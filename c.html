@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURORA - Checkout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.0.3"></script>
+
+    <style>
+      :root {
+        --background: #0d0d0d;
+        --text: #e8e8e8;
+        --accent: #ffffff;
+        --border: #2a2a2a;
+        --secondary-text: #a8a8a8;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--background);
+        color: var(--text);
+        overflow-x: hidden;
+        font-weight: 400;
+      }
+      body.no-scroll {
+        overflow: hidden;
+      }
+      .font-heading {
+        font-family: "Cormorant Garamond", serif;
+      }
+      .font-body {
+        font-family: "Poppins", sans-serif;
+      }
+      .cursor {
+        position: fixed;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--accent);
+        pointer-events: none;
+        mix-blend-mode: difference;
+        transition: transform 0.2s ease-out, width 0.3s ease, height 0.3s ease;
+        z-index: 9999;
+        transform-origin: center center;
+      }
+      .cursor-follower {
+        position: fixed;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--accent);
+        border-radius: 50%;
+        pointer-events: none;
+        mix-blend-mode: difference;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        z-index: 9999;
+      }
+      .cursor-grow {
+        transform: scale(3);
+        background: var(--accent);
+      }
+      #mobile-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--background);
+        z-index: 5000;
+        transform: translateX(100%);
+        transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      #mobile-menu.open {
+        transform: translateX(0);
+      }
+      .mobile-nav-link {
+        font-size: 2.5rem;
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        line-height: 1.5;
+        color: var(--text);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(1) {
+        transition-delay: 0.1s;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(2) {
+        transition-delay: 0.2s;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(3) {
+        transition-delay: 0.3s;
+      }
+      .magnetic-item {
+        display: inline-block;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .checkout-summary {
+        background-color: #1a1a1a;
+        border: 1px solid var(--border);
+      }
+      .checkout-btn {
+        transition: all 0.3s ease;
+      }
+      .checkout-btn:hover {
+        background-color: var(--accent);
+        color: var(--background);
+      }
+      .form-input {
+        background: transparent;
+        border-bottom: 1-px solid var(--border);
+        color: var(--text);
+        transition: all 0.3s ease;
+      }
+      .form-input:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      .order-item-card {
+        border-bottom: 1px solid var(--border);
+      }
+      .message-box {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #1a1a1a;
+        border: 1px solid var(--border);
+        padding: 2rem;
+        border-radius: 0.5rem;
+        z-index: 9999;
+        display: none;
+        max-width: 90%;
+        text-align: center;
+      }
+      .message-box h3 {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+      .message-box p {
+        font-family: "Poppins", sans-serif;
+        font-size: 1rem;
+        color: var(--secondary-text);
+        margin-bottom: 1rem;
+      }
+      .message-box button {
+        background-color: var(--accent);
+        color: var(--background);
+        padding: 0.5rem 1.5rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+      }
+      .message-box button:hover {
+        background-color: var(--accent);
+        filter: brightness(0.9);
+      }
+      .payment-option {
+        border: 1px solid var(--border);
+        transition: all 0.2s ease;
+      }
+      .payment-option.selected {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent);
+      }
+      .payment-option input[type="radio"] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Mobile Navigation Menu -->
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 bg-[var(--background)] z-5000 p-8 md:hidden"
+    >
+      <button id="close-menu" class="absolute top-8 right-8 text-white z-5001">
+        <i class="ph ph-x text-3xl magnetic-item"></i>
+      </button>
+      <nav class="flex flex-col items-center justify-center h-full">
+        <ul class="space-y-6">
+          <li>
+            <a href="#" class="mobile-nav-link hover-link">New In</a>
+          </li>
+          <li>
+            <a href="#" class="mobile-nav-link hover-link">Collections</a>
+          </li>
+          <li>
+            <a href="#" class="mobile-nav-link hover-link">Journal</a>
+          </li>
+          <li>
+            <a href="#" class="mobile-nav-link hover-link">Studio</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Header -->
+    <header
+      class="fixed top-0 left-0 w-full z-40 p-6 md:p-8 transition-all duration-500 bg-[var(--background)]/70 backdrop-blur-lg"
+    >
+      <div class="container mx-auto flex justify-between items-center">
+        <div
+          class="text-xl font-bold tracking-widest uppercase magnetic-item font-heading"
+        >
+          Aurora
+        </div>
+        <!-- Desktop Navigation -->
+        <nav
+          class="hidden md:flex items-center space-x-10 text-sm uppercase tracking-wider font-light"
+        >
+          <a href="#" class="hover-link magnetic-item">New In</a>
+          <a href="#" class="hover-link magnetic-item">Collections</a>
+          <a href="#" class="hover-link magnetic-item">Journal</a>
+          <a href="#" class="hover-link magnetic-item">Studio</a>
+        </nav>
+        <div class="flex items-center space-x-6">
+          <a
+            href="#"
+            class="hover-link magnetic-item hover:text-gray-400 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewbox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </a>
+          <a
+            href="cart.html"
+            class="hover-link magnetic-item relative hover:text-gray-400 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewbox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+            <span
+              id="cart-count"
+              class="absolute -top-2 -right-2 bg-white text-black text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold"
+              >0</span
+            >
+          </a>
+          <button
+            id="hamburger-btn"
+            class="magnetic-item md:hidden z-5001"
+            aria-label="Open mobile menu"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="min-h-screen pt-32 pb-16">
+      <div class="container mx-auto px-6">
+        <h1
+          class="text-5xl md:text-7xl font-heading text-center mb-16 uppercase"
+        >
+          Checkout
+        </h1>
+        <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
+          <!-- Order Summary (Right Side - but first on mobile) -->
+          <div
+            class="w-full lg:w-2/5 order-first lg:order-last checkout-summary p-8 rounded-lg shadow-xl"
+          >
+            <h2 class="font-heading text-3xl font-semibold mb-6">
+              Order Summary
+            </h2>
+            <div id="order-items-list" class="divide-y divide-[var(--border)]">
+              <!-- Order items will be dynamically inserted here -->
+            </div>
+
+            <div class="mt-8 space-y-4 text-lg">
+              <div class="flex justify-between items-center">
+                <span class="text-[var(--secondary-text)] font-body"
+                  >Subtotal</span
+                >
+                <span id="subtotal-amount" class="font-body font-medium"
+                  >$0.00</span
+                >
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-[var(--secondary-text)] font-body"
+                  >Shipping</span
+                >
+                <span id="shipping-amount" class="font-body font-medium"
+                  >Free</span
+                >
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-[var(--secondary-text)] font-body">Tax</span>
+                <span id="tax-amount" class="font-body font-medium">$0.00</span>
+              </div>
+            </div>
+
+            <div
+              class="border-t border-[var(--border)] my-6 pt-6 flex justify-between items-center font-heading text-2xl font-bold"
+            >
+              <span>Total</span>
+              <span id="total-amount">$0.00</span>
+            </div>
+          </div>
+
+          <!-- Checkout Form (Left Side - second on mobile) -->
+          <div class="w-full lg:w-3/5 order-last lg:order-first">
+            <form id="checkout-form" class="space-y-12">
+              <!-- Contact Information -->
+              <div>
+                <h2 class="font-heading text-2xl font-semibold mb-6">
+                  Contact Information
+                </h2>
+                <div class="space-y-6">
+                  <div>
+                    <label
+                      for="email"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >Email Address</label
+                    >
+                    <input
+                      type="email"
+                      id="email"
+                      required
+                      placeholder="Enter your email"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="mobile-number"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >Mobile Number</label
+                    >
+                    <input
+                      type="tel"
+                      id="mobile-number"
+                      required
+                      placeholder="01XXXXXXXXX"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Shipping Address -->
+              <div>
+                <h2 class="font-heading text-2xl font-semibold mb-6">
+                  Shipping Address
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label
+                      for="first-name"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >First Name</label
+                    >
+                    <input
+                      type="text"
+                      id="first-name"
+                      required
+                      placeholder="Jane"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="last-name"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >Last Name</label
+                    >
+                    <input
+                      type="text"
+                      id="last-name"
+                      required
+                      placeholder="Doe"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                </div>
+                <div class="mt-6">
+                  <label
+                    for="address"
+                    class="text-sm text-[var(--secondary-text)]"
+                    >Address</label
+                  >
+                  <input
+                    type="text"
+                    id="address"
+                    required
+                    placeholder="House 5, Road 10"
+                    class="form-input w-full mt-2 py-2 px-0"
+                  />
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  <div>
+                    <label
+                      for="country"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >Country/Region</label
+                    >
+                    <input
+                      type="text"
+                      id="country"
+                      required
+                      placeholder="Bangladesh"
+                      value="Bangladesh"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="city"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >City</label
+                    >
+                    <input
+                      type="text"
+                      id="city"
+                      required
+                      placeholder="Dhaka"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="state"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >District</label
+                    >
+                    <input
+                      type="text"
+                      id="state"
+                      required
+                      placeholder="Dhaka"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="postal-code"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >Postal Code</label
+                    >
+                    <input
+                      type="text"
+                      id="postal-code"
+                      required
+                      placeholder="1205"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Payment Information -->
+              <div>
+                <h2 class="font-heading text-2xl font-semibold mb-6">
+                  Payment
+                </h2>
+                <div class="space-y-4">
+                  <label
+                    for="cod"
+                    class="payment-option p-4 rounded-lg flex items-center gap-4 cursor-pointer selected"
+                    data-method="cod"
+                  >
+                    <input
+                      type="radio"
+                      id="cod"
+                      name="payment-method"
+                      value="cod"
+                      class="magnetic-item"
+                      checked
+                    />
+                    <i class="ph ph-handshake text-xl"></i>
+                    <span class="flex-grow font-body text-sm font-medium"
+                      >Cash on Delivery</span
+                    >
+                  </label>
+                  <label
+                    for="bKash"
+                    class="payment-option p-4 rounded-lg flex items-center gap-4 cursor-pointer"
+                    data-method="bKash"
+                  >
+                    <input
+                      type="radio"
+                      id="bKash"
+                      name="payment-method"
+                      value="bKash"
+                      class="magnetic-item"
+                    />
+                    <img
+                      src="https://logodownload.org/wp-content/uploads/2021/04/bkash-logo-1.png"
+                      class="h-6"
+                      alt="bKash Logo"
+                    />
+                    <span class="flex-grow font-body text-sm font-medium"
+                      >bKash (Coming Soon)</span
+                    >
+                  </label>
+                </div>
+              </div>
+
+              <div class="pt-8">
+                <button
+                  type="submit"
+                  class="checkout-btn w-full bg-white text-black py-4 rounded-full text-lg font-semibold uppercase tracking-wider magnetic-item"
+                >
+                  Place Order
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black py-16 border-t border-[var(--border)]">
+      <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12" id="footer-content">
+          <div class="col-span-1 md:col-span-2 footer-col">
+            <h3
+              class="text-xl font-bold mb-4 uppercase tracking-wider font-heading"
+            >
+              Stay in the loop
+            </h3>
+            <p class="text-[var(--secondary-text)] mb-6 max-w-sm font-body">
+              Receive updates on new arrivals, special offers and our creative
+              process.
+            </p>
+            <form class="flex items-center mt-8">
+              <input
+                type="email"
+                placeholder="Your email address"
+                class="bg-transparent border-b border-[var(--border)] w-full max-w-xs py-2 px-0 focus:outline-none focus:border-white transition-colors placeholder-[var(--secondary-text)] font-body"
+              />
+              <button
+                type="submit"
+                class="hover-link magnetic-item bg-transparent border border-white text-white px-6 py-2 rounded-full font-bold text-sm ml-4 hover:bg-white hover:text-black transition-all duration-300"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
+          <div class="col-span-1 footer-col">
+            <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
+              Shop
+            </h4>
+            <ul class="space-y-3 text-[var(--secondary-text)] font-body">
+              <li>
+                <a href="#" class="hover-link magnetic-item">New In</a>
+              </li>
+              <li>
+                <a href="#" class="hover-link magnetic-item">Clothing</a>
+              </li>
+              <li>
+                <a href="#" class="hover-link magnetic-item">Accessories</a>
+              </li>
+              <li>
+                <a href="#" class="hover-link magnetic-item">Collections</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-span-1 footer-col">
+            <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
+              About
+            </h4>
+            <ul class="space-y-3 text-[var(--secondary-text)] font-body">
+              <li>
+                <a href="#" class="hover-link magnetic-item">Our Studio</a>
+              </li>
+              <li>
+                <a href="#" class="hover-link magnetic-item">Journal</a>
+              </li>
+              <li>
+                <a href="#" class="hover-link magnetic-item">Contact</a>
+              </li>
+              <li><a href="#" class="hover-link magnetic-item">FAQs</a></li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="mt-16 pt-8 border-t border-[var(--border)] text-center text-gray-500 text-xs font-body"
+        >
+          <p>
+            &copy; 2025 Aurora. All Rights Reserved. A demonstration of
+            world-class web design.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Custom Message Box for validation success -->
+    <div id="message-box" class="message-box hidden">
+      <h3 id="message-title">Order Placed!</h3>
+      <p id="message-content">
+        Thank you for your order. We'll be in touch soon to confirm.
+      </p>
+      <button id="close-message-btn">Continue Shopping</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- Core UI and Animations ---
+        gsap.registerPlugin();
+        const lenis = new Lenis();
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        const cursor = document.querySelector(".cursor");
+        const follower = document.querySelector(".cursor-follower");
+        gsap.set(cursor, { xPercent: -50, yPercent: -50 });
+        gsap.set(follower, { xPercent: -50, yPercent: -50 });
+        window.addEventListener("mousemove", (e) => {
+          gsap.to(cursor, { duration: 0.2, x: e.clientX, y: e.clientY });
+          gsap.to(follower, {
+            duration: 0.6,
+            x: e.clientX,
+            y: e.clientY,
+            ease: "power2.out",
+          });
+        });
+        document
+          .querySelectorAll(".hover-link, .checkout-btn")
+          .forEach((el) => {
+            el.addEventListener("mouseenter", () =>
+              follower.classList.add("cursor-grow")
+            );
+            el.addEventListener("mouseleave", () =>
+              follower.classList.remove("cursor-grow")
+            );
+          });
+        document.querySelectorAll(".magnetic-item").forEach((el) => {
+          el.addEventListener("mousemove", function (e) {
+            const position = this.getBoundingClientRect();
+            const x = e.clientX - position.left - position.width / 2;
+            const y = e.clientY - position.top - position.height / 2;
+            gsap.to(this, {
+              x: x * 0.3,
+              y: y * 0.3,
+              duration: 0.3,
+              ease: "power2.out",
+            });
+          });
+          el.addEventListener("mouseleave", function () {
+            gsap.to(this, {
+              x: 0,
+              y: 0,
+              duration: 0.3,
+              ease: "elastic.out(1, 0.3)",
+            });
+          });
+        });
+
+        // --- Mobile Menu Logic ---
+        const hamburgerBtn = document.getElementById("hamburger-btn");
+        const closeMenuBtn = document.getElementById("close-menu");
+        const mobileMenu = document.getElementById("mobile-menu");
+        const mobileLinks = document.querySelectorAll(".mobile-nav-link");
+
+        hamburgerBtn.addEventListener("click", () => {
+          mobileMenu.classList.add("open");
+          document.body.classList.add("no-scroll");
+        });
+        closeMenuBtn.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          document.body.classList.remove("no-scroll");
+        });
+        mobileLinks.forEach((link) => {
+          link.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            document.body.classList.remove("no-scroll");
+          });
+        });
+
+        // --- Cart & Checkout Logic ---
+        const cartCountElement = document.getElementById("cart-count");
+        const orderItemsList = document.getElementById("order-items-list");
+        const subtotalAmountEl = document.getElementById("subtotal-amount");
+        const taxAmountEl = document.getElementById("tax-amount");
+        const totalAmountEl = document.getElementById("total-amount");
+        const checkoutForm = document.getElementById("checkout-form");
+        const messageBox = document.getElementById("message-box");
+        const closeMessageBoxBtn = document.getElementById("close-message-btn");
+
+        const SHIPPING_COST = 0; // Free shipping for this design
+        const TAX_RATE = 0.08; // 8% tax rate
+
+        function getCart() {
+          return JSON.parse(localStorage.getItem("aurora-cart")) || [];
+        }
+
+        function updateCartCount() {
+          const cart = getCart();
+          const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+          cartCountElement.textContent = totalItems;
+        }
+
+        function calculateTotals() {
+          const cart = getCart();
+          const subtotal = cart.reduce(
+            (sum, item) => sum + item.product.price * item.quantity,
+            0
+          );
+          const tax = subtotal * TAX_RATE;
+          const total = subtotal + SHIPPING_COST + tax;
+          return { subtotal, tax, total };
+        }
+
+        function renderOrderSummary() {
+          const cart = getCart();
+          const totals = calculateTotals();
+          orderItemsList.innerHTML = "";
+
+          cart.forEach((item) => {
+            const itemElement = document.createElement("div");
+            itemElement.className =
+              "order-item-card flex items-center gap-4 py-4 last:pb-0";
+            itemElement.innerHTML = `
+              <div class="relative flex-shrink-0 w-16 h-20 rounded-md z-10">
+                <img
+                  src="${item.product.images[0]}"
+                  alt="${item.product.name}"
+                  class="w-full h-full object-cover rounded-md"
+                  onerror="this.onerror=null;this.src='https://placehold.co/64x80/0d0d0d/e8e8e8?text=${item.product.name.replace(
+                    /\s/g,
+                    "+"
+                  )}';">
+                <span class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-white text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center z-20">
+                  ${item.quantity}
+                </span>
+              </div>
+              <div class="flex-grow">
+                <h3 class="font-body text-sm font-medium leading-tight">
+                  ${item.product.name}
+                </h3>
+                <!-- Display the size, color hex code, and a visual color swatch -->
+                <div class="flex items-center gap-2">
+                  <p class="text-[var(--secondary-text)] text-xs font-body">
+                    ${item.size} / ${item.color}
+                  </p>
+                  <div
+                    class="w-4 h-4 rounded-full border border-[var(--secondary-text)]"
+                    style="background-color: ${item.color};"
+                  ></div>
+                </div>
+              </div>
+              <span class="font-body text-sm font-semibold">
+                $${(item.product.price * item.quantity).toFixed(2)}
+              </span>
+            `;
+            orderItemsList.appendChild(itemElement);
+          });
+
+          subtotalAmountEl.textContent = `$${totals.subtotal.toFixed(2)}`;
+          taxAmountEl.textContent = `$${totals.tax.toFixed(2)}`;
+          totalAmountEl.textContent = `$${totals.total.toFixed(2)}`;
+        }
+
+        // Handle payment method selection
+        const paymentOptions = document.querySelectorAll(".payment-option");
+        paymentOptions.forEach((option) => {
+          option.addEventListener("click", () => {
+            paymentOptions.forEach((o) => o.classList.remove("selected"));
+            option.classList.add("selected");
+            option.querySelector('input[type="radio"]').checked = true;
+          });
+        });
+
+        // Simple form validation and "order placement" simulation
+        checkoutForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const requiredInputs = checkoutForm.querySelectorAll("[required]");
+          let formIsValid = true;
+
+          requiredInputs.forEach((input) => {
+            if (!input.value.trim()) {
+              formIsValid = false;
+              input.style.borderColor = "red";
+            } else {
+              input.style.borderColor = "var(--border)";
+            }
+          });
+
+          if (formIsValid) {
+            // Simulate successful order placement
+            document.getElementById("message-title").textContent =
+              "Order Placed!";
+            document.getElementById("message-content").textContent =
+              "Thank you for your order. We'll be in touch soon to confirm.";
+            messageBox.classList.remove("hidden");
+            document.body.classList.add("no-scroll");
+            localStorage.removeItem("aurora-cart");
+          } else {
+            document.getElementById("message-title").textContent = "Error!";
+            document.getElementById("message-content").textContent =
+              "Please fill out all required fields.";
+            messageBox.classList.remove("hidden");
+            document.body.classList.add("no-scroll");
+          }
+        });
+
+        closeMessageBoxBtn.addEventListener("click", () => {
+          messageBox.classList.add("hidden");
+          document.body.classList.remove("no-scroll");
+          updateCartCount();
+          // Optionally redirect after closing message
+          // window.location.href = "index.html";
+        });
+
+        // Initial rendering
+        updateCartCount();
+        renderOrderSummary();
+      });
+    </script>
+  </body>
+</html>

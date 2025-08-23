@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURORA - Checkout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.0.3"></script>
+
+    <style>
+      :root {
+        --background: #0d0d0d;
+        --text: #e8e8e8;
+        --accent: #ffffff;
+        --border: #2a2a2a;
+        --secondary-text: #a8a8a8;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--background);
+        color: var(--text);
+        overflow-x: hidden;
+        font-weight: 400;
+      }
+      body.no-scroll {
+        overflow: hidden;
+      }
+      .font-heading {
+        font-family: "Cormorant Garamond", serif;
+      }
+      .font-body {
+        font-family: "Poppins", sans-serif;
+      }
+      .cursor {
+        position: fixed;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--accent);
+        pointer-events: none;
+        mix-blend-mode: difference;
+        transition: transform 0.2s ease-out, width 0.3s ease, height 0.3s ease;
+        z-index: 9999;
+        transform-origin: center center;
+      }
+      .cursor-follower {
+        position: fixed;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--accent);
+        border-radius: 50%;
+        pointer-events: none;
+        mix-blend-mode: difference;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        z-index: 9999;
+      }
+      .cursor-grow {
+        transform: scale(3);
+        background: var(--accent);
+      }
+      @media (max-width: 768px) {
+        .cursor,
+        .cursor-follower {
+          display: none;
+        }
+      }
+      /* --- MOBILE MENU FIX --- */
+      #mobile-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--background);
+        z-index: 5000; /* Increased z-index to ensure it's on top */
+        transform: translateX(100%);
+        transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      #mobile-menu.open {
+        transform: translateX(0);
+      }
+
+      .mobile-nav-link {
+        font-size: 2.5rem;
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        line-height: 1.5;
+        color: var(--text); /* Explicitly set text color */
+        opacity: 0; /* Initial state for animation */
+        transform: translateY(20px); /* Initial state for animation */
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Add transition for animation */
+      }
+
+      /* Animation for the links when the menu is open */
+      #mobile-menu.open .mobile-nav-link {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Stagger the animation for each link */
+      #mobile-menu.open .mobile-nav-link:nth-child(1) {
+        transition-delay: 0.1s;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(2) {
+        transition-delay: 0.2s;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(3) {
+        transition-delay: 0.3s;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(4) {
+        transition-delay: 0.4s;
+      }
+
+      .close-menu-btn {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        cursor: pointer;
+        z-index: 5001; /* Must be higher than the menu itself */
+      }
+      .hamburger-btn {
+        cursor: pointer;
+      }
+      .magnetic-item {
+        display: inline-block;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .checkout-summary {
+        background-color: #1a1a1a;
+        border: 1px solid var(--border);
+      }
+      .checkout-btn {
+        transition: all 0.3s ease;
+      }
+      .checkout-btn:hover {
+        background-color: var(--accent);
+        color: var(--background);
+      }
+      .form-input {
+        background: transparent;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+        transition: all 0.3s ease;
+      }
+      .form-input:focus {
+        outline: none;
+        border-color: var(--accent);
+      }
+      .order-item-card {
+        border-bottom: 1px solid var(--border);
+      }
+      .message-box,
+      .payment-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 9998;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+      }
+      .message-box.show,
+      .payment-modal.show {
+        opacity: 1;
+        pointer-events: auto;
+      }
+      .message-box-content,
+      .payment-modal-content {
+        background-color: #1a1a1a;
+        border: 1px solid var(--border);
+        padding: 2rem;
+        border-radius: 0.5rem;
+        z-index: 9999;
+        max-width: 90%;
+        width: 500px;
+        text-align: center;
+        transform: scale(0.95);
+        transition: transform 0.3s ease;
+      }
+      .message-box.show .message-box-content,
+      .payment-modal.show .payment-modal-content {
+        transform: scale(1);
+      }
+      .message-box h3,
+      .payment-modal h3 {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+      .message-box p,
+      .payment-modal p {
+        font-family: "Poppins", sans-serif;
+        font-size: 1rem;
+        color: var(--secondary-text);
+        margin-bottom: 1.5rem;
+      }
+      .message-box button,
+      .payment-modal button {
+        background-color: var(--accent);
+        color: var(--background);
+        padding: 0.75rem 1.5rem;
+        border-radius: 9999px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+      }
+      .message-box button:hover,
+      .payment-modal button:hover {
+        background-color: var(--accent);
+        filter: brightness(0.9);
+      }
+      .payment-option {
+        border: 1px solid var(--border);
+        transition: all 0.2s ease;
+      }
+      .payment-option.selected {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent);
+      }
+      .payment-option input[type="radio"] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Mobile Navigation Menu -->
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 bg-[var(--background)] z-5000 p-8 md:hidden"
+    >
+      <button id="close-menu" class="absolute top-8 right-8 text-white z-5001">
+        <i class="ph ph-x text-3xl magnetic-item"></i>
+      </button>
+      <nav class="flex flex-col items-center justify-center h-full">
+        <ul class="space-y-6">
+          <li>
+            <a href="home.html" class="mobile-nav-link hover-link magnetic-item"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a href="shop.html" class="mobile-nav-link hover-link magnetic-item"
+              >Shop</a
+            >
+          </li>
+          <li>
+            <a
+              href="gallery.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Gallery</a
+            >
+          </li>
+          <li>
+            <a
+              href="contact.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Contact</a
+            >
+          </li>
+          <li>
+            <a
+              href="our-studio.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Studio</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Header -->
+    <header
+      class="fixed top-0 left-0 w-full z-40 p-6 md:p-8 transition-all duration-500 bg-[var(--background)]/70 backdrop-blur-lg"
+    >
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="home.html">
+          <div
+            class="text-xl font-bold tracking-widest uppercase magnetic-item font-heading"
+          >
+            Aurora
+          </div>
+        </a>
+        <!-- Desktop Navigation -->
+        <nav
+          class="hidden md:flex items-center space-x-10 text-sm uppercase tracking-wider font-light"
+        >
+          <a href="home.html" class="hover-link magnetic-item">Home</a>
+          <a href="shop.html" class="hover-link magnetic-item">Shop</a>
+          <a href="gallery.html" class="hover-link magnetic-item">Gallery</a>
+          <a href="contact.html" class="hover-link magnetic-item">Contact</a>
+          <a href="our-studio.html" class="hover-link magnetic-item">Studio</a>
+        </nav>
+        <div class="flex items-center space-x-6">
+          <a
+            href="cart.html"
+            class="hover-link magnetic-item relative hover:text-gray-400 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewbox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+            <span
+              id="cart-count"
+              class="absolute -top-2 -right-2 bg-white text-black text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold"
+              >0</span
+            >
+          </a>
+          <button
+            id="hamburger-btn"
+            class="magnetic-item md:hidden z-5001"
+            aria-label="Open mobile menu"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="min-h-screen pt-32 pb-16">
+      <div class="container mx-auto px-6">
+        <h1
+          class="text-5xl md:text-7xl font-heading text-center mb-16 uppercase"
+        >
+          Checkout
+        </h1>
+        <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
+          <!-- Order Summary (Right Side - but first on mobile) -->
+          <div
+            class="w-full lg:w-2/5 order-first lg:order-last checkout-summary p-8 rounded-lg shadow-xl"
+          >
+            <h2 class="font-heading text-3xl font-semibold mb-6">
+              Order Summary
+            </h2>
+            <div id="order-items-list" class="divide-y divide-[var(--border)]">
+              <!-- Order items will be dynamically inserted here -->
+            </div>
+
+            <div class="mt-8 space-y-4 text-lg">
+              <div class="flex justify-between items-center">
+                <span class="text-[var(--secondary-text)] font-body"
+                  >Subtotal</span
+                >
+                <span id="subtotal-amount" class="font-body font-medium"
+                  >$0.00</span
+                >
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-[var(--secondary-text)] font-body"
+                  >Shipping</span
+                >
+                <span id="shipping-amount" class="font-body font-medium"
+                  >...</span
+                >
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-[var(--secondary-text)] font-body">Tax</span>
+                <span id="tax-amount" class="font-body font-medium">$0.00</span>
+              </div>
+            </div>
+
+            <div
+              class="border-t border-[var(--border)] my-6 pt-6 flex justify-between items-center font-heading text-2xl font-bold"
+            >
+              <span>Total</span>
+              <span style="font-family: 'Poppins';" ; id="total-amount"
+                >$0.00</span
+              >
+            </div>
+          </div>
+
+          <!-- Checkout Form (Left Side - second on mobile) -->
+          <div class="w-full lg:w-3/5 order-last lg:order-first">
+            <form id="checkout-form" class="space-y-12" novalidate>
+              <!-- Contact Information -->
+              <div>
+                <h2 class="font-heading text-2xl font-semibold mb-6">
+                  Contact Information
+                </h2>
+                <div class="space-y-6">
+                  <div>
+                    <label
+                      for="email"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >Email Address</label
+                    >
+                    <input
+                      type="email"
+                      id="email"
+                      required
+                      placeholder="Enter your email"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="mobile-number"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >Mobile Number</label
+                    >
+                    <input
+                      type="tel"
+                      id="mobile-number"
+                      required
+                      placeholder="01XXXXXXXXX"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Shipping Address -->
+              <div>
+                <h2 class="font-heading text-2xl font-semibold mb-6">
+                  Shipping Address
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label
+                      for="first-name"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >First Name</label
+                    >
+                    <input
+                      type="text"
+                      id="first-name"
+                      required
+                      placeholder="Jane"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="last-name"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >Last Name</label
+                    >
+                    <input
+                      type="text"
+                      id="last-name"
+                      required
+                      placeholder="Doe"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                </div>
+                <div class="mt-6">
+                  <label
+                    for="address"
+                    class="text-sm text-[var(--secondary-text)]"
+                    >Address</label
+                  >
+                  <input
+                    type="text"
+                    id="address"
+                    required
+                    placeholder="House 5, Road 10"
+                    class="form-input w-full mt-2 py-2 px-0"
+                  />
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                  <div>
+                    <label
+                      for="country"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >Country/Region</label
+                    >
+                    <input
+                      type="text"
+                      id="country"
+                      required
+                      placeholder="Bangladesh"
+                      value="Bangladesh"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="city"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >City</label
+                    >
+                    <input
+                      type="text"
+                      id="city"
+                      required
+                      placeholder="Dhaka"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="state"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >District</label
+                    >
+                    <input
+                      type="text"
+                      id="state"
+                      required
+                      placeholder="Dhaka"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                  <div>
+                    <label
+                      for="postal-code"
+                      class="text-sm text-[var(--secondary-text)]"
+                      >Postal Code</label
+                    >
+                    <input
+                      type="text"
+                      id="postal-code"
+                      required
+                      placeholder="1205"
+                      class="form-input w-full mt-2 py-2 px-0"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Payment Information -->
+              <div>
+                <h2 class="font-heading text-2xl font-semibold mb-6">
+                  Payment
+                </h2>
+                <div class="space-y-4">
+                  <label
+                    for="cod"
+                    class="payment-option p-4 rounded-lg flex items-center gap-4 cursor-pointer selected"
+                    data-method="cod"
+                  >
+                    <input
+                      type="radio"
+                      id="cod"
+                      name="payment-method"
+                      value="cod"
+                      class="magnetic-item"
+                      checked
+                    />
+                    <i class="ph ph-handshake text-xl"></i>
+                    <span class="flex-grow font-body text-sm font-medium"
+                      >Cash on Delivery</span
+                    >
+                  </label>
+                </div>
+              </div>
+
+              <div class="pt-8">
+                <button
+                  type="submit"
+                  id="main-checkout-btn"
+                  class="checkout-btn w-full bg-white text-black py-4 rounded-full text-lg font-semibold uppercase tracking-wider magnetic-item"
+                >
+                  Review & Confirm
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black py-16 border-t border-[var(--border)]">
+      <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12" id="footer-content">
+          <div class="col-span-1 md:col-span-2 footer-col">
+            <h3
+              class="text-xl font-bold mb-4 uppercase tracking-wider font-heading"
+            >
+              Connect
+            </h3>
+            <p class="text-gray-400 mb-6 max-w-sm font-body">
+              Follow us on our social media channels to see our latest designs
+              and updates.
+            </p>
+            <div class="flex space-x-4 mt-8">
+              <a
+                href="#"
+                class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                <!-- Social Media Icon placeholder: You can replace this with actual SVG or Font Awesome icons -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07c3.252.148 4.653 1.636 4.807 4.845.056 1.268.067 1.649.067 4.853 0 3.204-.011 3.585-.067 4.849-.155 3.208-1.556 4.646-4.808 4.811-1.267.056-1.648.066-4.85.066s-3.583-.01-4.85-.066c-3.252-.165-4.652-1.603-4.807-4.811-.056-1.267-.067-1.648-.067-4.849s.011-3.585.067-4.85c.155-3.208 1.555-4.646 4.807-4.811 1.267-.056 1.648-.066 4.85-.066zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.211-6.671 2.457-6.882 6.812-.058 1.281-.07 1.689-.07 4.946s.012 3.666.07 4.947c.211 4.357 2.455 6.671 6.811 6.882 1.28.058 1.689.07 4.946.07s3.666-.012 4.946-.07c4.356-.211 6.67-2.456 6.882-6.812.058-1.28.07-1.689.07-4.946s-.012-3.666-.07-4.947c-.212-4.357-2.456-6.671-6.812-6.882-1.28-.058-1.689-.07-4.946-.07zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.442.646-1.442 1.442s.646 1.442 1.442 1.442 1.442-.646 1.442-1.442-.646-1.442-1.442-1.442z"
+                  />
+                </svg>
+              </a>
+              <a
+                href="#"
+                class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.235 0-5.503 3.037-4.437 6.075-4.095-.205-7.781-2.179-10.232-5.187-1.342 2.3-1.87 4.975-.544 7.279-1.02-.033-1.97-.329-2.809-.775v.098c0 2.91 2.071 5.437 4.821 6.002-.676.182-1.385.279-2.11.279-.517 0-1.018-.049-1.493-.146.766 2.399 2.984 4.148 5.61 4.195-2.059 1.615-4.674 2.578-7.534 2.578-.489 0-.97-.029-1.444-.085 2.651 1.714 5.864 2.712 9.313 2.712 11.171 0 17.271-9.294 17.271-17.271 0-.263-.006-.525-.018-.787 1.18-.851 2.201-1.916 3.018-3.13z"
+                  />
+                </svg>
+              </a>
+              <a
+                href="#"
+                class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M24 12c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.753 4.022 10.573 9.385 11.666v-8.252h-3.084v-3.414h3.084v-2.617c0-3.059 1.85-4.73 4.595-4.73 1.312 0 2.433.102 2.753.148v3.189h-1.892c-1.517 0-1.815.72-1.815 1.777v2.333h3.585l-.466 3.414h-3.119v8.252c5.362-1.093 9.385-5.913 9.385-11.666z"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="col-span-1 footer-col">
+            <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
+              Shop
+            </h4>
+            <ul class="space-y-3 text-gray-400 font-body">
+              <li><a href="#" class="hover-link magnetic-item">Shop All</a></li>
+              <li><a href="#" class="hover-link magnetic-item">Men</a></li>
+              <li>
+                <a href="#" class="hover-link magnetic-item">Women</a>
+              </li>
+              <li>
+                <a href="#" class="hover-link magnetic-item">Accessories</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-span-1 footer-col">
+            <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
+              About
+            </h4>
+            <ul class="space-y-3 text-gray-400 font-body">
+              <li>
+                <a href="#" class="hover-link magnetic-item">Our Studio</a>
+              </li>
+              <li><a href="#" class="hover-link magnetic-item">Gallery</a></li>
+              <li><a href="#" class="hover-link magnetic-item">Contact</a></li>
+              <li>
+                <a href="#" id="faq-link" class="hover-link magnetic-item"
+                  >FAQs</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="mt-16 pt-8 border-t border-[var(--border)] text-center text-gray-500 text-xs font-body"
+        >
+          <p>
+            &copy; 2025 Aurora. All Rights Reserved. A demonstration of
+            world-class web design.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Custom Message Box for validation/success -->
+    <div id="message-box" class="message-box">
+      <div class="message-box-content">
+        <h3 id="message-title">Order Placed!</h3>
+        <p id="message-content">
+          Thank you for your order. We'll be in touch soon to confirm.
+        </p>
+        <button id="close-message-btn">Continue Shopping</button>
+      </div>
+    </div>
+
+    <!-- Payment Verification Modal -->
+    <div id="payment-verification-modal" class="payment-modal">
+      <div class="payment-modal-content">
+        <h3 class="font-heading text-2xl">Confirm Your Delivery</h3>
+        <p class="text-base pb-2 text-white">
+          To secure your order, please pay the
+          <strong id="delivery-charge-amount" class="text-white">$0.00</strong>
+          delivery fee.
+        </p>
+
+        <p class="text-sm text-[var(--secondary-text)]">
+          You can either scan the QR code or send money to the number below.
+        </p>
+
+        <div class="my-6">
+          <img
+            id="qr-code-image"
+            src="https://placehold.co/200x200/1a1a1a/e8e8e8?text=QR+Code"
+            alt="Scan to pay with bKash or Nagad"
+            class="mx-auto rounded-lg border border-[var(--border)] w-40 h-40"
+          />
+        </div>
+
+        <div class="my-6 text-left bg-black/30 p-4 rounded-lg">
+          <p class="text-sm mb-2 text-[var(--secondary-text)]">
+            Use the 'Send Money' option in your app:
+          </p>
+          <div class="flex items-center justify-between gap-4">
+            <p
+              class="text-lg font-mono tracking-widest text-white"
+              id="merchant-number"
+            >
+              01700000000
+            </p>
+            <button
+              id="copy-number-btn"
+              class="bg-[var(--border)] text-white px-4 py-2 rounded-md text-xs font-semibold transition-all duration-200"
+            >
+              COPY
+            </button>
+          </div>
+        </div>
+
+        <div class="text-left w-full mt-4">
+          <label for="trx-id" class="text-sm text-[var(--secondary-text)]"
+            >Transaction ID (TrxID)</label
+          >
+          <input
+            type="text"
+            id="trx-id"
+            required
+            placeholder="Enter the TrxID from your payment confirmation"
+            class="form-input w-full mt-2 py-2 px-0 mb-6"
+          />
+        </div>
+
+        <button id="confirm-payment-btn" class="w-full checkout-btn">
+          Place Order
+        </button>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
+    <!-- Firebase SDKs -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        signInWithCustomToken,
+        signInAnonymously,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        addDoc,
+        serverTimestamp,
+        doc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // --- Firebase Setup ---
+      let db, auth, userId;
+      const appId =
+        typeof __app_id !== "undefined" ? __app_id : "default-app-id";
+
+      // Default settings in case Firestore is not available or data is missing
+      let shippingSettings = { baseCost: 10, freeThreshold: 100 };
+      let taxSettings = { rate: 8 };
+
+      async function initFirebase() {
+        try {
+          const userFirebaseConfig = {
+            apiKey: "AIzaSyCPWe_VrV_Rq9HcKruC5uoC9jNFkwpzNcU",
+            authDomain: "aurora-e-commerce.firebaseapp.com",
+            projectId: "aurora-e-commerce",
+            storageBucket: "aurora-e-commerce.firebasestorage.app",
+            messagingSenderId: "177216689386",
+            appId: "1:177216689386:web:04f567db96218da3323393",
+            measurementId: "G-0Q9ZFHSFS1",
+          };
+          const firebaseConfig =
+            typeof __firebase_config !== "undefined"
+              ? JSON.parse(__firebase_config)
+              : userFirebaseConfig;
+          const app = initializeApp(firebaseConfig);
+          db = getFirestore(app);
+          auth = getAuth(app);
+
+          if (
+            typeof __initial_auth_token !== "undefined" &&
+            __initial_auth_token
+          ) {
+            await signInWithCustomToken(auth, __initial_auth_token);
+          } else {
+            await signInAnonymously(auth);
+          }
+          userId = auth.currentUser.uid;
+          console.log("Firebase initialized and user signed in:", userId);
+        } catch (error) {
+          console.error("Firebase initialization failed:", error);
+        }
+      }
+
+      async function loadCheckoutSettings() {
+        if (!db) {
+          console.log("Firestore is not initialized. Using default settings.");
+          return;
+        }
+        try {
+          const shippingRef = doc(
+            db,
+            "artifacts",
+            appId,
+            "public",
+            "data",
+            "settings",
+            "shipping"
+          );
+          const taxRef = doc(
+            db,
+            "artifacts",
+            appId,
+            "public",
+            "data",
+            "settings",
+            "tax"
+          );
+
+          const shippingSnap = await getDoc(shippingRef);
+          if (shippingSnap.exists()) {
+            const data = shippingSnap.data();
+            shippingSettings.baseCost = data.baseCost || 0;
+            shippingSettings.freeThreshold = data.freeThreshold || 0;
+            console.log("Loaded shipping settings:", shippingSettings);
+          } else {
+            console.log(
+              "No shipping settings found in Firestore. Using defaults."
+            );
+          }
+
+          const taxSnap = await getDoc(taxRef);
+          if (taxSnap.exists()) {
+            const data = taxSnap.data();
+            taxSettings.rate = data.rate || 0;
+            console.log("Loaded tax settings:", taxSettings);
+          } else {
+            console.log("No tax settings found in Firestore. Using defaults.");
+          }
+        } catch (error) {
+          console.error("Error loading settings from Firestore:", error);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", async () => {
+        // --- Initialize Firebase and load settings first ---
+        await initFirebase();
+        await loadCheckoutSettings();
+
+        // --- Core UI and Animations ---
+        gsap.registerPlugin();
+        const lenis = new Lenis();
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        const cursor = document.querySelector(".cursor");
+        const follower = document.querySelector(".cursor-follower");
+        gsap.set(cursor, { xPercent: -50, yPercent: -50 });
+        gsap.set(follower, { xPercent: -50, yPercent: -50 });
+        window.addEventListener("mousemove", (e) => {
+          gsap.to(cursor, { duration: 0.2, x: e.clientX, y: e.clientY });
+          gsap.to(follower, {
+            duration: 0.6,
+            x: e.clientX,
+            y: e.clientY,
+            ease: "power2.out",
+          });
+        });
+        document
+          .querySelectorAll(".hover-link, .checkout-btn")
+          .forEach((el) => {
+            el.addEventListener("mouseenter", () =>
+              follower.classList.add("cursor-grow")
+            );
+            el.addEventListener("mouseleave", () =>
+              follower.classList.remove("cursor-grow")
+            );
+          });
+        document.querySelectorAll(".magnetic-item").forEach((el) => {
+          el.addEventListener("mousemove", function (e) {
+            const position = this.getBoundingClientRect();
+            const x = e.clientX - position.left - position.width / 2;
+            const y = e.clientY - position.top - position.height / 2;
+            gsap.to(this, {
+              x: x * 0.3,
+              y: y * 0.3,
+              duration: 0.3,
+              ease: "power2.out",
+            });
+          });
+          el.addEventListener("mouseleave", function () {
+            gsap.to(this, {
+              x: 0,
+              y: 0,
+              duration: 0.3,
+              ease: "elastic.out(1, 0.3)",
+            });
+          });
+        });
+
+        // --- Mobile Menu Logic ---
+        const hamburgerBtn = document.getElementById("hamburger-btn");
+        const closeMenuBtn = document.getElementById("close-menu");
+        const mobileMenu = document.getElementById("mobile-menu");
+        const mobileLinks = document.querySelectorAll(".mobile-nav-link");
+
+        hamburgerBtn.addEventListener("click", () => {
+          mobileMenu.classList.add("open");
+          document.body.classList.add("no-scroll");
+        });
+        closeMenuBtn.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          document.body.classList.remove("no-scroll");
+        });
+        mobileLinks.forEach((link) => {
+          link.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            document.body.classList.remove("no-scroll");
+          });
+        });
+
+        // --- Cart & Checkout Logic ---
+        const cartCountElement = document.getElementById("cart-count");
+        const orderItemsList = document.getElementById("order-items-list");
+        const subtotalAmountEl = document.getElementById("subtotal-amount");
+        const shippingAmountEl = document.getElementById("shipping-amount");
+        const taxAmountEl = document.getElementById("tax-amount");
+        const totalAmountEl = document.getElementById("total-amount");
+        const checkoutForm = document.getElementById("checkout-form");
+        const mainCheckoutBtn = document.getElementById("main-checkout-btn");
+
+        // --- Message and Modal Box Elements ---
+        const messageBox = document.getElementById("message-box");
+        const messageTitle = document.getElementById("message-title");
+        const messageContent = document.getElementById("message-content");
+        const closeMessageBoxBtn = document.getElementById("close-message-btn");
+
+        // --- Payment Modal Elements ---
+        const paymentModal = document.getElementById(
+          "payment-verification-modal"
+        );
+        const deliveryChargeAmountEl = document.getElementById(
+          "delivery-charge-amount"
+        );
+        const trxIdInput = document.getElementById("trx-id");
+        const confirmPaymentBtn = document.getElementById(
+          "confirm-payment-btn"
+        );
+        const copyNumberBtn = document.getElementById("copy-number-btn");
+        const merchantNumberEl = document.getElementById("merchant-number");
+
+        function calculateFinalPrice(product) {
+          const discount =
+            product.discountPercentage > 0 ? product.discountPercentage : 0;
+          return product.basePrice * (1 - discount / 100);
+        }
+
+        function getCart() {
+          return JSON.parse(localStorage.getItem("aurora-cart")) || [];
+        }
+
+        function updateCartCount() {
+          const cart = getCart();
+          const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+          cartCountElement.textContent = totalItems;
+        }
+
+        function calculateTotals() {
+          const cart = getCart();
+          const subtotal = cart.reduce(
+            (sum, item) =>
+              sum + calculateFinalPrice(item.product) * item.quantity,
+            0
+          );
+
+          let currentShippingCost = shippingSettings.baseCost;
+          if (
+            shippingSettings.freeThreshold > 0 &&
+            subtotal >= shippingSettings.freeThreshold
+          ) {
+            currentShippingCost = 0;
+          }
+
+          const tax = subtotal * (taxSettings.rate / 100);
+          const total = subtotal + currentShippingCost + tax;
+
+          return { subtotal, tax, total, shippingCost: currentShippingCost };
+        }
+
+        function renderOrderSummary() {
+          const cart = getCart();
+          const totals = calculateTotals();
+          orderItemsList.innerHTML = "";
+
+          if (cart.length === 0) {
+            mainCheckoutBtn.disabled = true;
+            mainCheckoutBtn.style.opacity = "0.5";
+            mainCheckoutBtn.textContent = "Cart is Empty";
+          } else {
+            mainCheckoutBtn.disabled = false;
+            mainCheckoutBtn.style.opacity = "1";
+            mainCheckoutBtn.textContent = "Review & Confirm";
+          }
+
+          cart.forEach((item) => {
+            const finalPrice = calculateFinalPrice(item.product);
+            let priceDisplayHTML = "";
+            const isDiscounted = item.product.discountPercentage > 0;
+            if (isDiscounted) {
+              priceDisplayHTML = `
+                    <div class="flex flex-col items-end gap-1">
+                        <div class="flex gap-2">
+                            <span class="text-xs line-through text-[var(--secondary-text)]">৳${item.product.basePrice.toFixed(
+                              2
+                            )}</span>
+                            <span class="text-sm font-semibold text-white">৳${finalPrice.toFixed(
+                              2
+                            )}</span>
+                        </div>
+                        <span class="text-xs text-red-500 font-medium">-${
+                          item.product.discountPercentage
+                        }% off</span>
+                    </div>`;
+            } else {
+              priceDisplayHTML = `<span class="font-body text-sm font-semibold">৳${item.product.basePrice.toFixed(
+                2
+              )}</span>`;
+            }
+
+            const itemElement = document.createElement("div");
+            itemElement.className =
+              "order-item-card flex items-center gap-4 py-4 last:pb-0";
+            itemElement.innerHTML = `
+              <div class="relative flex-shrink-0 w-16 h-20 rounded-md z-10">
+                <img src="${item.product.images[0]}" alt="${
+              item.product.name
+            }" class="w-full h-full object-cover rounded-md" onerror="this.onerror=null;this.src='https://placehold.co/64x80/0d0d0d/e8e8e8?text=${item.product.name.replace(
+              /\s/g,
+              "+"
+            )}';">
+                <span class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 bg-white text-black text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center z-20">${
+                  item.quantity
+                }</span>
+              </div>
+              <div class="flex-grow">
+                <h3 class="font-body text-sm font-medium leading-tight">${
+                  item.product.name
+                }</h3>
+                <div class="flex items-center gap-2">
+                  <p class="text-[var(--secondary-text)] text-xs font-body">${
+                    item.size
+                  } / ${item.color}</p>
+                  <div class="w-4 h-4 rounded-full border border-[var(--secondary-text)]" style="background-color: ${
+                    item.color
+                  };"></div>
+                </div>
+              </div>
+              ${priceDisplayHTML}`;
+            orderItemsList.appendChild(itemElement);
+          });
+
+          subtotalAmountEl.textContent = `৳${totals.subtotal.toFixed(2)}`;
+          shippingAmountEl.textContent =
+            totals.shippingCost === 0
+              ? "Free"
+              : `৳${totals.shippingCost.toFixed(2)}`;
+          taxAmountEl.textContent = `৳${totals.tax.toFixed(2)}`;
+          totalAmountEl.textContent = `৳${totals.total.toFixed(2)}`;
+          deliveryChargeAmountEl.textContent = `৳${totals.shippingCost.toFixed(
+            2
+          )}`;
+        }
+
+        function showMessageBox(title, content) {
+          messageTitle.textContent = title;
+          messageContent.innerHTML = content;
+          messageBox.classList.add("show");
+          document.body.classList.add("no-scroll");
+        }
+
+        function showPaymentModal() {
+          paymentModal.classList.add("show");
+          document.body.classList.add("no-scroll");
+        }
+
+        function hidePaymentModal() {
+          paymentModal.classList.remove("show");
+          if (!messageBox.classList.contains("show")) {
+            document.body.classList.remove("no-scroll");
+          }
+        }
+
+        const paymentOptions = document.querySelectorAll(".payment-option");
+        paymentOptions.forEach((option) => {
+          option.addEventListener("click", () => {
+            paymentOptions.forEach((o) => o.classList.remove("selected"));
+            option.classList.add("selected");
+            option.querySelector('input[type="radio"]').checked = true;
+            const method = option.dataset.method;
+            if (method === "cod") {
+              mainCheckoutBtn.textContent = "Review & Confirm";
+            } else {
+              mainCheckoutBtn.textContent = "Proceed to bKash";
+            }
+          });
+        });
+
+        function validateForm() {
+          const requiredInputs = checkoutForm.querySelectorAll("[required]");
+          let formIsValid = true;
+          requiredInputs.forEach((input) => {
+            if (!input.value.trim()) {
+              formIsValid = false;
+              input.style.borderColor = "red";
+            } else {
+              input.style.borderColor = "var(--border)";
+            }
+          });
+          return formIsValid;
+        }
+
+        checkoutForm.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const selectedPaymentMethod = document.querySelector(
+            'input[name="payment-method"]:checked'
+          ).value;
+
+          if (!validateForm()) {
+            showMessageBox("Error!", "Please fill out all required fields.");
+            return;
+          }
+
+          if (selectedPaymentMethod === "cod") {
+            showPaymentModal();
+          } else {
+            showMessageBox(
+              "Coming Soon",
+              "This payment method is not yet available."
+            );
+          }
+        });
+
+        async function saveOrderToFirestore(orderData) {
+          if (!userId) {
+            console.error("User not authenticated. Cannot save order.");
+            showMessageBox("Error", "Authentication failed. Please try again.");
+            return false;
+          }
+
+          try {
+            const ordersCollection = collection(
+              db,
+              "artifacts",
+              appId,
+              "users",
+              userId,
+              "orders"
+            );
+            const docRef = await addDoc(ordersCollection, {
+              ...orderData,
+              timestamp: serverTimestamp(),
+            });
+            console.log("Order saved with ID:", docRef.id);
+            return true;
+          } catch (error) {
+            console.error("Error saving order to Firestore:", error);
+            showMessageBox(
+              "Error",
+              "Failed to save your order. Please try again."
+            );
+            return false;
+          }
+        }
+
+        confirmPaymentBtn.addEventListener("click", async () => {
+          const trxId = trxIdInput.value.trim();
+          if (!trxId) {
+            trxIdInput.style.borderColor = "red";
+            return;
+          }
+          trxIdInput.style.borderColor = "var(--border)";
+
+          const orderData = {
+            contactInfo: {
+              email: document.getElementById("email").value,
+              mobileNumber: document.getElementById("mobile-number").value,
+            },
+            shippingAddress: {
+              firstName: document.getElementById("first-name").value,
+              lastName: document.getElementById("last-name").value,
+              address: document.getElementById("address").value,
+              country: document.getElementById("country").value,
+              city: document.getElementById("city").value,
+              state: document.getElementById("state").value,
+              postalCode: document.getElementById("postal-code").value,
+            },
+            paymentMethod: document.querySelector(
+              'input[name="payment-method"]:checked'
+            ).value,
+            cart: getCart(),
+            totals: calculateTotals(),
+            trxId: trxId,
+            status: "pending-payment-verification",
+          };
+
+          const success = await saveOrderToFirestore(orderData);
+          if (success) {
+            hidePaymentModal();
+            showMessageBox(
+              "Order Received!",
+              "Thank you! We are verifying your payment. Your order has been saved and you will receive a final confirmation via email or SMS shortly. <br><br> Your TrxID: <strong>" +
+                trxId +
+                "</strong>"
+            );
+            localStorage.removeItem("aurora-cart");
+          }
+        });
+
+        copyNumberBtn.addEventListener("click", () => {
+          const numberToCopy = merchantNumberEl.textContent;
+          navigator.clipboard
+            .writeText(numberToCopy)
+            .then(() => {
+              copyNumberBtn.textContent = "COPIED!";
+              copyNumberBtn.style.backgroundColor = "#4CAF50";
+              setTimeout(() => {
+                copyNumberBtn.textContent = "COPY";
+                copyNumberBtn.style.backgroundColor = "var(--border)";
+              }, 2000);
+            })
+            .catch((err) => {
+              try {
+                const textArea = document.createElement("textarea");
+                textArea.value = numberToCopy;
+                textArea.style.position = "fixed";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                document.execCommand("copy");
+                document.body.removeChild(textArea);
+                copyNumberBtn.textContent = "COPIED!";
+                copyNumberBtn.style.backgroundColor = "#4CAF50";
+                setTimeout(() => {
+                  copyNumberBtn.textContent = "COPY";
+                  copyNumberBtn.style.backgroundColor = "var(--border)";
+                }, 2000);
+              } catch (e) {
+                console.error("Failed to copy number: ", e);
+                copyNumberBtn.textContent = "FAILED";
+                copyNumberBtn.style.backgroundColor = "#F44336";
+                setTimeout(() => {
+                  copyNumberBtn.textContent = "COPY";
+                  copyNumberBtn.style.backgroundColor = "var(--border)";
+                }, 2000);
+              }
+            });
+        });
+
+        closeMessageBoxBtn.addEventListener("click", () => {
+          messageBox.classList.remove("show");
+          document.body.classList.remove("no-scroll");
+          updateCartCount();
+          renderOrderSummary();
+          checkoutForm.reset();
+        });
+
+        // Initial rendering
+        updateCartCount();
+        renderOrderSummary();
+        // Header Animation on Scroll
+        const header = document.querySelector("header");
+        let lastScroll = 0;
+        window.addEventListener("scroll", () => {
+          const currentScroll = window.pageYOffset;
+          if (currentScroll > lastScroll && currentScroll > 100) {
+            header.style.transform = "translateY(-100%)";
+          } else {
+            header.style.transform = "translateY(0)";
+          }
+          if (currentScroll > 50) {
+            header.classList.add("bg-black/70", "backdrop-blur-lg");
+          } else {
+            header.classList.remove("bg-black/70", "backdrop-blur-lg");
+          }
+          lastScroll = currentScroll <= 0 ? 0 : currentScroll;
+        });
+      });
+    </script>
+    <script src="footer.js"></script>
+  </body>
+</html>

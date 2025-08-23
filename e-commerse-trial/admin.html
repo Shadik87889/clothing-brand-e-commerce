@@ -1,0 +1,3369 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURORA - Admin Panel</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons for a clean, modern look -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.0.3"></script>
+    <!-- Google Fonts for a classic and elegant feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* --- Global CSS Variables & Styling for a premium feel --- */
+      :root {
+        --background: #0a0a0a;
+        --primary-bg: #141414;
+        --card-bg: #1c1c1c;
+        --border: #2c2c2c;
+        --text: #ffffff;
+        --secondary-text: #b0b0b0;
+        --accent: #e5c18c; /* Richer, more luxurious gold/bronze */
+        --accent-glow: rgba(229, 193, 140, 0.2);
+        --gradient: linear-gradient(145deg, #e5c18c, #c7a77d);
+        --shadow-dark: rgba(0, 0, 0, 0.6);
+        --input-active-border: #e5c18c;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: var(--background);
+        color: var(--text);
+        overflow-x: hidden;
+      }
+      .font-heading {
+        font-family: "Cormorant Garamond", serif;
+      }
+      .admin-sidebar {
+        background-color: var(--primary-bg);
+        box-shadow: 2px 0 15px var(--shadow-dark);
+      }
+      .admin-link {
+        position: relative;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
+      .admin-link::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: var(--accent);
+        transform: scaleX(0);
+      }
+      .admin-link.active {
+        color: var(--accent);
+        border-left: 2px solid var(--accent);
+      }
+
+      /* --- Input Fields with a Premium Feel --- */
+      .form-input,
+      .form-select,
+      .form-textarea {
+        background-color: var(--primary-bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+        padding: 0.85rem 1rem;
+        border-radius: 0.5rem;
+        outline: none;
+      }
+      .form-input:focus,
+      .form-select:focus,
+      .form-textarea:focus {
+        border-color: var(--input-active-border);
+        box-shadow: 0 0 0 3px var(--accent-glow);
+        background-color: var(--card-bg);
+      }
+      .form-input::placeholder {
+        color: var(--secondary-text);
+      }
+
+      /* --- Buttons with depth --- */
+      .btn {
+        box-shadow: 0 4px 12px var(--shadow-dark);
+        font-weight: 500;
+      }
+      .btn-primary {
+        background: var(--gradient);
+        color: #1a1a1a;
+      }
+      .btn-secondary {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border);
+        color: var(--secondary-text);
+      }
+
+      /* --- Cards with subtle glow and lift effect --- */
+      .card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 10px var(--shadow-dark);
+      }
+
+      .modal-overlay {
+        background-color: rgba(0, 0, 0, 0.85);
+        z-index: 6000;
+        visibility: hidden;
+        opacity: 0;
+      }
+      .modal-overlay.open {
+        visibility: visible;
+        opacity: 1;
+      }
+
+      /* --- Table Rows with a clear hover state --- */
+      .table-row {
+        background-color: transparent;
+      }
+
+      .back-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--secondary-text);
+      }
+      .back-btn:hover {
+        color: var(--accent);
+      }
+
+      /* --- Tab Underline Effect --- */
+      .tab-nav-container {
+        position: relative;
+      }
+      .tab-link {
+        position: relative;
+        z-index: 10;
+      }
+      .tab-link.active {
+        color: var(--text);
+      }
+      .tab-underline {
+        position: absolute;
+        bottom: 0;
+        height: 2px;
+        background: var(--gradient);
+        z-index: 5;
+      }
+
+      .color-preview {
+        display: inline-block;
+        width: 1.5rem;
+        height: 1.5rem;
+        border-radius: 50%;
+        border: 1px solid var(--border);
+        margin-right: 0.5rem;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+      }
+
+      /* --- Styling for the Pill-style selected sizes --- */
+      .size-pill {
+        background-color: var(--accent);
+        color: var(--primary-bg);
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .size-pill:hover {
+        background-color: #c7a77d;
+      }
+      .size-pill-remove {
+        background: none;
+        border: none;
+        color: inherit;
+        padding: 0;
+        line-height: 1;
+        font-size: 1rem;
+      }
+
+      /* --- Product Status Pills --- */
+      .status-pill {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+      .status-draft {
+        background-color: #555;
+        color: white;
+      }
+      .status-published {
+        background-color: #4ade80;
+        color: #141414;
+      }
+      .status-archived {
+        background-color: #ef4444;
+        color: white;
+      }
+
+      /* --- Order Status Pills --- */
+      .order-status-pill {
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #ffffff;
+      }
+      .status-pending {
+        background-color: #f59e0b;
+      }
+      .status-confirmed {
+        background-color: #3b82f6;
+        color: white;
+      }
+      .status-delivered {
+        background-color: #22c55e;
+      }
+      .status-cancelled {
+        background-color: #ef4444;
+        color: white;
+      }
+
+      /* --- Active state for filter buttons --- */
+      .filter-btn.active {
+        background: var(--gradient);
+        color: #1a1a1a;
+      }
+
+      /* --- Pagination Styling --- */
+      .pagination-controls button {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border);
+        color: var(--secondary-text);
+        transition: all 0.2s ease-in-out;
+      }
+      .pagination-controls button:hover:not(:disabled) {
+        background-color: var(--accent);
+        color: var(--primary-bg);
+        border-color: var(--accent);
+      }
+      .pagination-controls button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      /* --- Invoice Styling --- */
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+        #invoice-container,
+        #invoice-container * {
+          visibility: visible;
+        }
+        #invoice-container {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+        }
+        .no-print {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body class="antialiased flex flex-col min-h-screen lg:flex-row">
+    <!-- Main Admin Layout -->
+    <aside
+      class="admin-sidebar w-full lg:w-64 flex flex-col p-6 border-b lg:border-r lg:border-b-0 border-[var(--border)]"
+    >
+      <div class="flex items-center justify-between mb-12">
+        <h1
+          class="text-3xl font-bold tracking-widest uppercase font-heading text-[var(--accent)]"
+        >
+          AURORA
+        </h1>
+        <button id="hamburger-btn" class="lg:hidden text-white">
+          <i class="ph ph-list text-2xl"></i>
+        </button>
+      </div>
+      <!-- Mobile menu container -->
+      <div
+        id="mobile-sidebar-menu"
+        class="hidden fixed inset-0 bg-[var(--primary-bg)] z-50 p-6 flex-col"
+      >
+        <div class="flex justify-between items-center mb-8">
+          <h1
+            class="text-3xl font-bold tracking-widest uppercase font-heading text-[var(--accent)]"
+          >
+            AURORA
+          </h1>
+          <button id="close-mobile-sidebar" class="text-white">
+            <i class="ph ph-x text-2xl"></i>
+          </button>
+        </div>
+        <nav>
+          <ul
+            class="flex flex-col space-y-2 text-sm uppercase tracking-wider font-light"
+          >
+            <li>
+              <a
+                href="#"
+                class="admin-link flex items-center gap-3 p-3 rounded-lg active"
+                data-view="dashboard"
+              >
+                <i class="ph ph-chart-line-up"></i> Dashboard
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="admin-link flex items-center gap-3 p-3 rounded-lg"
+                data-view="products"
+              >
+                <i class="ph ph-tag"></i> Products
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="admin-link flex items-center gap-3 p-3 rounded-lg"
+                data-view="orders"
+              >
+                <i class="ph ph-bag"></i> Orders
+              </a>
+            </li>
+            <li></li>
+            <li>
+              <a
+                href="#"
+                class="admin-link flex items-center gap-3 p-3 rounded-lg"
+                data-view="settings"
+              >
+                <i class="ph ph-gear"></i> Settings
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <!-- Desktop Sidebar Navigation -->
+      <nav class="hidden lg:block">
+        <ul
+          class="flex flex-col space-y-2 text-sm uppercase tracking-wider font-light"
+        >
+          <li>
+            <a
+              href="#"
+              class="admin-link flex items-center gap-3 p-3 rounded-lg active"
+              data-view="dashboard"
+            >
+              <i class="ph ph-chart-line-up"></i> Dashboard
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="admin-link flex items-center gap-3 p-3 rounded-lg"
+              data-view="products"
+            >
+              <i class="ph ph-tag"></i> Products
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="admin-link flex items-center gap-3 p-3 rounded-lg"
+              data-view="orders"
+            >
+              <i class="ph ph-bag"></i> Orders
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="admin-link flex items-center gap-3 p-3 rounded-lg"
+              data-view="invoices"
+            >
+              <i class="ph ph-receipt"></i> Invoices
+            </a>
+          </li>
+          <li>
+            <a
+              href="#"
+              class="admin-link flex items-center gap-3 p-3 rounded-lg"
+              data-view="settings"
+            >
+              <i class="ph ph-gear"></i> Settings
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- User ID Display for Collaboration -->
+      <div
+        class="mt-auto pt-6 text-sm text-[var(--secondary-text)] border-t border-[var(--border)]"
+      >
+        <p>User ID:</p>
+        <code
+          id="user-id-display"
+          class="block font-mono text-xs break-all mt-1"
+          >...</code
+        >
+      </div>
+    </aside>
+
+    <main class="flex-1 p-6 lg:p-12 overflow-y-auto">
+      <div id="content-area">
+        <!-- Dynamic content will be rendered here -->
+        <div
+          class="flex items-center justify-center p-8 text-center text-[var(--secondary-text)]"
+        >
+          <div id="loading-indicator" class="flex flex-col items-center">
+            <i
+              class="ph ph-gear-six text-5xl animate-spin text-[var(--accent)] mb-4"
+            ></i>
+            <p>Initializing Firebase...</p>
+          </div>
+          <div id="firebase-error" class="hidden flex-col items-center">
+            <i class="ph ph-warning-circle text-5xl text-red-500 mb-4"></i>
+            <p class="text-red-400 font-semibold mb-2">Initialization Error</p>
+            <p class="text-sm">
+              Firebase could not be initialized. Please check the configuration.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modal for confirmation/error messages -->
+    <div
+      id="message-modal"
+      class="modal-overlay fixed inset-0 flex items-center justify-center"
+    >
+      <div
+        class="bg-[var(--primary-bg)] p-8 rounded-xl max-w-sm w-full mx-4 border border-[var(--border)] shadow-xl"
+      >
+        <h3
+          class="font-heading text-2xl font-semibold mb-4"
+          id="modal-title"
+        ></h3>
+        <p class="text-[var(--secondary-text)] mb-6" id="modal-message"></p>
+        <div class="flex justify-end gap-4">
+          <button
+            id="modal-cancel-btn"
+            class="px-6 py-2 rounded-full text-[var(--secondary-text)] btn-secondary hidden"
+          >
+            Cancel
+          </button>
+          <button
+            id="modal-confirm-btn"
+            class="px-6 py-2 rounded-full text-white btn-primary"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        signInAnonymously,
+        signInWithCustomToken,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        getDocs,
+        addDoc,
+        setDoc,
+        updateDoc,
+        deleteDoc,
+        onSnapshot,
+        collection,
+        collectionGroup,
+        query,
+        where,
+        deleteField,
+        writeBatch,
+        orderBy,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // --- Firebase Setup ---
+      let app, db, auth;
+      let userId;
+
+      // These variables are provided by the canvas environment
+      const appId =
+        typeof __app_id !== "undefined" ? __app_id : "default-app-id";
+      const initialAuthToken =
+        typeof __initial_auth_token !== "undefined"
+          ? __initial_auth_token
+          : null;
+
+      // ---------------------------------------------------------------------
+      // IMPORTANT: Paste your Firebase config here if you are not using the
+      // live canvas environment. This will resolve the initialization errors.
+      // ---------------------------------------------------------------------
+      const localFirebaseConfig = {
+        apiKey: "AIzaSyCPWe_VrV_Rq9HcKruC5uoC9jNFkwpzNcU",
+        authDomain: "aurora-e-commerce.firebaseapp.com",
+        projectId: "aurora-e-commerce",
+        storageBucket: "aurora-e-commerce.firebasestorage.app",
+        messagingSenderId: "177216689386",
+        appId: "1:177216689386:web:04f567db96218da3323393",
+        measurementId: "G-0Q9ZFHSFS1",
+      };
+
+      let firebaseConfig =
+        typeof __firebase_config !== "undefined"
+          ? JSON.parse(__firebase_config)
+          : localFirebaseConfig;
+
+      // Unsubscribe functions for real-time listeners
+      let productUnsubscribe = null;
+      let dashboardUnsubscribe = null;
+      let ordersUnsubscribe = null;
+      let invoicesUnsubscribe = null;
+
+      // --- State for Filters and Search ---
+      let currentProductStatusFilter = "All";
+      let currentOrderStatusFilter = "All";
+      let currentSearchQuery = "";
+      let currentOrderSearchQuery = "";
+      let currentInvoiceSearchQuery = ""; // New state for invoice search
+
+      // --- State for Pagination ---
+      let productsCurrentPage = 1;
+      const productsItemsPerPage = 10;
+      let ordersCurrentPage = 1;
+      const ordersItemsPerPage = 9; // Ideal for a 3-column grid
+      let invoicesCurrentPage = 1;
+      const invoicesItemsPerPage = 15;
+
+      // State to manage selected products and all data in view
+      let selectedProducts = new Set();
+      let allProductsInView = [];
+      let allOrdersInView = [];
+      let allInvoicesInView = [];
+
+      // Initialize Firebase and set up auth listener
+      async function setupFirebase() {
+        try {
+          if (!firebaseConfig || !firebaseConfig.projectId) {
+            console.error(
+              "Firebase config is missing or invalid. Cannot initialize app."
+            );
+            document
+              .getElementById("loading-indicator")
+              ?.classList.add("hidden");
+            document
+              .getElementById("firebase-error")
+              ?.classList.remove("hidden");
+            return;
+          }
+
+          app = initializeApp(firebaseConfig);
+          db = getFirestore(app);
+          auth = getAuth(app);
+
+          if (initialAuthToken) {
+            await signInWithCustomToken(auth, initialAuthToken);
+          } else {
+            await signInAnonymously(auth);
+          }
+
+          onAuthStateChanged(auth, (user) => {
+            if (user) {
+              userId = user.uid;
+              const userIdDisplay = document.getElementById("user-id-display");
+              if (userIdDisplay) userIdDisplay.textContent = userId;
+              console.log(
+                "Firebase initialized and user authenticated:",
+                userId
+              );
+              document
+                .getElementById("loading-indicator")
+                ?.classList.add("hidden");
+              renderUI("dashboard");
+            } else {
+              console.log("No user is signed in.");
+              const userIdDisplay = document.getElementById("user-id-display");
+              if (userIdDisplay)
+                userIdDisplay.textContent = "Not authenticated";
+            }
+          });
+        } catch (error) {
+          console.error("Error setting up Firebase:", error);
+          document.getElementById("loading-indicator")?.classList.add("hidden");
+          document.getElementById("firebase-error")?.classList.remove("hidden");
+        }
+      }
+
+      /**
+       * Generates a human-readable ID with a prefix, date, time, and random component.
+       * @param {string} prefix - The prefix for the ID (e.g., 'PROD', 'ORD', 'INV').
+       * @returns {string} A readable ID string.
+       */
+      function generateReadableId(prefix) {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, "0");
+        const day = String(now.getDate()).padStart(2, "0");
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        const seconds = String(now.getSeconds()).padStart(2, "0");
+        const randomPart = Math.random()
+          .toString(36)
+          .substring(2, 8)
+          .toUpperCase();
+        return `${prefix}-${year}${month}${day}-${hours}${minutes}${seconds}-${randomPart}`;
+      }
+
+      // --- State and UI Management ---
+      const contentArea = document.getElementById("content-area");
+      const navLinks = document.querySelectorAll(".admin-link");
+      let currentView = "dashboard";
+
+      function renderUI(view, data = null) {
+        currentView = view;
+        if (contentArea) contentArea.innerHTML = "";
+
+        // Stop any active Firestore listeners to prevent memory leaks
+        if (productUnsubscribe) productUnsubscribe();
+        if (dashboardUnsubscribe) dashboardUnsubscribe();
+        if (ordersUnsubscribe) ordersUnsubscribe();
+        if (invoicesUnsubscribe) invoicesUnsubscribe();
+
+        navLinks.forEach((link) => {
+          link.classList.remove("active");
+          if (link.getAttribute("data-view") === view) {
+            link.classList.add("active");
+          }
+        });
+
+        const mobileSidebar = document.getElementById("mobile-sidebar-menu");
+        if (mobileSidebar) mobileSidebar.classList.add("hidden");
+
+        switch (view) {
+          case "dashboard":
+            renderDashboard();
+            break;
+          case "products":
+            renderProductsView();
+            break;
+          case "add_product":
+            renderProductForm();
+            break;
+          case "edit_product":
+            renderProductForm(data);
+            break;
+          case "product_detail":
+            renderProductDetail(data);
+            break;
+          case "orders":
+            renderOrdersView();
+            break;
+          case "order_detail":
+            renderOrderDetailView(data);
+            break;
+          case "invoices":
+            renderInvoicesView();
+            break;
+          case "invoice_detail":
+            renderInvoiceDetailView(data);
+            break;
+
+          case "settings":
+            renderSettingsView();
+            break;
+        }
+      }
+
+      function renderDashboard() {
+        if (!contentArea) return;
+        contentArea.innerHTML = `
+            <h2 class="text-4xl font-heading mb-12 text-[var(--accent)]">Dashboard</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div class="card p-8 rounded-xl">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="font-heading text-xl font-semibold">Total Revenue</h3>
+                  <span class="text-3xl text-[var(--accent)]">&#2547;</span>
+                </div>
+                <p id="total-revenue" class="text-5xl font-bold font-heading">0.00</p>
+              </div>
+              <div class="card p-8 rounded-xl">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="font-heading text-xl font-semibold">Total Profit</h3>
+                  <i class="ph ph-trend-up text-3xl text-[var(--accent)]"></i>
+                </div>
+                <p id="total-profit" class="text-5xl font-bold font-heading">0.00</p>
+              </div>
+              <div class="card p-8 rounded-xl">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="font-heading text-xl font-semibold">Total Orders</h3>
+                  <i class="ph ph-bag text-3xl text-[var(--accent)]"></i>
+                </div>
+                <p id="total-orders-count" class="text-5xl font-bold font-heading">0</p>
+              </div>
+              <div class="card p-8 rounded-xl">
+                <div class="flex items-center justify-between mb-4">
+                  <h3 class="font-heading text-xl font-semibold">Total Products</h3>
+                  <i class="ph ph-tag text-3xl text-[var(--accent)]"></i>
+                </div>
+                <p id="total-products-count" class="text-5xl font-bold font-heading">0</p>
+              </div>
+            </div>
+          `;
+        listenForDashboardData();
+      }
+
+      function renderProductsView() {
+        if (!contentArea) return;
+        selectedProducts.clear(); // Clear selection when view is rendered
+        contentArea.innerHTML = `
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+              <h2 class="text-4xl font-heading text-[var(--accent)]">Products</h2>
+              <button id="add-product-btn" class="py-3 px-6 rounded-full text-sm font-semibold flex items-center gap-2 btn btn-primary">
+                <i class="ph ph-plus text-base"></i> Add New Product
+              </button>
+            </div>
+            
+            <!-- Filter, Search, and Bulk Actions -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <div class="flex gap-4">
+                    <button data-filter="All" class="filter-btn text-sm py-2 px-4 rounded-full btn-secondary">All</button>
+                    <button data-filter="Published" class="filter-btn text-sm py-2 px-4 rounded-full btn-secondary">Published</button>
+                    <button data-filter="Draft" class="filter-btn text-sm py-2 px-4 rounded-full btn-secondary">Draft</button>
+                    <button data-filter="Archived" class="filter-btn text-sm py-2 px-4 rounded-full btn-secondary">Archived</button>
+                </div>
+                <div class="flex flex-1 md:flex-none items-center gap-4">
+                    <div class="relative flex-1">
+                        <i class="ph ph-magnifying-glass text-[var(--secondary-text)] absolute left-4 top-1/2 -translate-y-1/2"></i>
+                        <input type="text" id="product-search" placeholder="Search by ID, name, category..." class="form-input w-full pl-10">
+                    </div>
+                    <!-- Bulk Actions Dropdown -->
+                    <div class="relative" id="bulk-actions-container">
+                      <button id="bulk-actions-btn" class="py-2 px-4 rounded-full text-sm btn-secondary flex items-center gap-2" disabled>
+                        Actions <i class="ph ph-caret-down text-xs"></i>
+                      </button>
+                      <div id="bulk-actions-menu" class="hidden absolute right-0 mt-2 w-48 card rounded-lg shadow-lg z-10 py-2">
+                        <button class="block w-full text-left px-4 py-2 text-sm text-[var(--secondary-text)] hover:bg-[var(--primary-bg)]" id="bulk-delete-btn">Delete Selected</button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-4 overflow-x-auto">
+              <table class="w-full text-left">
+                <thead>
+                  <tr class="uppercase text-sm text-[var(--secondary-text)] border-b border-[var(--border)]">
+                    <th class="py-4 px-2">
+                      <input type="checkbox" id="select-all-products" class="w-4 h-4 rounded text-black focus:ring-0 cursor-pointer" />
+                    </th>
+                    <th class="py-4 px-2">Image</th>
+                    <th class="py-4 px-2">Name & ID</th>
+                    <th class="py-4 px-2">Status</th>
+                    <th class="py-4 px-2">Price</th>
+                    <th class="py-4 px-2 hidden md:table-cell">Department</th>
+                    <th class="py-4 px-2 hidden md:table-cell">category</th>
+                    <th class="py-4 px-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="products-table-body">
+                  <tr><td colspan="7" class="text-center py-8 text-[var(--secondary-text)]">Loading products...</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="products-pagination" class="mt-6"></div>
+          `;
+
+        document
+          .getElementById("add-product-btn")
+          ?.addEventListener("click", () => renderUI("add_product"));
+
+        const filterButtons = document.querySelectorAll(".filter-btn");
+        filterButtons.forEach((btn) => {
+          if (btn.getAttribute("data-filter") === currentProductStatusFilter) {
+            btn.classList.add("active");
+          }
+          btn.addEventListener("click", (e) => {
+            filterButtons.forEach((b) => b.classList.remove("active"));
+            e.target.classList.add("active");
+            currentProductStatusFilter = e.target.getAttribute("data-filter");
+            productsCurrentPage = 1; // Reset to first page on filter change
+            listenForProducts();
+          });
+        });
+
+        const productSearchInput = document.getElementById("product-search");
+        if (productSearchInput) {
+          productSearchInput.value = currentSearchQuery;
+          productSearchInput.addEventListener("input", (e) => {
+            currentSearchQuery = e.target.value.toLowerCase();
+            productsCurrentPage = 1; // Reset to first page on search
+            displayProducts(allProductsInView);
+          });
+        }
+
+        const selectAllCheckbox = document.getElementById(
+          "select-all-products"
+        );
+        const bulkActionsBtn = document.getElementById("bulk-actions-btn");
+        const bulkActionsMenu = document.getElementById("bulk-actions-menu");
+        const bulkDeleteBtn = document.getElementById("bulk-delete-btn");
+
+        if (selectAllCheckbox) {
+          selectAllCheckbox.addEventListener("change", (e) => {
+            handleSelectAll(e.target.checked);
+          });
+        }
+
+        if (bulkActionsBtn) {
+          bulkActionsBtn.addEventListener("click", () => {
+            bulkActionsMenu?.classList.toggle("hidden");
+          });
+        }
+
+        if (bulkDeleteBtn) {
+          bulkDeleteBtn.addEventListener("click", () => {
+            if (selectedProducts.size > 0) {
+              openMessageModal({
+                title: "Confirm Bulk Deletion",
+                message: `Are you sure you want to delete ${selectedProducts.size} product(s)? This action cannot be undone.`,
+                confirmAction: handleBulkDelete,
+                showCancel: true,
+              });
+              bulkActionsMenu?.classList.add("hidden");
+            }
+          });
+        }
+
+        listenForProducts();
+      }
+
+      function renderProductForm(product = null) {
+        if (!contentArea) return;
+        const isEdit = product !== null;
+        const discountPrice =
+          product?.basePrice && product?.discountPercentage !== undefined
+            ? product.basePrice * (1 - product.discountPercentage / 100)
+            : product?.basePrice || 0;
+
+        contentArea.innerHTML = `
+            <div class="flex items-center mb-8 gap-4">
+              <button id="back-to-products" class="back-btn">
+                <i class="ph ph-arrow-left text-xl"></i>
+                <span class="hidden sm:inline">Back to Products</span>
+              </button>
+              <h2 class="text-4xl font-heading text-[var(--accent)]">${
+                isEdit ? "Edit Product" : "Add New Product"
+              }</h2>
+            </div>
+            <form id="product-form" class="max-w-6xl mx-auto">
+              <input type="hidden" id="product-id" value="${
+                isEdit ? product.id : ""
+              }">
+              
+              <!-- Tab Navigation for the Form -->
+              <div class="relative mb-8 tab-nav-container">
+                <div class="flex border-b border-[var(--border)]">
+                  <button type="button" class="tab-link active py-4 px-4 text-sm font-semibold" data-tab="product-info">Product Info</button>
+                  <button type="button" class="tab-link py-4 px-4 text-sm font-semibold text-[var(--secondary-text)]" data-tab="media">Media & Variants</button>
+                  <button type="button" class="tab-link py-4 px-4 text-sm font-semibold text-[var(--secondary-text)]" data-tab="shipping">Shipping & Tax</button>
+                  <button type="button" class="tab-link py-4 px-4 text-sm font-semibold text-[var(--secondary-text)]" data-tab="seo">SEO & Metadata</button>
+                </div>
+                <div class="tab-underline"></div>
+              </div>
+              
+              <!-- Tab Content: Product Info -->
+              <div id="product-info-tab" class="tab-content card p-8 rounded-xl">
+                <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] mb-6">Product Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                  <div>
+                    <label for="product-name" class="block text-sm font-light mb-2">Product Name</label>
+                    <input type="text" id="product-name" name="name" class="form-input w-full" value="${
+                      isEdit ? product.name : ""
+                    }" required>
+                  </div>
+                  <div>
+                    <label for="product-department" class="block text-sm font-light mb-2">Department</label>
+                    <select id="product-department" name="department" class="form-select w-full" required>
+                        <option value="">Select Department</option>
+                        <option value="Men" ${
+                          isEdit && product.department === "Men"
+                            ? "selected"
+                            : ""
+                        }>Men</option>
+                        <option value="Women" ${
+                          isEdit && product.department === "Women"
+                            ? "selected"
+                            : ""
+                        }>Women</option>
+                        <option value="Kids" ${
+                          isEdit && product.department === "Kids"
+                            ? "selected"
+                            : ""
+                        }>Kids</option>
+                        <option value="Others" ${
+                          isEdit && product.department === "Others"
+                            ? "selected"
+                            : ""
+                        }>Others</option>
+                    </select>
+                  </div>
+                   <div>
+                    <label for="product-category" class="block text-sm font-light mb-2">Category (e.g., T-Shirt)</label>
+                    <input type="text" id="product-category" name="category" class="form-input w-full" value="${
+                      isEdit ? product.category : ""
+                    }" placeholder="e.g., T-Shirt, Jacket" required>
+                  </div>
+                </div>
+                
+                <!-- Pricing Section with Discount -->
+                <h4 class="font-heading text-xl font-semibold text-[var(--secondary-text)] mb-4 mt-8">Pricing</h4>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                    <div>
+                        <label for="cost-price" class="block text-sm font-light mb-2">Cost Price (&#2547;)</label>
+                        <input type="number" id="cost-price" name="costPrice" class="form-input w-full" step="0.01" value="${
+                          isEdit ? product.costPrice : ""
+                        }" required>
+                    </div>
+                    <div>
+                        <label for="base-price" class="block text-sm font-light mb-2">Base Price (&#2547;)</label>
+                        <input type="number" id="base-price" name="basePrice" class="form-input w-full" step="0.01" value="${
+                          isEdit ? product.basePrice : ""
+                        }" required>
+                    </div>
+                    <div>
+                        <label for="discount-percentage" class="block text-sm font-light mb-2">Discount (%)</label>
+                        <input type="number" id="discount-percentage" name="discountPercentage" class="form-input w-full" step="1" min="0" max="100" value="${
+                          isEdit ? product.discountPercentage : "0"
+                        }">
+                    </div>
+                    <div>
+                        <label for="final-price" class="block text-sm font-light mb-2">Final Price (&#2547;)</label>
+                        <input type="text" id="final-price" class="form-input w-full bg-[var(--card-bg)]" value="${
+                          discountPrice.toFixed(2) || "0.00"
+                        }" readonly>
+                    </div>
+                </div>
+
+                
+                <div class="mb-6">
+                  <label for="product-description" class="block text-sm font-light mb-2">Short Description</label>
+                  <textarea id="product-description" name="description" rows="3" class="form-textarea w-full" required>${
+                    isEdit ? product.description : ""
+                  }</textarea>
+                </div>
+
+                <div class="mb-6">
+                  <label for="product-details" class="block text-sm font-light mb-2">Detailed Description</label>
+                  <textarea id="product-details" name="details" rows="6" class="form-textarea w-full" required>${
+                    isEdit ? product.details : ""
+                  }</textarea>
+                </div>
+
+                <h4 class="font-heading text-xl font-semibold text-[var(--secondary-text)] mb-4 mt-8">Specifications</h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <label for="spec-material" class="block text-sm font-light mb-2">Material</label>
+                    <input type="text" id="spec-material" name="specs.material" class="form-input w-full" value="${
+                      isEdit && product.specs ? product.specs.material : ""
+                    }" required>
+                  </div>
+                  <div>
+                    <div>
+                      <label for="spec-fit" class="block text-sm font-light mb-2">Fit</label>
+                      <select id="spec-fit" name="specs.fit" class="form-select w-full" required>
+                        <option value="">Select Fit</option>
+                        <option value="Regular" ${
+                          isEdit && product.specs?.fit === "Regular"
+                            ? "selected"
+                            : ""
+                        }>Regular</option>
+                        <option value="Slim" ${
+                          isEdit && product.specs?.fit === "Slim"
+                            ? "selected"
+                            : ""
+                        }>Slim</option>
+                        <option value="Loose" ${
+                          isEdit && product.specs?.fit === "Loose"
+                            ? "selected"
+                            : ""
+                        }>Loose</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+                    <label for="spec-care" class="block text-sm font-light mb-2">Care Instructions</label>
+                    <input type="text" id="spec-care" name="specs.care" class="form-input w-full" value="${
+                      isEdit && product.specs ? product.specs.care : ""
+                    }" required>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tab Content: Media & Variants -->
+              <div id="media-tab" class="tab-content card p-8 rounded-xl hidden">
+                <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] mb-6">Product Media & Variants</h3>
+                
+                <div class="mb-8">
+                  <label class="block text-sm font-light mb-2">Images</label>
+                  <div id="images-list" class="flex flex-wrap gap-4">
+                    ${
+                      isEdit && product.images
+                        ? product.images
+                            .map(
+                              (img) => `
+                      <div class="relative group">
+                        <img src="${img}" class="w-24 h-24 object-cover rounded-md border border-[var(--border)]" onerror="this.src='https://placehold.co/96x96/2a2a2a/a8a8a8?text=N/A';">
+                        <button type="button" class="remove-item absolute top-0 right-0 -mt-2 -mr-2 bg-red-600 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs opacity-0 hover:opacity-100">
+                          <i class="ph ph-x"></i>
+                        </button>
+                        <input type="hidden" value="${img}">
+                      </div>
+                    `
+                            )
+                            .join("")
+                        : ""
+                    }
+                    <div class="relative group">
+                      <img src="https://placehold.co/96x96/2a2a2a/a8a8a8?text=Add" class="w-24 h-24 object-cover rounded-md border border-[var(--border)] cursor-pointer" id="add-image-placeholder">
+                    </div>
+                  </div>
+                  <div class="flex gap-2 mt-2 hidden" id="add-image-input-container">
+                    <input type="text" id="new-image-url" placeholder="New image URL" class="form-input flex-1">
+                    <button type="button" id="add-image-btn" class="px-4 py-2 rounded-full btn-secondary text-sm font-semibold">Add</button>
+                  </div>
+                </div>
+
+                <div class="mb-8">
+                  <label class="block text-sm font-light mb-2">Colors</label>
+                  <div id="colors-list" class="flex flex-wrap gap-2 mb-4">
+                    ${
+                      isEdit && product.colors
+                        ? product.colors
+                            .map(
+                              (color) => `
+                        <div class="relative group flex items-center p-2 rounded-md bg-[var(--card-bg)]">
+                          <span class="color-preview" style="background-color: ${color};"></span>
+                          <input type="text" value="${color}" class="p-0 border-none bg-transparent w-24">
+                          <button type="button" class="remove-item text-red-400 opacity-0 hover:opacity-100">
+                            <i class="ph ph-x-circle text-lg"></i>
+                          </button>
+                        </div>
+                      `
+                            )
+                            .join("")
+                        : ""
+                    }
+                  </div>
+                  <div class="flex items-center gap-2 mt-4">
+                    <input type="text" id="new-color-input" placeholder="Color name or hex code" class="form-input flex-1">
+                    <input type="color" id="new-color-picker" class="w-10 h-10 p-0 border-none rounded-md bg-transparent cursor-pointer">
+                    <button type="button" id="add-color-btn" class="px-4 py-2 rounded-full btn-secondary text-sm font-semibold">Add</button>
+                  </div>
+                </div>
+
+                <div class="mb-6">
+                  <label class="block text-sm font-light mb-2">Sizes</label>
+                  <div id="sizes-pills-container" class="flex flex-wrap gap-2 mb-4">
+                    ${
+                      isEdit && product.sizes
+                        ? product.sizes
+                            .map(
+                              (size) => `
+                        <div class="size-pill" data-size="${size}">
+                          <span>${size}</span>
+                          <button type="button" class="size-pill-remove">
+                            <i class="ph ph-x text-xs"></i>
+                          </button>
+                        </div>
+                      `
+                            )
+                            .join("")
+                        : ""
+                    }
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <select id="size-dropdown" class="form-select flex-1">
+                      <option value="">Select a size</option>
+                      <option value="XS">XS</option>
+                      <option value="S">S</option>
+                      <option value="M">M</option>
+                      <option value="L">L</option>
+                      <option value="XL">XL</option>
+                      <option value="XXL">XXL</option>
+                    </select>
+                    <button type="button" id="add-size-dropdown-btn" class="px-4 py-2 rounded-full btn-secondary text-sm font-semibold">Add</button>
+                  </div>
+                  <div class="flex items-center gap-2 mt-4">
+                    <input type="text" id="new-size-input" placeholder="Add a custom size" class="form-input flex-1">
+                    <button type="button" id="add-size-btn" class="px-4 py-2 rounded-full btn-secondary text-sm font-semibold">Add</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tab Content: Shipping & Tax -->
+              <div id="shipping-tab" class="tab-content card p-8 rounded-xl hidden">
+                <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] mb-6">Shipping & Tax Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div>
+                    <label for="shipping-weight" class="block text-sm font-light mb-2">Weight (kg)</label>
+                    <input type="number" id="shipping-weight" name="shipping.weight" class="form-input w-full" step="0.1" value="${
+                      isEdit && product.shipping ? product.shipping.weight : ""
+                    }">
+                  </div>
+                  <div>
+                    <label for="shipping-dimensions" class="block text-sm font-light mb-2">Dimensions (LxWxH cm)</label>
+                    <input type="text" id="shipping-dimensions" name="shipping.dimensions" class="form-input w-full" value="${
+                      isEdit && product.shipping
+                        ? product.shipping.dimensions
+                        : ""
+                    }">
+                  </div>
+                  <div>
+                    <label for="tax-class" class="block text-sm font-light mb-2">Tax Class</label>
+                    <input type="text" id="tax-class" name="shipping.taxClass" class="form-input w-full" value="${
+                      isEdit && product.shipping
+                        ? product.shipping.taxClass
+                        : ""
+                    }">
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tab Content: SEO & Metadata -->
+              <div id="seo-tab" class="tab-content card p-8 rounded-xl hidden">
+                <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] mb-6">SEO & Metadata</h3>
+                <div class="mb-6">
+                  <label for="meta-title" class="block text-sm font-light mb-2">Meta Title</label>
+                  <input type="text" id="meta-title" name="seo.metaTitle" class="form-input w-full" value="${
+                    isEdit && product.seo ? product.seo.metaTitle : ""
+                  }">
+                </div>
+                <div class="mb-6">
+                  <label for="meta-description" class="block text-sm font-light mb-2">Meta Description</label>
+                  <textarea id="meta-description" name="seo.metaDescription" rows="3" class="form-textarea w-full">${
+                    isEdit && product.seo ? product.seo.metaDescription : ""
+                  }</textarea>
+                </div>
+              </div>
+
+
+              <div class="flex justify-end gap-4 mt-8">
+                <button type="button" id="cancel-form-btn" class="py-3 px-6 rounded-full btn btn-secondary">Cancel</button>
+                <button type="submit" class="py-3 px-6 rounded-full text-sm font-semibold btn btn-primary">
+                  ${isEdit ? "Update Product" : "Add Product"}
+                </button>
+              </div>
+            </form>
+          `;
+
+        // Tab functionality
+        const tabs = document.querySelectorAll(".tab-link");
+        const tabUnderline = document.querySelector(".tab-underline");
+
+        const updateTabUnderline = () => {
+          const activeTab = document.querySelector(".tab-link.active");
+          if (activeTab) {
+            tabUnderline.style.width = `${activeTab.offsetWidth}px`;
+            tabUnderline.style.left = `${activeTab.offsetLeft}px`;
+          }
+        };
+
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", (e) => {
+            document
+              .querySelectorAll(".tab-link")
+              .forEach((t) =>
+                t.classList.remove("active", "text-[var(--text)]")
+              );
+            document
+              .querySelectorAll(".tab-link")
+              .forEach((t) => t.classList.add("text-[var(--secondary-text)]"));
+            e.target.classList.add("active");
+            e.target.classList.remove("text-[var(--secondary-text)]");
+            updateTabUnderline();
+
+            document
+              .querySelectorAll(".tab-content")
+              .forEach((c) => c.classList.add("hidden"));
+            document
+              .getElementById(`${e.target.getAttribute("data-tab")}-tab`)
+              ?.classList.remove("hidden");
+          });
+        });
+
+        window.addEventListener("resize", updateTabUnderline);
+        updateTabUnderline();
+
+        // Pricing Calculation Logic
+        const basePriceInput = document.getElementById("base-price");
+        const discountPercentageInput = document.getElementById(
+          "discount-percentage"
+        );
+        const finalPriceInput = document.getElementById("final-price");
+
+        const calculateFinalPrice = () => {
+          const basePrice = parseFloat(basePriceInput?.value) || 0;
+          const discountPercentage =
+            parseFloat(discountPercentageInput?.value) || 0;
+          const discountAmount = basePrice * (discountPercentage / 100);
+          const finalPrice = basePrice - discountAmount;
+          if (finalPriceInput) {
+            finalPriceInput.value = finalPrice.toFixed(2);
+          }
+        };
+
+        if (basePriceInput) {
+          basePriceInput.addEventListener("input", calculateFinalPrice);
+        }
+        if (discountPercentageInput) {
+          discountPercentageInput.addEventListener(
+            "input",
+            calculateFinalPrice
+          );
+        }
+
+        // Color input management
+        const newColorInput = document.getElementById("new-color-input");
+        const newColorPicker = document.getElementById("new-color-picker");
+        const addColorBtn = document.getElementById("add-color-btn");
+        const colorsList = document.getElementById("colors-list");
+
+        if (newColorPicker && newColorInput && addColorBtn && colorsList) {
+          newColorPicker.addEventListener("input", (e) => {
+            newColorInput.value = e.target.value;
+          });
+
+          addColorBtn.addEventListener("click", () => {
+            const colorValue = newColorInput.value.trim();
+            if (colorValue) {
+              const colorPill = `
+                <div class="relative group flex items-center p-2 rounded-md bg-[var(--card-bg)]">
+                  <span class="color-preview" style="background-color: ${colorValue};"></span>
+                  <input type="text" value="${colorValue}" class="p-0 border-none bg-transparent w-24">
+                  <button type="button" class="remove-item text-red-400 opacity-0 hover:opacity-100">
+                    <i class="ph ph-x-circle text-lg"></i>
+                  </button>
+                </div>
+              `;
+              colorsList.insertAdjacentHTML("beforeend", colorPill);
+              newColorInput.value = "";
+            }
+          });
+        }
+
+        // Size input management
+        const sizeDropdown = document.getElementById("size-dropdown");
+        const addSizeDropdownBtn = document.getElementById(
+          "add-size-dropdown-btn"
+        );
+        const newSizeInput = document.getElementById("new-size-input");
+        const addSizeBtn = document.getElementById("add-size-btn");
+        const sizesPillsContainer = document.getElementById(
+          "sizes-pills-container"
+        );
+
+        const addSizePill = (size) => {
+          if (!size) return;
+          if (
+            !sizesPillsContainer?.querySelector(
+              `[data-size="${size.toUpperCase()}"]`
+            )
+          ) {
+            const sizePillHtml = `
+              <div class="size-pill" data-size="${size.toUpperCase()}">
+                <span>${size.toUpperCase()}</span>
+                <button type="button" class="size-pill-remove">
+                  <i class="ph ph-x text-xs"></i>
+                </button>
+              </div>
+            `;
+            sizesPillsContainer?.insertAdjacentHTML("beforeend", sizePillHtml);
+          }
+        };
+
+        if (addSizeDropdownBtn && sizeDropdown) {
+          addSizeDropdownBtn.addEventListener("click", () => {
+            const selectedSize = sizeDropdown.value;
+            addSizePill(selectedSize);
+          });
+        }
+
+        if (addSizeBtn && newSizeInput) {
+          addSizeBtn.addEventListener("click", () => {
+            const customSize = newSizeInput.value.trim();
+            if (customSize) {
+              addSizePill(customSize);
+              newSizeInput.value = "";
+            }
+          });
+        }
+
+        if (sizesPillsContainer) {
+          sizesPillsContainer.addEventListener("click", (e) => {
+            const removeBtn = e.target.closest(".size-pill-remove");
+            if (removeBtn) {
+              removeBtn.closest(".size-pill")?.remove();
+            }
+          });
+        }
+
+        // Image input management
+        const imagesList = document.getElementById("images-list");
+        const newImageUrlInputContainer = document.getElementById(
+          "add-image-input-container"
+        );
+        const addImagePlaceholder = document.getElementById(
+          "add-image-placeholder"
+        );
+        const addImageBtn = document.getElementById("add-image-btn");
+        const newImageUrlInput = document.getElementById("new-image-url");
+
+        if (addImagePlaceholder) {
+          addImagePlaceholder.addEventListener("click", () => {
+            newImageUrlInputContainer?.classList.toggle("hidden");
+            newImageUrlInput?.focus();
+          });
+        }
+
+        if (addImageBtn && newImageUrlInput && addImagePlaceholder) {
+          addImageBtn.addEventListener("click", () => {
+            const imageUrl = newImageUrlInput.value.trim();
+            if (imageUrl) {
+              const itemHtml = `
+                    <div class="relative group">
+                      <img src="${imageUrl}" class="w-24 h-24 object-cover rounded-md border border-[var(--border)]" onerror="this.src='https://placehold.co/96x96/2a2a2a/a8a8a8?text=N/A';">
+                      <button type="button" class="remove-item absolute top-0 right-0 -mt-2 -mr-2 bg-red-600 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs opacity-0 hover:opacity-100">
+                        <i class="ph ph-x"></i>
+                      </button>
+                      <input type="hidden" value="${imageUrl}">
+                    </div>
+                  `;
+              addImagePlaceholder.insertAdjacentHTML("beforebegin", itemHtml);
+              newImageUrlInput.value = "";
+              newImageUrlInputContainer.classList.add("hidden");
+            }
+          });
+        }
+
+        if (imagesList && newImageUrlInputContainer) {
+          imagesList.addEventListener("click", (e) => {
+            const removeItemBtn = e.target.closest(".remove-item");
+            if (removeItemBtn) {
+              removeItemBtn.closest(".relative")?.remove();
+              const totalImages = imagesList.querySelectorAll(
+                'input[type="hidden"]'
+              ).length;
+              if (totalImages === 0) {
+                newImageUrlInputContainer.classList.add("hidden");
+              }
+            }
+          });
+        }
+
+        document
+          .getElementById("back-to-products")
+          ?.addEventListener("click", () => renderUI("products"));
+        document
+          .getElementById("product-form")
+          ?.addEventListener("submit", handleFormSubmit);
+        document
+          .getElementById("cancel-form-btn")
+          ?.addEventListener("click", () => renderUI("products"));
+      }
+
+      function renderProductDetail(product) {
+        if (!contentArea) return;
+
+        const basePrice = product.basePrice || 0;
+        const discountPercentage = product.discountPercentage || 0;
+        const finalPrice = basePrice * (1 - discountPercentage / 100);
+
+        const colorsHtml = (product.colors || [])
+          .map(
+            (color) => `
+            <div class="flex items-center gap-2">
+                <div class="w-4 h-4 rounded-full border border-[var(--secondary-text)]" style="background-color: ${color};"></div>
+                <span>${color}</span>
+            </div>
+        `
+          )
+          .join("");
+
+        contentArea.innerHTML = `
+            <div class="flex items-center mb-8 gap-4">
+              <button id="back-to-products" class="back-btn">
+                <i class="ph ph-arrow-left text-xl"></i>
+                <span class="hidden sm:inline">Back to Products</span>
+              </button>
+              <div>
+                <h2 class="text-4xl font-heading text-[var(--accent)]">${
+                  product.name
+                }</h2>
+                <p class="font-mono text-xs text-[var(--secondary-text)] mt-1">ID: ${
+                  product.id
+                }</p>
+              </div>
+              <span class="status-pill status-${product.status?.toLowerCase()} ml-4">${
+          product.status
+        }</span>
+            </div>
+            <div class="card p-8 rounded-xl grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div class="space-y-4">
+                <img src="${product.images?.[0]}" alt="${
+          product.name
+        }" class="w-full h-auto object-cover rounded-xl shadow-lg" onerror="this.onerror=null;this.src='https://placehold.co/600x800/2a2a2a/a8a8a8?text=Image+N/A';">
+                <div class="grid grid-cols-3 gap-4">
+                  ${(product.images || [])
+                    .slice(1)
+                    .map(
+                      (imgUrl) => `
+                    <img src="${imgUrl}" alt="${product.name}" class="w-full h-24 object-cover rounded-lg" onerror="this.onerror=null;this.src='https://placehold.co/100x100/2a2a2a/a8a8a8?text=Image+N/A';">
+                  `
+                    )
+                    .join("")}
+                </div>
+              </div>
+              <div class="flex flex-col">
+                <div class="flex items-center gap-4 mb-2">
+                    ${
+                      discountPercentage > 0
+                        ? `
+                        <p class="text-3xl font-bold font-heading text-[var(--accent)]">&#2547;${finalPrice.toFixed(
+                          2
+                        )}</p>
+                        <p class="text-xl font-heading text-[var(--secondary-text)] line-through">&#2547;${basePrice.toFixed(
+                          2
+                        )}</p>
+                        <span class="bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-full">- ${discountPercentage}%</span>
+                        `
+                        : `
+                        <p class="text-3xl font-bold font-heading text-[var(--accent)]">&#2547;${basePrice.toFixed(
+                          2
+                        )}</p>
+                        `
+                    }
+                </div>
+                
+                <p class="text-[var(--secondary-text)] mb-6">${
+                  product.description
+                }</p>
+                
+                <div class="card p-6 rounded-xl mb-6 flex-1">
+                  <h4 class="font-semibold font-heading text-xl mb-2">Details</h4>
+                  <p class="text-sm text-[var(--secondary-text)] mb-4">${
+                    product.details
+                  }</p>
+                  <div class="grid grid-cols-2 gap-4 text-sm mt-auto pt-4 border-t border-[var(--border)]">
+                    <div>
+                      <p class="font-semibold text-[var(--secondary-text)]">Department:</p>
+                      <p>${product.department || "N/A"}</p>
+                    </div>
+                     <div>
+                      <p class="font-semibold text-[var(--secondary-text)]">Category:</p>
+                      <p>${product.category || "N/A"}</p>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-[var(--secondary-text)]">Sizes:</p>
+                      <p>${product.sizes?.join(", ") || "N/A"}</p>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-[var(--secondary-text)]">Colors:</p>
+                      <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+                        ${colorsHtml || "N/A"}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="card p-6 rounded-xl mb-6">
+                  <h4 class="font-semibold font-heading text-xl mb-2">Specifications</h4>
+                  <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p class="font-semibold text-[var(--secondary-text)]">Material:</p>
+                      <p>${product.specs?.material || "N/A"}</p>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-[var(--secondary-text)]">Fit:</p>
+                      <p>${product.specs?.fit || "N/A"}</p>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-[var(--secondary-text)]">Care:</p>
+                      <p>${product.specs?.care || "N/A"}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Shipping and SEO details -->
+                <div class="card p-6 rounded-xl mb-6">
+                  <h4 class="font-semibold font-heading text-xl mb-2">Shipping Details</h4>
+                  <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <p class="font-semibold text-[var(--secondary-text)]">Weight:</p>
+                      <p>${product.shipping?.weight || "N/A"} kg</p>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-[var(--secondary-text)]">Dimensions:</p>
+                      <p>${product.shipping?.dimensions || "N/A"} cm</p>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-[var(--secondary-text)]">Tax Class:</p>
+                      <p>${product.shipping?.taxClass || "N/A"}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card p-6 rounded-xl mb-6">
+                  <h4 class="font-semibold font-heading text-xl mb-2">SEO & Metadata</h4>
+                  <div class="text-sm">
+                    <p class="font-semibold text-[var(--secondary-text)]">Meta Title:</p>
+                    <p class="mb-2">${product.seo?.metaTitle || "N/A"}</p>
+                    <p class="font-semibold text-[var(--secondary-text)]">Meta Description:</p>
+                    <p>${product.seo?.metaDescription || "N/A"}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        document
+          .getElementById("back-to-products")
+          ?.addEventListener("click", () => renderUI("products"));
+      }
+
+      function renderOrdersView() {
+        if (!contentArea) return;
+        contentArea.innerHTML = `
+            <h2 class="text-4xl font-heading mb-8 text-[var(--accent)]">All Orders</h2>
+            
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <!-- Order Status Filters -->
+                <div class="flex flex-wrap gap-4">
+                    <button data-filter="All" class="filter-btn text-sm py-2 px-4 rounded-full btn-secondary active">All</button>
+                    <button data-filter="Pending" class="filter-btn text-sm py-2 px-4 rounded-full btn-secondary">Pending</button>
+                    <button data-filter="Confirmed" class="filter-btn text-sm py-2 px-4 rounded-full btn-secondary">Confirmed</button>
+                    <button data-filter="Delivered" class="filter-btn text-sm py-2 px-4 rounded-full btn-secondary">Delivered</button>
+                    <button data-filter="Cancelled" class="filter-btn text-sm py-2 px-4 rounded-full btn-secondary">Cancelled</button>
+                </div>
+                <!-- Search Input -->
+                <div class="relative flex-1 md:flex-none">
+                    <i class="ph ph-magnifying-glass text-[var(--secondary-text)] absolute left-4 top-1/2 -translate-y-1/2"></i>
+                    <input type="text" id="order-search" placeholder="Search by Order ID, User ID..." class="form-input w-full pl-10">
+                </div>
+            </div>
+
+            <div id="orders-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <!-- Orders will be dynamically loaded here -->
+              <div id="orders-loading" class="col-span-full flex flex-col items-center justify-center p-8 text-[var(--secondary-text)]">
+                <i class="ph ph-bag-simple text-5xl text-[var(--accent)] mb-4 animate-pulse"></i>
+                <p>Fetching orders...</p>
+              </div>
+            </div>
+            <div id="orders-pagination" class="mt-6"></div>
+          `;
+
+        const orderSearchInput = document.getElementById("order-search");
+        if (orderSearchInput) {
+          orderSearchInput.value = currentOrderSearchQuery;
+          orderSearchInput.addEventListener("input", (e) => {
+            currentOrderSearchQuery = e.target.value;
+            ordersCurrentPage = 1; // Reset page on search
+            displayOrders(allOrdersInView);
+          });
+        }
+
+        const filterButtons = document.querySelectorAll(
+          "#content-area .filter-btn"
+        );
+        filterButtons.forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            filterButtons.forEach((b) => b.classList.remove("active"));
+            e.target.classList.add("active");
+            currentOrderStatusFilter = e.target.getAttribute("data-filter");
+            ordersCurrentPage = 1; // Reset page on filter change
+            displayOrders(allOrdersInView);
+          });
+        });
+
+        listenForOrders();
+      }
+
+      function renderOrderDetailView(order) {
+        if (!contentArea) return;
+
+        const contact = order.contactInfo || {};
+        const address = order.shippingAddress || {};
+        const totals = order.totals || {};
+        const cartItems = order.cart || [];
+        const timestamp = order.timestamp?.toDate
+          ? order.timestamp.toDate().toLocaleString()
+          : "N/A";
+
+        const itemsHtml =
+          cartItems
+            .map((item) => {
+              const product = item.product || {};
+              const finalPrice =
+                (product.basePrice || 0) *
+                (1 - (product.discountPercentage || 0) / 100);
+              return `
+                <div class="flex items-center gap-4 p-4 border-b border-[var(--border)] last:border-b-0">
+                    <div class="relative">
+                        <img src="${
+                          product.images?.[0] ||
+                          "https://placehold.co/80x80/2a2a2a/a8a8a8?text=N/A"
+                        }" alt="${
+                product.name
+              }" class="w-20 h-20 object-cover rounded-md">
+                        <span class="absolute -top-2 -left-2 bg-[var(--accent)] text-black text-xs font-bold w-6 h-6 flex items-center justify-center rounded-full">${
+                          item.quantity || 1
+                        }</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-semibold">${
+                          product.name || "Unknown Product"
+                        }</p>
+                        <p class="font-mono text-xs text-[var(--secondary-text)] mt-1">ID: ${
+                          product.id
+                        }</p>
+                        <div class="flex items-center gap-2 text-sm text-[var(--secondary-text)] mt-2">
+                          <span>Color: ${item.color || "N/A"}</span>
+                          <div class="w-4 h-4 rounded-full border border-[var(--secondary-text)]" style="background-color: ${
+                            item.color
+                          };"></div>
+                          <span>| Size: ${item.size || "N/A"}</span>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-semibold">&#2547;${finalPrice.toFixed(
+                          2
+                        )}</p>
+                    </div>
+                </div>
+            `;
+            })
+            .join("") ||
+          '<p class="p-6 text-[var(--secondary-text)]">No items in this order.</p>';
+
+        // --- UPDATED: Invoice Button Logic ---
+        let invoiceButtonHtml = "";
+        if (order.invoiceId) {
+          invoiceButtonHtml = `<button id="view-invoice-btn" data-invoice-id="${order.invoiceId}" class="py-2 px-5 rounded-full text-sm font-semibold flex items-center gap-2 btn btn-secondary">
+                <i class="ph ph-receipt"></i> View Invoice
+             </button>`;
+        } else {
+          if (order.isShippingPaid) {
+            invoiceButtonHtml = `<button id="generate-invoice-btn" class="py-2 px-5 rounded-full text-sm font-semibold flex items-center gap-2 btn btn-primary">
+                    <i class="ph ph-plus-circle"></i> Generate Invoice
+                 </button>`;
+          } else {
+            invoiceButtonHtml = `<button title="An invoice can be generated only after the shipping cost is paid." class="py-2 px-5 rounded-full text-sm font-semibold flex items-center gap-2 btn btn-secondary opacity-50 cursor-not-allowed" disabled>
+                    <i class="ph ph-plus-circle"></i> Generate Invoice
+                 </button>`;
+          }
+        }
+
+        contentArea.innerHTML = `
+            <div class="flex flex-wrap items-center justify-between mb-8 gap-4">
+                <div class="flex items-center gap-4">
+                    <button id="back-to-orders" class="back-btn">
+                        <i class="ph ph-arrow-left text-xl"></i>
+                        <span class="hidden sm:inline">Back to Orders</span>
+                    </button>
+                    <h2 class="text-4xl font-heading text-[var(--accent)]">Order Details</h2>
+                </div>
+                <div class="flex items-center gap-4">
+                    ${invoiceButtonHtml}
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Column: Items and Totals -->
+                <div class="lg:col-span-2 space-y-8">
+                    <div class="card rounded-xl">
+                        <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] p-6 border-b border-[var(--border)]">Items Ordered (${
+                          cartItems.length
+                        })</h3>
+                        <div class="max-h-96 overflow-y-auto">
+                            ${itemsHtml}
+                        </div>
+                    </div>
+
+                    <div class="card rounded-xl p-6">
+                        <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] mb-4">Payment Summary</h3>
+                        <div class="space-y-2 text-[var(--secondary-text)]">
+                            <div class="flex justify-between"><p>Subtotal:</p> <p class="font-semibold text-white">&#2547;${(
+                              totals.subtotal || 0
+                            ).toFixed(2)}</p></div>
+                            <div class="flex justify-between"><p>Shipping:</p> <p class="font-semibold text-white">&#2547;${(
+                              totals.shippingCost || 0
+                            ).toFixed(2)}</p></div>
+                            <div class="flex justify-between"><p>Tax:</p> <p class="font-semibold text-white">&#2547;${(
+                              totals.tax || 0
+                            ).toFixed(2)}</p></div>
+                            <div class="flex justify-between text-lg pt-2 border-t border-[var(--border)]"><p class="font-semibold text-[var(--accent)]">Total:</p> <p class="font-bold text-[var(--accent)]">&#2547;${(
+                              totals.total || 0
+                            ).toFixed(2)}</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Customer and Shipping Info -->
+                <div class="space-y-8">
+                    <div class="card rounded-xl p-6">
+                        <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] mb-4">Customer Info</h3>
+                        <div class="space-y-1 text-sm text-[var(--secondary-text)]">
+                            <p><strong>Name:</strong> ${
+                              address.firstName || ""
+                            } ${address.lastName || ""}</p>
+                            <p><strong>Email:</strong> ${
+                              contact.email || "N/A"
+                            }</p>
+                            <p><strong>Mobile:</strong> ${
+                              contact.mobileNumber || "N/A"
+                            }</p>
+                            <p><strong>User ID:</strong> <span class="font-mono text-xs break-all">${
+                              order.userId
+                            }</span></p>
+                        </div>
+                    </div>
+
+                  <div class="card rounded-xl p-6">
+                    <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] mb-4">
+                        Shipping Address
+                    </h3>
+                    <div class="space-y-2 text-sm text-[var(--secondary-text)]">
+                        <p><strong>Street Address:</strong> ${
+                          address.address || "N/A"
+                        }</p>
+                        <p>
+                        <strong>City:</strong> ${address.city || "N/A"}<br>
+                        <strong>State:</strong> ${address.state || "N/A"}<br>
+                        <strong>Postal Code:</strong> ${
+                          address.postalCode || "N/A"
+                        }
+                        </p>
+                        <p><strong>Country:</strong> ${
+                          address.country || "N/A"
+                        }</p>
+                    </div>
+                  </div>
+
+                    <div class="card rounded-xl p-6">
+                        <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] mb-4">Order Status</h3>
+                        <div class="space-y-4 text-sm text-[var(--secondary-text)]">
+                            <!-- Shipping Payment Status and Action -->
+                            <div class="flex flex-col gap-4">
+                                <div class="flex justify-between items-center">
+                                    <p><strong>Shipping Payment:</strong></p>
+                                    <span class="font-semibold ${
+                                      order.isShippingPaid
+                                        ? "text-green-400"
+                                        : "text-yellow-400"
+                                    }">
+                                        ${
+                                          order.isShippingPaid
+                                            ? "Paid"
+                                            : "Pending"
+                                        }
+                                    </span>
+                                </div>
+                                ${
+                                  !order.isShippingPaid
+                                    ? `<button id="mark-shipping-paid-btn" class="w-full py-2 px-4 rounded-full text-sm font-semibold btn btn-secondary">
+                                        Mark Shipping Paid & Confirm Order
+                                    </button>`
+                                    : ""
+                                }
+                            </div>
+                            <hr class="border-[var(--border)]">
+                            <div>
+                                <label for="order-status-select" class="block text-sm font-light mb-2">Update Status (Manual)</label>
+                                <select id="order-status-select" class="form-select w-full">
+                                    <option value="Pending" ${
+                                      order.status === "Pending"
+                                        ? "selected"
+                                        : ""
+                                    }>Pending</option>
+                                    <option value="Confirmed" ${
+                                      order.status === "Confirmed"
+                                        ? "selected"
+                                        : ""
+                                    }>Confirmed</option>
+                                    <option value="Delivered" ${
+                                      order.status === "Delivered"
+                                        ? "selected"
+                                        : ""
+                                    }>Delivered</option>
+                                    <option value="Cancelled" ${
+                                      order.status === "Cancelled"
+                                        ? "selected"
+                                        : ""
+                                    }>Cancelled</option>
+                                </select>
+                            </div>
+                            <p><strong>Payment Method:</strong> ${
+                              contact.paymentMethod || "N/A"
+                            }</p>
+                            <p><strong>Transaction ID:</strong> ${
+                              order.trxId || "N/A"
+                            }</p>
+                            <p><strong>Order Date:</strong> ${timestamp}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document
+          .getElementById("back-to-orders")
+          ?.addEventListener("click", () => renderUI("orders"));
+
+        document
+          .getElementById("order-status-select")
+          ?.addEventListener("change", (e) => {
+            updateOrderStatus(order.userId, order.id, e.target.value);
+          });
+
+        document
+          .getElementById("mark-shipping-paid-btn")
+          ?.addEventListener("click", () => {
+            markShippingAsPaid(order);
+          });
+
+        const generateInvoiceBtn = document.getElementById(
+          "generate-invoice-btn"
+        );
+        if (generateInvoiceBtn) {
+          generateInvoiceBtn.addEventListener("click", () => {
+            generateAndStoreInvoice(order);
+          });
+        }
+
+        const viewInvoiceBtn = document.getElementById("view-invoice-btn");
+        if (viewInvoiceBtn) {
+          viewInvoiceBtn.addEventListener("click", async (e) => {
+            const invoiceId = e.currentTarget.getAttribute("data-invoice-id");
+            const invoiceRef = doc(
+              db,
+              "artifacts",
+              appId,
+              "public",
+              "data",
+              "invoices",
+              invoiceId
+            );
+            const invoiceSnap = await getDoc(invoiceRef);
+            if (invoiceSnap.exists()) {
+              renderUI("invoice_detail", {
+                id: invoiceSnap.id,
+                ...invoiceSnap.data(),
+              });
+            } else {
+              openMessageModal({
+                title: "Error",
+                message: "Invoice not found.",
+                isError: true,
+              });
+            }
+          });
+        }
+      }
+
+      function renderInvoicesView() {
+        if (!contentArea) return;
+        contentArea.innerHTML = `
+            <h2 class="text-4xl font-heading mb-8 text-[var(--accent)]">Invoices</h2>
+            
+            <!-- NEW: Search bar for invoices -->
+            <div class="flex justify-end mb-8">
+                <div class="relative w-full md:w-1/3">
+                    <i class="ph ph-magnifying-glass text-[var(--secondary-text)] absolute left-4 top-1/2 -translate-y-1/2"></i>
+                    <input type="text" id="invoice-search" placeholder="Search by Invoice ID, Order ID, Customer..." class="form-input w-full pl-10">
+                </div>
+            </div>
+
+            <div class="card rounded-xl p-4 overflow-x-auto">
+              <table class="w-full text-left">
+                <thead>
+                  <tr class="uppercase text-sm text-[var(--secondary-text)] border-b border-[var(--border)]">
+                    <th class="py-4 px-2">Invoice ID</th>
+                    <th class="py-4 px-2">Order ID</th>
+                    <th class="py-4 px-2">Customer</th>
+                    <th class="py-4 px-2">Date</th>
+                    <th class="py-4 px-2">Amount</th>
+                    <th class="py-4 px-2">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="invoices-table-body">
+                  <tr><td colspan="6" class="text-center py-8 text-[var(--secondary-text)]">Loading invoices...</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="invoices-pagination" class="mt-6"></div>
+        `;
+
+        const invoiceSearchInput = document.getElementById("invoice-search");
+        if (invoiceSearchInput) {
+          invoiceSearchInput.value = currentInvoiceSearchQuery;
+          invoiceSearchInput.addEventListener("input", (e) => {
+            currentInvoiceSearchQuery = e.target.value.toLowerCase();
+            invoicesCurrentPage = 1; // Reset page on search
+            displayInvoices(allInvoicesInView);
+          });
+        }
+
+        listenForInvoices();
+      }
+
+      function renderInvoiceDetailView(invoice) {
+        if (!contentArea) return;
+
+        const itemsHtml = invoice.cart
+          .map((item) => {
+            const product = item.product || {};
+            const finalPrice =
+              (product.basePrice || 0) *
+              (1 - (product.discountPercentage || 0) / 100);
+            return `
+                <tr class="border-b border-[var(--border)]">
+                    <td class="py-3 px-4">${product.name || "N/A"}</td>
+                    <td class="py-3 px-4 text-center">${item.quantity}</td>
+                    <td class="py-3 px-4 text-right">&#2547;${finalPrice.toFixed(
+                      2
+                    )}</td>
+                    <td class="py-3 px-4 text-right">&#2547;${(
+                      finalPrice * item.quantity
+                    ).toFixed(2)}</td>
+                </tr>
+            `;
+          })
+          .join("");
+
+        const shippingRowHtml = invoice.isShippingPaid
+          ? `
+                <tr>
+                    <td colspan="3" class="py-2 px-4 font-semibold">Shipping</td>
+                    <td class="py-2 px-4 text-right text-green-400 font-semibold">PAID</td>
+                </tr>
+            `
+          : `
+                <tr>
+                    <td colspan="3" class="py-2 px-4 font-semibold">Shipping</td>
+                    <td class="py-2 px-4 text-right">&#2547;${(
+                      invoice.totals.shippingCost || 0
+                    ).toFixed(2)}</td>
+                </tr>
+            `;
+
+        contentArea.innerHTML = `
+            <div class="flex items-center justify-between mb-8 gap-4 no-print">
+                <button id="back-to-invoices" class="back-btn">
+                    <i class="ph ph-arrow-left text-xl"></i>
+                    <span class="hidden sm:inline">Back to Invoices</span>
+                </button>
+                <button id="print-invoice-btn" class="py-2 px-5 rounded-full text-sm font-semibold flex items-center gap-2 btn btn-primary">
+                    <i class="ph ph-printer"></i> Print Invoice
+                </button>
+            </div>
+            <div id="invoice-container" class="card p-8 md:p-12 rounded-xl bg-[var(--primary-bg)] text-white">
+                <header class="flex justify-between items-start pb-8 border-b border-[var(--border)]">
+                    <div>
+                        <h1 class="text-4xl font-bold tracking-widest uppercase font-heading text-[var(--accent)]">AURORA</h1>
+                        <p class="text-sm text-[var(--secondary-text)]">123 Luxury Lane, Fashion City, 10001</p>
+                    </div>
+                    <div>
+                        <h2 class="text-3xl font-heading text-right">Invoice</h2>
+                        <p class="text-right text-[var(--secondary-text)]">#${
+                          invoice.id
+                        }</p>
+                        <p class="text-right text-[var(--secondary-text)]">Date: ${new Date(
+                          invoice.issuedDate
+                        ).toLocaleDateString()}</p>
+                    </div>
+                </header>
+                <section class="grid grid-cols-2 gap-8 my-8">
+                    <div>
+                        <h3 class="font-heading text-lg font-semibold mb-2 text-[var(--accent)]">Bill To:</h3>
+                        <p>${invoice.shippingAddress.firstName} ${
+          invoice.shippingAddress.lastName
+        }</p>
+                        <p>${invoice.shippingAddress.address}</p>
+                        <p>${invoice.shippingAddress.city}, ${
+          invoice.shippingAddress.state
+        } ${invoice.shippingAddress.postalCode}</p>
+                        <p>${invoice.contactInfo.email}</p>
+                    </div>
+                </section>
+                <section>
+                    <table class="w-full text-left">
+                        <thead class="bg-[var(--card-bg)]">
+                            <tr>
+                                <th class="py-3 px-4 font-semibold">Item</th>
+                                <th class="py-3 px-4 font-semibold text-center">Quantity</th>
+                                <th class="py-3 px-4 font-semibold text-right">Unit Price</th>
+                                <th class="py-3 px-4 font-semibold text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsHtml}
+                        </tbody>
+                        <tfoot class="text-right">
+                            <tr>
+                                <td colspan="3" class="py-2 px-4 font-semibold">Subtotal</td>
+                                <td class="py-2 px-4">&#2547;${invoice.totals.subtotal.toFixed(
+                                  2
+                                )}</td>
+                            </tr>
+                            ${shippingRowHtml}
+                            <tr>
+                                <td colspan="3" class="py-2 px-4 font-semibold">Tax</td>
+                                <td class="py-2 px-4">&#2547;${invoice.totals.tax.toFixed(
+                                  2
+                                )}</td>
+                            </tr>
+                            <tr class="font-bold text-lg text-[var(--accent)] border-t-2 border-[var(--accent)]">
+                                <td colspan="3" class="py-3 px-4">Amount Due</td>
+                                <td class="py-3 px-4">&#2547;${invoice.totals.total.toFixed(
+                                  2
+                                )}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </section>
+                <footer class="mt-12 pt-8 border-t border-[var(--border)] text-center text-sm text-[var(--secondary-text)]">
+                    <p>Thank you for your business!</p>
+                </footer>
+            </div>
+        `;
+
+        document
+          .getElementById("back-to-invoices")
+          ?.addEventListener("click", () => renderUI("invoices"));
+        document
+          .getElementById("print-invoice-btn")
+          ?.addEventListener("click", () => window.print());
+      }
+
+      function renderSettingsView() {
+        if (!contentArea) return;
+        contentArea.innerHTML = `
+            <h2 class="text-4xl font-heading mb-8 text-[var(--accent)]">Settings</h2>
+            <div class="w-full mx-auto space-y-8">
+                <!-- Shipping Settings -->
+                <div class="card p-8 rounded-xl">
+                    <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] mb-6">Shipping Settings</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="base-shipping-cost" class="block text-sm font-light mb-2">Base Shipping Cost (&#2547;)</label>
+                            <input type="number" id="base-shipping-cost" class="form-input w-full md:w-1/2" placeholder="e.g., 5.00" step="0.01">
+                        </div>
+                        <div>
+                            <label for="free-shipping-threshold" class="block text-sm font-light mb-2">Free Shipping Threshold (&#2547;)</label>
+                            <input type="number" id="free-shipping-threshold" class="form-input w-full md:w-1/2" placeholder="e.g., 50.00" step="0.01">
+                            <p class="text-xs text-[var(--secondary-text)] mt-1">Orders over this amount will have free shipping.</p>
+                        </div>
+                    </div>
+                    <div class="flex justify-end mt-6">
+                        <button id="save-shipping-settings" class="py-2 px-6 rounded-full text-sm font-semibold btn btn-primary">Save Shipping Settings</button>
+                    </div>
+                </div>
+
+                <!-- Tax Settings -->
+                <div class="card p-8 rounded-xl">
+                    <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] mb-6">Tax Settings</h3>
+                    <div>
+                        <label for="tax-rate" class="block text-sm font-light mb-2">Default Tax Rate (%)</label>
+                        <input type="number" id="tax-rate" class="form-input w-full md:w-1/2" placeholder="e.g., 8.5" step="0.01">
+                    </div>
+                    <div class="flex justify-end mt-6">
+                        <button id="save-tax-settings" class="py-2 px-6 rounded-full text-sm font-semibold btn btn-primary">Save Tax Settings</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document
+          .getElementById("save-shipping-settings")
+          ?.addEventListener("click", () => {
+            const baseCost = document.getElementById("base-shipping-cost")
+              .value;
+            const freeThreshold = document.getElementById(
+              "free-shipping-threshold"
+            ).value;
+            saveSettings("shipping", {
+              baseCost: parseFloat(baseCost),
+              freeThreshold: parseFloat(freeThreshold),
+            });
+          });
+
+        document
+          .getElementById("save-tax-settings")
+          ?.addEventListener("click", () => {
+            const taxRate = document.getElementById("tax-rate").value;
+            saveSettings("tax", { rate: parseFloat(taxRate) });
+          });
+
+        loadSettings();
+      }
+
+      // --- Firestore Logic ---
+
+      async function listenForDashboardData() {
+        if (!db) {
+          console.error("Firestore not initialized.");
+          return;
+        }
+
+        const totalRevenueEl = document.getElementById("total-revenue");
+        const totalProfitEl = document.getElementById("total-profit");
+        const totalOrdersCountEl = document.getElementById(
+          "total-orders-count"
+        );
+        const totalProductsCountEl = document.getElementById(
+          "total-products-count"
+        );
+
+        // Fetch all products once to calculate cost
+        const productsRef = collection(
+          db,
+          "artifacts",
+          "aurora-data",
+          "public",
+          "data",
+          "products"
+        );
+        const productsSnap = await getDocs(productsRef);
+        const productsMap = new Map();
+
+        productsSnap.docs.forEach((doc) => productsMap.set(doc.id, doc.data()));
+
+        onSnapshot(productsRef, (snapshot) => {
+          if (totalProductsCountEl)
+            totalProductsCountEl.textContent = snapshot.size;
+          // Update the map in real-time
+          snapshot.docChanges().forEach((change) => {
+            if (change.type === "removed") {
+              productsMap.delete(change.doc.id);
+            } else {
+              productsMap.set(change.doc.id, change.doc.data());
+            }
+          });
+        });
+
+        // Listen to all orders for analytics
+        const ordersQuery = query(collectionGroup(db, "orders"));
+        dashboardUnsubscribe = onSnapshot(
+          ordersQuery,
+          (snapshot) => {
+            if (totalOrdersCountEl)
+              totalOrdersCountEl.textContent = snapshot.size;
+
+            let totalRevenue = 0;
+            let totalCost = 0;
+
+            snapshot.docs.forEach((doc) => {
+              const order = doc.data();
+              if (order.status === "Delivered") {
+                totalRevenue += order.totals?.total || 0;
+                order.cart?.forEach((item) => {
+                  const product = productsMap.get(item.productId);
+                  // Use costPrice for profit calc, fallback to basePrice if not set
+                  if (product) {
+                    const cost = product.costPrice || product.basePrice || 0;
+                    totalCost += cost * item.quantity;
+                  }
+                });
+              }
+            });
+
+            const totalProfit = totalRevenue - totalCost;
+            if (totalRevenueEl)
+              totalRevenueEl.textContent = totalRevenue.toFixed(2);
+            if (totalProfitEl)
+              totalProfitEl.textContent = totalProfit.toFixed(2);
+          },
+          (error) => {
+            console.error("Dashboard listener error:", error);
+          }
+        );
+      }
+
+      function listenForProducts() {
+        if (!db) {
+          console.error("Firestore not initialized.");
+          return;
+        }
+
+        if (productUnsubscribe) {
+          productUnsubscribe();
+        }
+
+        let productsRef = collection(
+          db,
+          "artifacts",
+          "aurora-data",
+          "public",
+          "data",
+          "products"
+        );
+
+        if (currentProductStatusFilter !== "All") {
+          productsRef = query(
+            productsRef,
+            where("status", "==", currentProductStatusFilter)
+          );
+        }
+
+        productUnsubscribe = onSnapshot(
+          productsRef,
+          (snapshot) => {
+            allProductsInView = snapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            displayProducts(allProductsInView);
+          },
+          (error) => {
+            console.error("Error fetching products:", error);
+            const tableBody = document.getElementById("products-table-body");
+            if (tableBody) {
+              tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-red-500">Error loading products.</td></tr>`;
+            }
+          }
+        );
+      }
+
+      function listenForOrders() {
+        if (!db) {
+          console.error("Firestore not initialized.");
+          return;
+        }
+
+        let ordersQuery = query(collectionGroup(db, "orders"));
+
+        try {
+          ordersUnsubscribe = onSnapshot(
+            ordersQuery,
+            (snapshot) => {
+              allOrdersInView = snapshot.docs.map((doc) => {
+                const orderData = doc.data();
+                const orderId = doc.id;
+                const pathParts = doc.ref.path.split("/");
+                const userIdFromPath = pathParts[3];
+
+                return {
+                  id: orderId,
+                  userId: userIdFromPath,
+                  ...orderData,
+                };
+              });
+
+              // Sort the orders by timestamp in descending order (newest first) on the client-side
+              allOrdersInView.sort(
+                (a, b) =>
+                  (b.timestamp?.toDate() || 0) - (a.timestamp?.toDate() || 0)
+              );
+
+              displayOrders(allOrdersInView);
+            },
+            (error) => {
+              console.error("Error fetching orders:", error);
+              const ordersListElement = document.getElementById("orders-list");
+              if (ordersListElement) {
+                ordersListElement.innerHTML = `
+                        <div class="col-span-full flex flex-col items-center justify-center p-8 text-red-500">
+                            <i class="ph ph-warning-circle text-5xl text-red-500 mb-4"></i>
+                            <p class="font-semibold mb-2">Error loading orders.</p>
+                            <p class="text-sm text-center">There was an issue fetching the orders. Please check your permissions or try again.</p>
+                        </div>
+                        `;
+              }
+            }
+          );
+        } catch (e) {
+          console.error("Collection group query failed:", e);
+          const ordersListElement = document.getElementById("orders-list");
+          if (ordersListElement) {
+            ordersListElement.innerHTML = `
+                <div class="col-span-full flex flex-col items-center justify-center p-8 text-red-500">
+                    <i class="ph ph-warning-circle text-5xl text-red-500 mb-4"></i>
+                    <p class="font-semibold mb-2">Query Error</p>
+                    <p class="text-sm text-center">Failed to run the collection group query. Please check your Firestore security rules.</p>
+                </div>
+                `;
+          }
+        }
+      }
+
+      function listenForInvoices() {
+        if (!db) return;
+        const invoicesRef = collection(
+          db,
+          "artifacts",
+          appId,
+          "public",
+          "data",
+          "invoices"
+        );
+
+        invoicesUnsubscribe = onSnapshot(
+          invoicesRef,
+          (snapshot) => {
+            allInvoicesInView = snapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            // Sort invoices by issuedDate descending (most recent first)
+            allInvoicesInView.sort((a, b) => b.issuedDate - a.issuedDate);
+            displayInvoices(allInvoicesInView);
+          },
+          (error) => {
+            console.error("Error fetching invoices:", error);
+            const invoicesTableBody = document.getElementById(
+              "invoices-table-body"
+            );
+            if (invoicesTableBody) {
+              invoicesTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-red-500">Error loading invoices.</td></tr>`;
+            }
+          }
+        );
+      }
+
+      function displayProducts(products) {
+        const tableBody = document.getElementById("products-table-body");
+        if (!tableBody) return;
+
+        const filteredProducts = products.filter((product) => {
+          const name = product.name?.toLowerCase() || "";
+          const category = product.category?.toLowerCase() || "";
+          // --- ADD THIS LINE ---
+          const department = product.department?.toLowerCase() || "";
+          const id = product.id?.toLowerCase() || "";
+          return (
+            id.includes(currentSearchQuery) ||
+            name.includes(currentSearchQuery) ||
+            category.includes(currentSearchQuery) ||
+            // --- AND ADD THIS CONDITION ---
+            department.includes(currentSearchQuery)
+          );
+        });
+
+        // Pagination Logic
+        const totalItems = filteredProducts.length;
+        const startIndex = (productsCurrentPage - 1) * productsItemsPerPage;
+        const endIndex = startIndex + productsItemsPerPage;
+        const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+
+        const selectAllCheckbox = document.getElementById(
+          "select-all-products"
+        );
+        if (selectAllCheckbox) {
+          selectAllCheckbox.checked =
+            selectedProducts.size > 0 &&
+            selectedProducts.size === paginatedProducts.length &&
+            paginatedProducts.length > 0;
+        }
+
+        const bulkActionsBtn = document.getElementById("bulk-actions-btn");
+        if (bulkActionsBtn) {
+          bulkActionsBtn.disabled = selectedProducts.size === 0;
+        }
+
+        if (paginatedProducts.length === 0) {
+          tableBody.innerHTML = `<tr><td colspan="8" class="text-center py-8 text-[var(--secondary-text)]">No products found.</td></tr>`;
+        } else {
+          tableBody.innerHTML = paginatedProducts
+            .map((product) => {
+              const basePrice = product.basePrice || 0;
+              const discountPercentage = product.discountPercentage || 0;
+              const finalPrice = basePrice * (1 - discountPercentage / 100);
+              return `
+              <tr class="table-row border-t border-[var(--border)]">
+                <td class="py-4 px-2">
+                  <input type="checkbox" data-id="${
+                    product.id
+                  }" class="product-checkbox w-4 h-4 rounded text-black focus:ring-0 cursor-pointer" ${
+                selectedProducts.has(product.id) ? "checked" : ""
+              } />
+                </td>
+                <td class="py-4 px-2">
+                  <img src="${product.images?.[0]}" alt="${
+                product.name
+              }" class="w-16 h-20 object-cover rounded-md" onerror="this.onerror=null;this.src='https://placehold.co/64x80/2a2a2a/a8a8a8?text=N/A';">
+                </td>
+                <td class="py-4 px-2">
+                  <span class="font-medium">${product.name}</span>
+                  <span class="block font-mono text-xs text-[var(--secondary-text)] mt-1">${
+                    product.id
+                  }</span>
+                </td>
+                <td class="py-4 px-2">
+                  <div class="relative inline-block">
+                    <select data-id="${
+                      product.id
+                    }" class="status-select form-select bg-[var(--card-bg)] text-sm pr-8 appearance-none">
+                      <option value="Draft" ${
+                        product.status === "Draft" ? "selected" : ""
+                      }>Draft</option>
+                      <option value="Published" ${
+                        product.status === "Published" ? "selected" : ""
+                      }>Published</option>
+                      <option value="Archived" ${
+                        product.status === "Archived" ? "selected" : ""
+                      }>Archived</option>
+                    </select>
+                    <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none text-[var(--secondary-text)]">
+                      <i class="ph-fill ph-caret-down text-xs"></i>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4 px-2">
+                  <div class="flex flex-col">
+                    ${
+                      discountPercentage > 0
+                        ? `
+                      <div class="flex items-center gap-2">
+                          <span class="text-[var(--accent)] font-semibold">&#2547;${finalPrice.toFixed(
+                            2
+                          )}</span>
+                          <span class="text-sm text-[var(--secondary-text)] line-through">&#2547;${basePrice.toFixed(
+                            2
+                          )}</span>
+                      </div>
+                      <span class="bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-full w-fit mt-1">- ${discountPercentage}%</span>
+                      `
+                        : `
+                      <span class="text-[var(--accent)] font-semibold">&#2547;${basePrice.toFixed(
+                        2
+                      )}</span>
+                      `
+                    }
+                  </div>
+                </td>
+                <td class="py-4 px-2 text-[var(--secondary-text)] hidden md:table-cell">${
+                  product.department
+                }</td>
+                <td class="py-4 px-2 text-[var(--secondary-text)] hidden md:table-cell">${
+                  product.category
+                }</td>
+                <td class="py-4 px-2">
+                  <div class="flex gap-2 items-center">
+                    <button data-id="${
+                      product.id
+                    }" class="details-btn text-[var(--secondary-text)] p-1 rounded-full">
+                      <i class="ph ph-info text-lg"></i>
+                    </button>
+                    <button data-id="${
+                      product.id
+                    }" class="edit-btn text-[var(--secondary-text)] p-1 rounded-full">
+                      <i class="ph ph-pencil-simple text-lg"></i>
+                    </button>
+                    <button data-id="${
+                      product.id
+                    }" class="delete-btn text-red-400 p-1 rounded-full">
+                      <i class="ph ph-trash text-lg"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            `;
+            })
+            .join("");
+        }
+
+        renderPaginationControls(
+          "products-pagination",
+          productsCurrentPage,
+          totalItems,
+          productsItemsPerPage,
+          (newPage) => {
+            productsCurrentPage = newPage;
+            displayProducts(allProductsInView);
+          }
+        );
+
+        // Attach event listeners for new elements
+        document.querySelectorAll(".product-checkbox").forEach((checkbox) => {
+          checkbox.addEventListener("change", handleProductSelection);
+        });
+
+        document.querySelectorAll(".status-select").forEach((select) => {
+          select.addEventListener("change", (e) => {
+            const productId = e.target.getAttribute("data-id");
+            const newStatus = e.target.value;
+            updateProductStatusQuick(productId, newStatus);
+          });
+        });
+
+        document.querySelectorAll(".details-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const productId = e.currentTarget.getAttribute("data-id");
+            const productToView = filteredProducts.find(
+              (p) => p.id === productId
+            );
+            if (productToView) {
+              renderUI("product_detail", productToView);
+            }
+          });
+        });
+
+        document.querySelectorAll(".edit-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const productId = e.currentTarget.getAttribute("data-id");
+            const productToEdit = filteredProducts.find(
+              (p) => p.id === productId
+            );
+            if (productToEdit) {
+              renderUI("edit_product", productToEdit);
+            }
+          });
+        });
+
+        document.querySelectorAll(".delete-btn").forEach((btn) => {
+          btn.addEventListener("click", (e) => {
+            const productId = e.currentTarget.getAttribute("data-id");
+            openMessageModal({
+              title: "Confirm Deletion",
+              message:
+                "Are you sure you want to delete this product? This action cannot be undone.",
+              confirmAction: () => deleteProduct(productId),
+              showCancel: true,
+            });
+          });
+        });
+      }
+      function displayOrders(orders) {
+        const ordersListElement = document.getElementById("orders-list");
+        if (!ordersListElement) return;
+
+        // 1. Filter by status
+        const statusFilteredOrders = orders.filter((order) => {
+          if (currentOrderStatusFilter === "All") return true;
+          return (order.status || "Pending") === currentOrderStatusFilter;
+        });
+
+        // 2. Filter by search query
+        const searchFilteredOrders = statusFilteredOrders.filter((order) => {
+          const query = currentOrderSearchQuery.toLowerCase();
+          if (!query) return true;
+
+          const orderId = order.id.toLowerCase();
+          const userId = order.userId.toLowerCase();
+          const customerName = `${order.shippingAddress?.firstName || ""} ${
+            order.shippingAddress?.lastName || ""
+          }`.toLowerCase();
+          const customerEmail = (order.contactInfo?.email || "").toLowerCase();
+
+          return (
+            orderId.includes(query) ||
+            userId.includes(query) ||
+            customerName.includes(query) ||
+            customerEmail.includes(query)
+          );
+        });
+
+        // 3. Pagination Logic
+        const totalItems = searchFilteredOrders.length;
+        const startIndex = (ordersCurrentPage - 1) * ordersItemsPerPage;
+        const endIndex = startIndex + ordersItemsPerPage;
+        const paginatedOrders = searchFilteredOrders.slice(
+          startIndex,
+          endIndex
+        );
+
+        // 4. Render the final list
+        if (paginatedOrders.length === 0) {
+          ordersListElement.innerHTML = `
+            <div class="col-span-full flex flex-col items-center justify-center p-8 text-[var(--secondary-text)]">
+                <i class="ph ph-bag-simple text-5xl text-[var(--secondary-text)] mb-4"></i>
+                <p>No orders found matching your criteria.</p>
+            </div>
+        `;
+        } else {
+          ordersListElement.innerHTML = paginatedOrders
+            .map((order) => {
+              const timestamp = order.timestamp?.toDate
+                ? order.timestamp.toDate().toLocaleString()
+                : "N/A";
+              const totalAmount = order.totals?.total || 0;
+              const status = order.status || "Pending";
+              return `
+                <div class="card p-6 rounded-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <h3 class="font-heading text-lg font-semibold truncate">Order #${order.id.substring(
+                              0,
+                              8
+                            )}</h3>
+                            <span class="order-status-pill status-${status.toLowerCase()}">${status}</span>
+                        </div>
+                        <div class="space-y-1 text-sm text-[var(--secondary-text)]">
+                            <p><strong>User ID:</strong> <span class="block font-mono text-xs break-all">${
+                              order.userId
+                            }</span></p>
+                            <p><strong>Total Amount:</strong> <span class="text-[var(--accent)] font-semibold">&#2547;${totalAmount.toFixed(
+                              2
+                            )}</span></p>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center mt-4 pt-4 border-t border-[var(--border)]">
+                        <p class="text-xs text-[var(--secondary-text)]">${timestamp}</p>
+                        <button data-id="${
+                          order.id
+                        }" class="view-order-details-btn text-sm text-[var(--accent)] hover:underline font-semibold">View Details</button>
+                    </div>
+                </div>
+            `;
+            })
+            .join("");
+
+          // Add event listeners after rendering all cards
+          document
+            .querySelectorAll(".view-order-details-btn")
+            .forEach((btn) => {
+              btn.addEventListener("click", (e) => {
+                const orderId = e.currentTarget.getAttribute("data-id");
+                const orderToView = allOrdersInView.find(
+                  (o) => o.id === orderId
+                );
+                if (orderToView) {
+                  renderUI("order_detail", orderToView);
+                }
+              });
+            });
+        }
+
+        renderPaginationControls(
+          "orders-pagination",
+          ordersCurrentPage,
+          totalItems,
+          ordersItemsPerPage,
+          (newPage) => {
+            ordersCurrentPage = newPage;
+            displayOrders(allOrdersInView);
+          }
+        );
+      }
+
+      function displayInvoices(invoices) {
+        const invoicesTableBody = document.getElementById(
+          "invoices-table-body"
+        );
+        if (!invoicesTableBody) return;
+
+        // NEW: Filter invoices based on the search query
+        const filteredInvoices = invoices.filter((invoice) => {
+          if (!currentInvoiceSearchQuery) return true;
+          const query = currentInvoiceSearchQuery;
+          const customerName = `${invoice.shippingAddress?.firstName || ""} ${
+            invoice.shippingAddress?.lastName || ""
+          }`.toLowerCase();
+          return (
+            invoice.id.toLowerCase().includes(query) ||
+            invoice.orderId.toLowerCase().includes(query) ||
+            customerName.includes(query)
+          );
+        });
+
+        // Pagination Logic
+        const totalItems = filteredInvoices.length;
+        const startIndex = (invoicesCurrentPage - 1) * invoicesItemsPerPage;
+        const endIndex = startIndex + invoicesItemsPerPage;
+        const paginatedInvoices = filteredInvoices.slice(startIndex, endIndex);
+
+        if (paginatedInvoices.length === 0) {
+          invoicesTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-[var(--secondary-text)]">No invoices found.</td></tr>`;
+        } else {
+          invoicesTableBody.innerHTML = paginatedInvoices
+            .map(
+              (invoice) => `
+                <tr class="table-row border-t border-[var(--border)]">
+                    <td class="py-4 px-2 font-mono text-sm">${invoice.id}</td>
+                    <td class="py-4 px-2 font-mono text-sm">${
+                      invoice.orderId
+                    }</td>
+                    <td class="py-4 px-2">${
+                      invoice.shippingAddress.firstName
+                    } ${invoice.shippingAddress.lastName}</td>
+                    <td class="py-4 px-2">${new Date(
+                      invoice.issuedDate
+                    ).toLocaleDateString()}</td>
+                    <td class="py-4 px-2 text-[var(--accent)] font-semibold">&#2547;${invoice.totals.total.toFixed(
+                      2
+                    )}</td>
+                    <td class="py-4 px-2">
+                         <button data-id="${
+                           invoice.id
+                         }" class="view-invoice-details-btn text-sm text-[var(--accent)] hover:underline font-semibold">View</button>
+                    </td>
+                </tr>
+            `
+            )
+            .join("");
+        }
+
+        renderPaginationControls(
+          "invoices-pagination",
+          invoicesCurrentPage,
+          totalItems,
+          invoicesItemsPerPage,
+          (newPage) => {
+            invoicesCurrentPage = newPage;
+            displayInvoices(allInvoicesInView);
+          }
+        );
+
+        document
+          .querySelectorAll(".view-invoice-details-btn")
+          .forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              const invoiceId = e.currentTarget.getAttribute("data-id");
+              const invoiceToView = allInvoicesInView.find(
+                (inv) => inv.id === invoiceId
+              );
+              if (invoiceToView) {
+                renderUI("invoice_detail", invoiceToView);
+              }
+            });
+          });
+      }
+
+      async function updateProductStatusQuick(productId, newStatus) {
+        if (!db) {
+          console.error("Firestore not initialized.");
+          return;
+        }
+
+        try {
+          const productDocRef = doc(
+            db,
+            "artifacts",
+            "aurora-data",
+            "public",
+            "data",
+            "products",
+            productId
+          );
+          await updateDoc(productDocRef, {
+            status: newStatus,
+          });
+          console.log(`Product ${productId} status updated to ${newStatus}`);
+        } catch (error) {
+          console.error("Error updating product status:", error);
+          openMessageModal({
+            title: "Error",
+            message: "Failed to update product status. Please try again.",
+            isError: true,
+          });
+        }
+      }
+
+      async function updateOrderStatus(orderUserId, orderId, newStatus) {
+        if (!db) return;
+        const orderDocRef = doc(
+          db,
+          "artifacts",
+          appId,
+          "users",
+          orderUserId,
+          "orders",
+          orderId
+        );
+        try {
+          await updateDoc(orderDocRef, { status: newStatus });
+          openMessageModal({
+            title: "Success",
+            message: `Order status updated to ${newStatus}.`,
+          });
+          // Re-render the detail view to reflect the change immediately
+          const updatedOrderSnap = await getDoc(orderDocRef);
+          if (updatedOrderSnap.exists()) {
+            renderUI("order_detail", {
+              id: updatedOrderSnap.id,
+              userId: orderUserId,
+              ...updatedOrderSnap.data(),
+            });
+          }
+        } catch (error) {
+          console.error("Error updating order status:", error);
+          openMessageModal({
+            title: "Error",
+            message: "Failed to update order status.",
+            isError: true,
+          });
+        }
+      }
+
+      async function markShippingAsPaid(order) {
+        if (!db) return;
+        const orderDocRef = doc(
+          db,
+          "artifacts",
+          appId,
+          "users",
+          order.userId,
+          "orders",
+          order.id
+        );
+        try {
+          // Set shipping as paid and automatically confirm the order
+          await updateDoc(orderDocRef, {
+            isShippingPaid: true,
+            status: "Confirmed",
+          });
+          openMessageModal({
+            title: "Success",
+            message: "Shipping marked as paid and order has been confirmed.",
+          });
+          // Re-render the detail view to reflect the change immediately
+          const updatedOrderSnap = await getDoc(orderDocRef);
+          if (updatedOrderSnap.exists()) {
+            renderUI("order_detail", {
+              id: updatedOrderSnap.id,
+              userId: order.userId,
+              ...updatedOrderSnap.data(),
+            });
+          }
+        } catch (error) {
+          console.error("Error marking shipping as paid:", error);
+          openMessageModal({
+            title: "Error",
+            message: "Failed to update shipping payment status.",
+            isError: true,
+          });
+        }
+      }
+
+      async function generateAndStoreInvoice(order) {
+        if (!db) return;
+
+        const invoiceId = generateReadableId("INV");
+        const isShippingPaid = order.isShippingPaid || false;
+
+        // Create a deep copy of totals to avoid mutating the original order object
+        const invoiceTotals = JSON.parse(JSON.stringify(order.totals));
+
+        // If shipping is paid, the amount due on the invoice should not include shipping cost
+        if (isShippingPaid) {
+          invoiceTotals.total -= invoiceTotals.shippingCost || 0;
+        }
+
+        const invoiceData = {
+          ...order,
+          totals: invoiceTotals, // Use the adjusted totals
+          isShippingPaid: isShippingPaid, // Store the flag in the invoice
+          id: invoiceId,
+          orderId: order.id,
+          issuedDate: Date.now(),
+        };
+
+        const invoiceDocRef = doc(
+          db,
+          "artifacts",
+          appId,
+          "public",
+          "data",
+          "invoices",
+          invoiceId
+        );
+        const orderDocRef = doc(
+          db,
+          "artifacts",
+          appId,
+          "users",
+          order.userId,
+          "orders",
+          order.id
+        );
+
+        try {
+          const batch = writeBatch(db);
+          batch.set(invoiceDocRef, invoiceData);
+          batch.update(orderDocRef, { invoiceId: invoiceId });
+          await batch.commit();
+
+          openMessageModal({
+            title: "Success",
+            message: `Invoice ${invoiceId} generated.`,
+          });
+          renderUI("invoice_detail", invoiceData);
+        } catch (error) {
+          console.error("Error generating invoice:", error);
+          openMessageModal({
+            title: "Error",
+            message: "Failed to generate invoice.",
+            isError: true,
+          });
+        }
+      }
+
+      function handleProductSelection(e) {
+        const productId = e.target.getAttribute("data-id");
+        if (e.target.checked) {
+          selectedProducts.add(productId);
+        } else {
+          selectedProducts.delete(productId);
+        }
+        const bulkActionsBtn = document.getElementById("bulk-actions-btn");
+        if (bulkActionsBtn) {
+          bulkActionsBtn.disabled = selectedProducts.size === 0;
+        }
+
+        const selectAllCheckbox = document.getElementById(
+          "select-all-products"
+        );
+        if (selectAllCheckbox) {
+          const checkboxesOnPage = document.querySelectorAll(
+            ".product-checkbox"
+          );
+          const allOnPageSelected = Array.from(checkboxesOnPage).every((cb) =>
+            selectedProducts.has(cb.dataset.id)
+          );
+          selectAllCheckbox.checked =
+            allOnPageSelected && checkboxesOnPage.length > 0;
+        }
+      }
+
+      function handleSelectAll(isChecked) {
+        const checkboxesOnPage = document.querySelectorAll(".product-checkbox");
+        checkboxesOnPage.forEach((checkbox) => {
+          const productId = checkbox.dataset.id;
+          if (isChecked) {
+            selectedProducts.add(productId);
+            checkbox.checked = true;
+          } else {
+            selectedProducts.delete(productId);
+            checkbox.checked = false;
+          }
+        });
+
+        const bulkActionsBtn = document.getElementById("bulk-actions-btn");
+        if (bulkActionsBtn) {
+          bulkActionsBtn.disabled = selectedProducts.size === 0;
+        }
+      }
+
+      async function handleBulkDelete() {
+        if (!db) {
+          console.error("Firestore not initialized.");
+          return;
+        }
+
+        const batch = writeBatch(db);
+        selectedProducts.forEach((productId) => {
+          const productDocRef = doc(
+            db,
+            "artifacts",
+            "aurora-data",
+            "public",
+            "data",
+            "products",
+            productId
+          );
+          batch.delete(productDocRef);
+        });
+
+        try {
+          await batch.commit();
+          console.log("Bulk deletion successful.");
+          selectedProducts.clear();
+          // After deletion, you might want to force a re-render
+          displayProducts(
+            allProductsInView.filter((p) => !selectedProducts.has(p.id))
+          );
+        } catch (error) {
+          console.error("Error during bulk deletion:", error);
+          openMessageModal({
+            title: "Error",
+            message: "Failed to perform bulk deletion. Please try again.",
+            isError: true,
+          });
+        }
+      }
+
+      async function handleFormSubmit(e) {
+        e.preventDefault();
+        const productId = document.getElementById("product-id")?.value;
+
+        const colors = Array.from(
+          document.querySelectorAll("#colors-list input[type='text']") || []
+        )
+          .map((input) => input.value.trim())
+          .filter(Boolean);
+
+        const sizes = Array.from(
+          document.querySelectorAll("#sizes-pills-container .size-pill") || []
+        ).map((pill) => pill.getAttribute("data-size"));
+
+        const images = Array.from(
+          document.querySelectorAll('#images-list input[type="hidden"]') || []
+        )
+          .map((input) => input.value.trim())
+          .filter(Boolean);
+
+        const shipping = {
+          weight:
+            parseFloat(document.getElementById("shipping-weight")?.value) || 0,
+          dimensions: document.getElementById("shipping-dimensions")?.value,
+          taxClass: document.getElementById("tax-class")?.value,
+        };
+
+        const seo = {
+          metaTitle: document.getElementById("meta-title")?.value,
+          metaDescription: document.getElementById("meta-description")?.value,
+        };
+
+        const basePrice =
+          parseFloat(document.getElementById("base-price")?.value) || 0;
+        const costPrice =
+          parseFloat(document.getElementById("cost-price")?.value) || 0;
+        const discountPercentage =
+          parseFloat(document.getElementById("discount-percentage")?.value) ||
+          0;
+
+        const productData = {
+          name: document.getElementById("product-name")?.value,
+          costPrice,
+          basePrice,
+          discountPercentage,
+          department: document.getElementById("product-department")?.value,
+          category: document.getElementById("product-category")?.value,
+          status: "Draft",
+          description: document.getElementById("product-description")?.value,
+          details: document.getElementById("product-details")?.value,
+          specs: {
+            material: document.getElementById("spec-material")?.value,
+            fit: document.getElementById("spec-fit")?.value,
+            care: document.getElementById("spec-care")?.value,
+          },
+          colors,
+          sizes,
+          images,
+          shipping,
+          seo,
+          dateAdded: Date.now(),
+        };
+
+        if (!db) {
+          console.error("Firestore not initialized.");
+          openMessageModal({
+            title: "Error",
+            message: "Authentication error. Failed to save product.",
+            isError: true,
+          });
+          return;
+        }
+
+        try {
+          if (productId) {
+            const productDocRef = doc(
+              db,
+              "artifacts",
+              "aurora-data",
+              "public",
+              "data",
+              "products",
+              productId
+            );
+            await setDoc(productDocRef, productData, { merge: true });
+            console.log("Product updated successfully:", productId);
+          } else {
+            const newProductId = generateReadableId("PROD");
+            const productDocRef = doc(
+              db,
+              "artifacts",
+              "aurora-data",
+              "public",
+              "data",
+              "products",
+              newProductId
+            );
+            await setDoc(productDocRef, productData);
+            console.log(
+              "New product added successfully with ID:",
+              newProductId
+            );
+          }
+          renderUI("products");
+        } catch (error) {
+          console.error("Error saving product:", error);
+          openMessageModal({
+            title: "Error",
+            message: "Failed to save product. Please try again.",
+            isError: true,
+          });
+        }
+      }
+
+      async function deleteProduct(productId) {
+        if (!db) {
+          console.error("Firestore not initialized.");
+          return;
+        }
+
+        try {
+          const productDocRef = doc(
+            db,
+            "artifacts",
+            "aurora-data",
+            "public",
+            "data",
+            "products",
+            productId
+          );
+          await deleteDoc(productDocRef);
+          console.log("Product deleted:", productId);
+        } catch (error) {
+          console.error("Error deleting product:", error);
+          openMessageModal({
+            title: "Error",
+            message: "Failed to delete product. Please try again.",
+            isError: true,
+          });
+        }
+      }
+
+      async function saveSettings(type, data) {
+        if (!db) return;
+
+        // Convert empty strings or non-numeric values to 0 for specific fields
+        if (type === "shipping") {
+          data.baseCost = data.baseCost ? Number(data.baseCost) : 0;
+          data.freeThreshold = data.freeThreshold
+            ? Number(data.freeThreshold)
+            : 0;
+        } else if (type === "tax") {
+          data.rate = data.rate ? Number(data.rate) : 0;
+        }
+
+        const settingsRef = doc(
+          db,
+          "artifacts",
+          appId,
+          "public",
+          "data",
+          "settings",
+          type
+        );
+        try {
+          await setDoc(settingsRef, data, { merge: true });
+          openMessageModal({
+            title: "Success",
+            message: `${
+              type.charAt(0).toUpperCase() + type.slice(1)
+            } settings have been saved.`,
+          });
+        } catch (error) {
+          console.error(`Error saving ${type} settings:`, error);
+          openMessageModal({
+            title: "Error",
+            message: `Failed to save ${type} settings.`,
+            isError: true,
+          });
+        }
+      }
+
+      async function loadSettings() {
+        if (!db) return;
+        try {
+          const shippingRef = doc(
+            db,
+            "artifacts",
+            appId,
+            "public",
+            "data",
+            "settings",
+            "shipping"
+          );
+          const taxRef = doc(
+            db,
+            "artifacts",
+            appId,
+            "public",
+            "data",
+            "settings",
+            "tax"
+          );
+
+          const shippingSnap = await getDoc(shippingRef);
+          const taxSnap = await getDoc(taxRef);
+
+          if (shippingSnap.exists()) {
+            const data = shippingSnap.data();
+            document.getElementById("base-shipping-cost").value =
+              data.baseCost || "";
+            document.getElementById("free-shipping-threshold").value =
+              data.freeThreshold || "";
+          }
+          if (taxSnap.exists()) {
+            const data = taxSnap.data();
+            document.getElementById("tax-rate").value = data.rate || "";
+          }
+        } catch (error) {
+          console.error("Error loading settings:", error);
+        }
+      }
+
+      // --- Pagination Controls Renderer ---
+      function renderPaginationControls(
+        containerId,
+        currentPage,
+        totalItems,
+        itemsPerPage,
+        onPageChange
+      ) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        if (totalPages <= 1) {
+          container.innerHTML = "";
+          return;
+        }
+
+        const startItem = (currentPage - 1) * itemsPerPage + 1;
+        const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
+        container.innerHTML = `
+            <div class="flex items-center justify-between text-sm text-[var(--secondary-text)]">
+                <p>Showing ${startItem} to ${endItem} of ${totalItems} results</p>
+                <div class="pagination-controls flex items-center gap-2">
+                    <button id="${containerId}-prev" class="px-3 py-1 rounded-md" ${
+          currentPage === 1 ? "disabled" : ""
+        }>
+                        <i class="ph ph-arrow-left"></i> Previous
+                    </button>
+                    <span class="font-semibold text-white">${currentPage} / ${totalPages}</span>
+                    <button id="${containerId}-next" class="px-3 py-1 rounded-md" ${
+          currentPage === totalPages ? "disabled" : ""
+        }>
+                        Next <i class="ph ph-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document
+          .getElementById(`${containerId}-prev`)
+          ?.addEventListener("click", () => {
+            if (currentPage > 1) onPageChange(currentPage - 1);
+          });
+        document
+          .getElementById(`${containerId}-next`)
+          ?.addEventListener("click", () => {
+            if (currentPage < totalPages) onPageChange(currentPage + 1);
+          });
+      }
+
+      // --- Custom Modal Logic ---
+      const modalOverlay = document.getElementById("message-modal");
+      const modalTitle = document.getElementById("modal-title");
+      const modalMessage = document.getElementById("modal-message");
+      const modalConfirmBtn = document.getElementById("modal-confirm-btn");
+      const modalCancelBtn = document.getElementById("modal-cancel-btn");
+
+      let confirmCallback = () => {};
+
+      function openMessageModal({
+        title,
+        message,
+        confirmAction,
+        showCancel = false,
+        isError = false,
+      }) {
+        if (
+          !modalTitle ||
+          !modalMessage ||
+          !modalCancelBtn ||
+          !modalConfirmBtn ||
+          !modalOverlay
+        )
+          return;
+
+        modalTitle.textContent = title;
+        modalMessage.textContent = message;
+        modalCancelBtn.style.display = showCancel ? "inline-block" : "none";
+
+        if (isError) {
+          modalConfirmBtn.textContent = "Dismiss";
+          modalConfirmBtn.classList.remove("btn-primary");
+          modalConfirmBtn.classList.add("btn-secondary");
+        } else {
+          modalConfirmBtn.textContent = showCancel ? "Confirm" : "OK";
+          modalConfirmBtn.classList.remove("btn-secondary");
+          modalConfirmBtn.classList.add("btn-primary");
+        }
+
+        confirmCallback = confirmAction || closeMessageModal;
+        modalOverlay.classList.add("open");
+      }
+
+      function closeMessageModal() {
+        if (modalOverlay) modalOverlay.classList.remove("open");
+      }
+
+      if (modalOverlay) {
+        modalOverlay.addEventListener("click", (e) => {
+          if (e.target === modalOverlay) {
+            closeMessageModal();
+          }
+        });
+      }
+      if (modalConfirmBtn) {
+        modalConfirmBtn.addEventListener("click", () => {
+          confirmCallback();
+          closeMessageModal();
+        });
+      }
+      if (modalCancelBtn) {
+        modalCancelBtn.addEventListener("click", () => {
+          closeMessageModal();
+        });
+      }
+
+      // --- Mobile Sidebar Logic ---
+      const hamburgerBtn = document.getElementById("hamburger-btn");
+      const closeMobileSidebarBtn = document.getElementById(
+        "close-mobile-sidebar"
+      );
+      const mobileSidebar = document.getElementById("mobile-sidebar-menu");
+
+      if (hamburgerBtn && mobileSidebar) {
+        hamburgerBtn.addEventListener("click", () => {
+          mobileSidebar.classList.remove("hidden");
+        });
+      }
+
+      if (closeMobileSidebarBtn && mobileSidebar) {
+        closeMobileSidebarBtn.addEventListener("click", () => {
+          mobileSidebar.classList.add("hidden");
+        });
+      }
+
+      // --- Event Listeners and Initial Call ---
+      navLinks.forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const view = e.currentTarget.getAttribute("data-view");
+          renderUI(view);
+        });
+      });
+
+      setupFirebase();
+    </script>
+  </body>
+</html>

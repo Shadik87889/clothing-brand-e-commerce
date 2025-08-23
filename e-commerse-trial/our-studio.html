@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURORA - Our Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.0.3"></script>
+
+    <style>
+      :root {
+        --background: #0a0a0a;
+        --text: #e8e8e8;
+        --accent: #ffffff;
+        --border: #2a2a2a;
+        --secondary-text: #a8a8a8;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--background);
+        color: var(--text);
+        overflow-x: hidden;
+        font-weight: 300;
+      }
+      body.no-scroll {
+        overflow: hidden;
+      }
+      .font-heading {
+        font-family: "Cormorant Garamond", serif;
+      }
+      .font-body {
+        font-family: "Poppins", sans-serif;
+      }
+      .cursor {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent);
+        pointer-events: none;
+        mix-blend-mode: difference;
+        transition: transform 0.2s ease-out, width 0.3s ease, height 0.3s ease;
+        z-index: 9999;
+        transform-origin: center center;
+      }
+      .cursor-follower {
+        position: fixed;
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--accent);
+        border-radius: 50%;
+        pointer-events: none;
+        mix-blend-mode: difference;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        z-index: 9999;
+      }
+      .cursor-grow {
+        transform: scale(3);
+        background: var(--accent);
+      }
+      @media (max-width: 768px) {
+        .cursor,
+        .cursor-follower {
+          display: none;
+        }
+      }
+      #mobile-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--background);
+        z-index: 5000;
+        transform: translateX(100%);
+        transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      #mobile-menu.open {
+        transform: translateX(0);
+      }
+      .mobile-nav-link {
+        font-size: 2.5rem;
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        line-height: 1.5;
+        color: var(--text);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(1) {
+        transition-delay: 0.1s;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(2) {
+        transition-delay: 0.2s;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(3) {
+        transition-delay: 0.3s;
+      }
+      .magnetic-item {
+        display: inline-block;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .hover-link {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+      }
+      .hover-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: var(--accent);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+      }
+      .hover-link:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+      .split-word {
+        display: inline-block;
+        overflow: hidden;
+      }
+      .split-char {
+        display: inline-block;
+        transform: translateY(110%);
+        transition: transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+      .clip-img {
+        clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
+        transition: clip-path 1s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      .is-inview .clip-img {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+      }
+      .manifesto-card {
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+      }
+      .manifesto-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      }
+      .manifesto-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 150%;
+        height: 150%;
+        background: radial-gradient(
+          circle at var(--x) var(--y),
+          rgba(255, 255, 255, 0.15),
+          transparent 20%
+        );
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        transition: opacity 0.5s;
+      }
+      .manifesto-card:hover::before {
+        opacity: 1;
+      }
+      .scroll-indicator {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        animation: fadeIn 1s 2s forwards, bounce 2s infinite 3s;
+      }
+      .scroll-indicator span {
+        display: block;
+        width: 1px;
+        height: 40px;
+        background-color: white;
+        margin: 0 auto;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes bounce {
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-15px);
+        }
+        60% {
+          transform: translateY(-10px);
+        }
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Mobile Navigation Menu -->
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 bg-[var(--background)] z-5000 p-8 md:hidden"
+    >
+      <button id="close-menu" class="absolute top-8 right-8 text-white z-5001">
+        <i class="ph ph-x text-3xl magnetic-item"></i>
+      </button>
+      <nav class="flex flex-col items-center justify-center h-full">
+        <ul class="space-y-6">
+          <li>
+            <a href="home.html" class="mobile-nav-link hover-link magnetic-item"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a href="shop.html" class="mobile-nav-link hover-link magnetic-item"
+              >Shop</a
+            >
+          </li>
+          <li>
+            <a
+              href="gallery.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Gallery</a
+            >
+          </li>
+          <li>
+            <a
+              href="contact.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Contact</a
+            >
+          </li>
+          <li>
+            <a
+              href="our-studio.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Studio</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Header -->
+    <header
+      class="fixed top-0 left-0 w-full z-40 p-6 md:p-8 transition-all duration-500 bg-transparent"
+      id="main-header"
+    >
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="home.html">
+          <div
+            class="text-xl font-bold tracking-widest uppercase magnetic-item font-heading"
+          >
+            Aurora
+          </div>
+        </a>
+        <!-- Desktop Navigation -->
+        <nav
+          class="hidden md:flex items-center space-x-10 text-sm uppercase tracking-wider font-light"
+        >
+          <a href="home.html" class="hover-link magnetic-item">Home</a>
+          <a href="shop.html" class="hover-link magnetic-item">Shop</a>
+          <a href="gallery.html" class="hover-link magnetic-item">Gallery</a>
+          <a href="contact.html" class="hover-link magnetic-item">Contact</a>
+          <a href="our-studio.html" class="hover-link magnetic-item">Studio</a>
+        </nav>
+        <div class="flex items-center space-x-6">
+          <a
+            href="cart.html"
+            style="overflow: visible;"
+            class="hover-link magnetic-item relative hover:text-gray-400 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewbox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+            <span
+              id="cart-count"
+              class="absolute -top-2 -right-2 bg-white text-black text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold"
+              >0</span
+            >
+          </a>
+          <button
+            id="hamburger-btn"
+            class="magnetic-item md:hidden z-5001"
+            aria-label="Open mobile menu"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="min-h-screen">
+      <div
+        class="container mx-auto px-6 max-w-5xl pt-48 pb-16 relative min-h-screen flex flex-col justify-center"
+      >
+        <!-- Main title with split text animation -->
+        <h1
+          id="main-title"
+          class="text-7xl md:text-9xl font-heading text-center uppercase leading-none overflow-hidden"
+        >
+          Our Studio
+        </h1>
+        <!-- New: Style text that fades on scroll -->
+        <p
+          id="hero-scroll-text"
+          class="text-lg md:text-xl text-[var(--secondary-text)] font-heading italic tracking-wide text-center mt-8"
+        >
+          Fashion is what you buy. Style is what you do with it.
+        </p>
+        <div class="scroll-indicator">
+          <span></span>
+        </div>
+      </div>
+
+      <div class="container mx-auto px-6 max-w-5xl">
+        <!-- First Content Block (Our Philosophy) -->
+        <div class="mb-48" data-animation-trigger>
+          <div
+            class="relative w-full h-[60vh] md:h-[90vh] overflow-hidden rounded-lg"
+            data-parallax-image
+          >
+            <img
+              src="https://images.unsplash.com/photo-1600201319331-27d31ecd7850?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              alt="Crafted with a conscious mind"
+              class="w-full h-full object-cover clip-img"
+              onerror="this.onerror=null;this.src='https://placehold.co/800x600/1a1a1a/a8a8a8?text=Craft';"
+            />
+          </div>
+          <div class="mt-16 md:mt-24 max-w-3xl mx-auto text-center">
+            <h2
+              class="font-heading text-4xl md:text-5xl mb-8 font-semibold"
+              data-animation-target
+            >
+              Our Philosophy
+            </h2>
+            <div
+              class="text-[var(--secondary-text)] font-body leading-relaxed text-lg md:text-xl space-y-6"
+            >
+              <p class="text-reveal-split" data-animation-target>
+                At Aurora, we believe in creating more than just products; we
+                craft experiences. Our journey began with a simple idea: to
+                design pieces that transcend fleeting trends, focusing on
+                quality, elegance, and durability. We pour our passion for art
+                and design into every stitch and seam, ensuring that each item
+                tells a story of meticulous craftsmanship and enduring style.
+              </p>
+              <p class="text-reveal-split" data-animation-target>
+                We are dedicated to sustainable practices and ethical
+                production. From sourcing high-quality, responsibly-obtained
+                materials to partnering with artisans who share our values,
+                every step of our process is a conscious choice. Our commitment
+                extends beyond our products to the people and the planet,
+                building a brand that you can feel good about wearing and
+                supporting for years to come.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quote Section -->
+        <div class="my-48 text-center" data-animation-trigger>
+          <p
+            class="font-heading text-4xl md:text-6xl italic font-light leading-snug max-w-4xl mx-auto"
+            data-animation-target
+          >
+            "Elegance is not about being noticed, it's about being remembered."
+          </p>
+          <span
+            class="block mt-6 text-[var(--secondary-text)] tracking-widest uppercase text-sm"
+            data-animation-target
+            >- Giorgio Armani</span
+          >
+        </div>
+
+        <!-- The Process Section -->
+        <div class="my-48" data-animation-trigger>
+          <h2
+            class="font-heading text-4xl md:text-5xl mb-16 font-semibold text-center"
+            data-animation-target
+          >
+            Our Creative Process
+          </h2>
+          <div
+            class="flex flex-col md:flex-row justify-center items-stretch gap-8"
+          >
+            <!-- Process Step 1 -->
+            <div
+              class="flex-1 space-y-4 p-8 rounded-lg border border-[var(--border)]"
+              data-animation-target
+            >
+              <span
+                class="font-heading text-6xl text-[var(--secondary-text)] font-semibold"
+                >01</span
+              >
+              <h3 class="font-heading text-xl font-semibold uppercase">
+                Ideation & Concept
+              </h3>
+              <p class="text-[var(--secondary-text)] font-body">
+                Every project begins with a spark. We immerse ourselves in
+                research, gathering inspiration from art, architecture, and
+                nature to form the initial concept.
+              </p>
+            </div>
+            <!-- Arrow or Separator -->
+            <div
+              class="hidden md:flex flex-col items-center justify-center text-[var(--border)]"
+            >
+              <i class="ph-fill ph-arrow-right text-3xl"></i>
+            </div>
+            <!-- Process Step 2 -->
+            <div
+              class="flex-1 space-y-4 p-8 rounded-lg border border-[var(--border)]"
+              data-animation-target
+            >
+              <span
+                class="font-heading text-6xl text-[var(--secondary-text)] font-semibold"
+                >02</span
+              >
+              <h3 class="font-heading text-xl font-semibold uppercase">
+                Design & Refinement
+              </h3>
+              <p class="text-[var(--secondary-text)] font-body">
+                We meticulously sketch and iterate, translating our concepts
+                into tangible designs. Every detail is considered and refined.
+              </p>
+            </div>
+            <!-- Arrow or Separator -->
+            <div
+              class="hidden md:flex flex-col items-center justify-center text-[var(--border)]"
+            >
+              <i class="ph-fill ph-arrow-right text-3xl"></i>
+            </div>
+            <!-- Process Step 3 -->
+            <div
+              class="flex-1 space-y-4 p-8 rounded-lg border border-[var(--border)]"
+              data-animation-target
+            >
+              <span
+                class="font-heading text-6xl text-[var(--secondary-text)] font-semibold"
+                >03</span
+              >
+              <h3 class="font-heading text-xl font-semibold uppercase">
+                Craftsmanship & Production
+              </h3>
+              <p class="text-[var(--secondary-text)] font-body">
+                Partnering with skilled artisans, we bring our designs to life.
+                Our focus is on ethical production and quality materials.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- The Manifesto Section -->
+        <div class="my-48 text-center" data-animation-trigger>
+          <h2
+            class="font-heading text-4xl md:text-5xl mb-16 font-semibold text-center"
+            data-animation-target
+          >
+            Our Manifesto
+          </h2>
+          <p
+            class="text-[var(--secondary-text)] font-body max-w-2xl mx-auto mb-16 text-lg md:text-xl"
+            data-animation-target
+          >
+            We are a collective of visionaries, artists, and craftsmen united by
+            a shared belief in the power of beautiful, honest design.
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Manifesto Item 1 -->
+            <div
+              class="manifesto-card bg-[var(--border)] p-8 rounded-xl"
+              data-animation-target
+            >
+              <i class="ph-fill ph-heart text-5xl mb-4 text-white"></i>
+              <h3 class="font-heading text-2xl font-semibold mb-2">Passion</h3>
+              <p class="text-[var(--secondary-text)] font-body">
+                We pour our souls into every creation, driven by an unwavering
+                love for our craft.
+              </p>
+            </div>
+            <!-- Manifesto Item 2 -->
+            <div
+              class="manifesto-card bg-[var(--border)] p-8 rounded-xl"
+              data-animation-target
+            >
+              <i class="ph-fill ph-infinity text-5xl mb-4 text-white"></i>
+              <h3 class="font-heading text-2xl font-semibold mb-2">
+                Longevity
+              </h3>
+              <p class="text-[var(--secondary-text)] font-body">
+                We design for the future, crafting timeless pieces that defy
+                passing trends.
+              </p>
+            </div>
+            <!-- Manifesto Item 3 -->
+            <div
+              class="manifesto-card bg-[var(--border)] p-8 rounded-xl"
+              data-animation-target
+            >
+              <i class="ph-fill ph-handshake text-5xl mb-4 text-white"></i>
+              <h3 class="font-heading text-2xl font-semibold mb-2">
+                Integrity
+              </h3>
+              <p class="text-[var(--secondary-text)] font-body">
+                Our commitment is to ethical practices and transparent,
+                responsible production.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- New Section -->
+        <div class="my-48" data-animation-trigger>
+          <div
+            class="bg-[var(--border)] p-12 rounded-lg text-center"
+            data-animation-target
+          >
+            <h2
+              class="font-heading text-4xl md:text-5xl font-semibold uppercase leading-tight mb-4"
+              data-animation-target
+            >
+              Crafted with a Conscious Mind
+            </h2>
+            <p
+              class="text-[var(--secondary-text)] font-body max-w-2xl mx-auto text-lg"
+              data-animation-target
+            >
+              Every piece is a promise of quality, sustainability, and
+              unparalleled design.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black py-16 border-t border-[var(--border)]">
+      <div class="container mx-auto px-6">
+        <div
+          class="grid grid-cols-1 md:grid-cols-4 gap-12"
+          id="footer-content"
+          data-animation-trigger
+        >
+          <div
+            class="col-span-1 md:col-span-2 footer-col"
+            data-animation-target
+          >
+            <h3
+              class="text-xl font-bold mb-4 uppercase tracking-wider font-heading"
+            >
+              Stay in the loop
+            </h3>
+            <p class="text-[var(--secondary-text)] mb-6 max-w-sm font-body">
+              Receive updates on new arrivals, special offers and our creative
+              process.
+            </p>
+            <form class="flex items-center mt-8">
+              <input
+                type="email"
+                placeholder="Your email address"
+                class="bg-transparent border-b border-[var(--border)] w-full max-w-xs py-2 px-0 focus:outline-none focus:border-white transition-colors placeholder-[var(--secondary-text)] font-body"
+              />
+              <button
+                type="submit"
+                class="hover-link magnetic-item bg-transparent border border-white text-white px-6 py-2 rounded-full font-bold text-sm ml-4 hover:bg-white hover:text-black transition-all duration-300"
+              >
+                Subscribe
+              </button>
+            </form>
+          </div>
+          <div class="col-span-1 footer-col" data-animation-target>
+            <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
+              Shop
+            </h4>
+            <ul class="space-y-3 text-[var(--secondary-text)] font-body">
+              <li>
+                <a href="#" class="hover-link magnetic-item">New In</a>
+              </li>
+              <li>
+                <a href="#" class="hover-link magnetic-item">Clothing</a>
+              </li>
+              <li>
+                <a href="#" class="hover-link magnetic-item">Accessories</a>
+              </li>
+              <li>
+                <a href="#" class="hover-link magnetic-item">Collections</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-span-1 footer-col" data-animation-target>
+            <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
+              About
+            </h4>
+            <ul class="space-y-3 text-[var(--secondary-text)] font-body">
+              <li>
+                <a href="#" class="hover-link magnetic-item">Our Studio</a>
+              </li>
+              <li>
+                <a href="#" class="hover-link magnetic-item">Journal</a>
+              </li>
+              <li>
+                <a href="#" class="hover-link magnetic-item">Contact</a>
+              </li>
+              <li><a href="#" class="hover-link magnetic-item">FAQs</a></li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="mt-16 pt-8 border-t border-[var(--border)] text-center text-gray-500 text-xs font-body"
+        >
+          <p>
+            &copy; 2025 Aurora. All Rights Reserved. A demonstration of
+            world-class web design.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Scripts for animations and functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
+    <script>
+      // Smooth Scroll
+      const lenis = new Lenis();
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // Custom Cursor
+      const cursor = document.querySelector(".cursor");
+      const follower = document.querySelector(".cursor-follower");
+      gsap.set(cursor, { xPercent: -50, yPercent: -50 });
+      gsap.set(follower, { xPercent: -50, yPercent: -50 });
+      window.addEventListener("mousemove", (e) => {
+        gsap.to(cursor, { duration: 0.2, x: e.clientX, y: e.clientY });
+        gsap.to(follower, {
+          duration: 0.6,
+          x: e.clientX,
+          y: e.clientY,
+          ease: "power2.out",
+        });
+      });
+      document
+        .querySelectorAll(
+          ".hover-link, .magnetic-item, a, button, .manifesto-card"
+        )
+        .forEach((el) => {
+          el.addEventListener("mouseenter", () =>
+            follower.classList.add("cursor-grow")
+          );
+          el.addEventListener("mouseleave", () =>
+            follower.classList.remove("cursor-grow")
+          );
+        });
+      document.querySelectorAll(".magnetic-item").forEach((el) => {
+        el.addEventListener("mousemove", function (e) {
+          const position = this.getBoundingClientRect();
+          const x = e.clientX - position.left - position.width / 2;
+          const y = e.clientY - position.top - position.height / 2;
+          gsap.to(this, {
+            x: x * 0.3,
+            y: y * 0.3,
+            duration: 0.3,
+            ease: "power2.out",
+          });
+        });
+        el.addEventListener("mouseleave", function () {
+          gsap.to(this, {
+            x: 0,
+            y: 0,
+            duration: 0.3,
+            ease: "elastic.out(1, 0.3)",
+          });
+        });
+      });
+
+      // Manifesto Card Glare Effect
+      document.querySelectorAll(".manifesto-card").forEach((card) => {
+        card.addEventListener("mousemove", (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          card.style.setProperty("--x", `${x}px`);
+          card.style.setProperty("--y", `${y}px`);
+        });
+      });
+
+      // Mobile Menu Logic
+      const hamburgerBtn = document.getElementById("hamburger-btn");
+      const closeMenuBtn = document.getElementById("close-menu");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const mobileLinks = document.querySelectorAll(".mobile-nav-link");
+
+      hamburgerBtn.addEventListener("click", () => {
+        mobileMenu.classList.add("open");
+        document.body.classList.add("no-scroll");
+        mobileLinks.forEach((link) => {
+          link.style.opacity = 1;
+          link.style.transform = "translateY(0)";
+        });
+      });
+      closeMenuBtn.addEventListener("click", () => {
+        mobileMenu.classList.remove("open");
+        document.body.classList.remove("no-scroll");
+        mobileLinks.forEach((link) => {
+          link.style.opacity = 0;
+          link.style.transform = "translateY(20px)";
+        });
+      });
+      mobileLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          document.body.classList.remove("no-scroll");
+        });
+      });
+
+      // GSAP Animations with ScrollTrigger
+      gsap.registerPlugin(ScrollTrigger);
+      // Header scroll effect
+      const header = document.getElementById("main-header");
+
+      ScrollTrigger.create({
+        start: "top top",
+        end: 99999,
+        onUpdate: (self) => {
+          if (self.direction === 1 && self.progress > 0) {
+            gsap.set(header, { y: "-100%" });
+          } else {
+            gsap.set(header, { y: "0%" });
+          }
+
+          if (self.progress > 0.01) {
+            header.style.backgroundColor = "rgba(13, 13, 13, 0.7)";
+            header.style.backdropFilter = "blur(10px)";
+          } else {
+            header.style.backgroundColor = "transparent";
+            header.style.backdropFilter = "none";
+          }
+        },
+      });
+
+      // Main title animation
+      const mainTitle = document.getElementById("main-title");
+      function splitText(element) {
+        const text = element.textContent.trim();
+        element.innerHTML = "";
+        text.split(" ").forEach((word) => {
+          const wordSpan = document.createElement("span");
+          wordSpan.className = "split-word";
+          word.split("").forEach((char) => {
+            const charSpan = document.createElement("span");
+            charSpan.className = "split-char";
+            charSpan.textContent = char === " " ? "\u00A0" : char;
+            wordSpan.appendChild(charSpan);
+          });
+          element.appendChild(wordSpan);
+          element.appendChild(document.createTextNode(" "));
+        });
+      }
+
+      if (mainTitle) {
+        splitText(mainTitle);
+        // Using fromTo for a more explicit and reliable animation
+        gsap.fromTo(
+          mainTitle.querySelectorAll(".split-char"),
+          {
+            y: "110%", // From (starting state)
+          },
+          {
+            y: "0%", // To (ending state)
+            stagger: {
+              each: 0.03,
+              from: "start",
+            },
+            duration: 1.5,
+            ease: "power4.out",
+            delay: 0.5,
+          }
+        );
+      }
+
+      // Hero Scroll Text Fade-out Animation
+      gsap.to("#hero-scroll-text", {
+        opacity: 0,
+        y: -50,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#main-content",
+          start: "top top",
+          end: "center top",
+          scrub: 1,
+        },
+      });
+
+      // Parallax Image
+      document.querySelectorAll("[data-parallax-image]").forEach((element) => {
+        const image = element.querySelector("img");
+        gsap.set(image, { scale: 1.15 });
+        gsap.to(image, {
+          scale: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: element,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+      });
+
+      // Unified Reveal Animation
+      document
+        .querySelectorAll("[data-animation-trigger]")
+        .forEach((container) => {
+          const targets = container.querySelectorAll("[data-animation-target]");
+          gsap.from(targets, {
+            y: 60,
+            opacity: 0,
+            stagger: 0.15,
+            duration: 1.2,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: container,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
+          });
+        });
+
+      // Image clip-path reveal
+      ScrollTrigger.batch("[data-parallax-image]", {
+        onEnter: (batch) =>
+          gsap.to(batch, {
+            onStart: () => (batch[0].parentNode.className += " is-inview"),
+          }),
+      });
+    </script>
+    <script src="cart-count.js"></script>
+  </body>
+</html>

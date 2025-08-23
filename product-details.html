@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURORA - Product Details</title>
+    <!-- Tailwind CSS for utility-first styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for typography: Cormorant Garamond and Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Phosphor Icons for elegant icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web@2.0.3"></script>
+
+    <!-- Custom CSS variables and styles -->
+    <style>
+      :root {
+        --background: #0d0d0d;
+        --text: #e8e8e8;
+        --accent: #ffffff;
+        --border: #2a2a2a;
+        --secondary-text: #a8a8a8;
+        --star-filled: #ffc107;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--background);
+        color: var(--text);
+        overflow-x: hidden;
+        font-weight: 400;
+      }
+
+      /* Global styles for smooth scrolling and cursor */
+      html.lenis {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+      body.no-scroll {
+        overflow: hidden;
+      }
+
+      /* Font classes */
+      .font-heading {
+        font-family: "Cormorant Garamond", serif;
+      }
+      .font-body {
+        font-family: "Poppins", sans-serif;
+      }
+
+      /* Custom cursor styles */
+      .cursor {
+        position: fixed;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--accent);
+        pointer-events: none;
+        mix-blend-mode: difference;
+        transition: transform 0.2s ease-out, width 0.3s ease, height 0.3s ease;
+        z-index: 9999;
+        transform-origin: center center;
+      }
+      .cursor-follower {
+        position: fixed;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--accent);
+        border-radius: 50%;
+        pointer-events: none;
+        mix-blend-mode: difference;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        z-index: 9999;
+      }
+      .cursor-grow {
+        transform: scale(3);
+        background: var(--accent);
+      }
+
+      /* Mobile menu styles */
+      #mobile-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--background);
+        z-index: 5000;
+        transform: translateX(100%);
+        transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      #mobile-menu.open {
+        transform: translateX(0);
+      }
+      .mobile-nav-link {
+        font-size: 2.5rem;
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        line-height: 1.5;
+        color: var(--text);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      }
+      #mobile-menu.open .mobile-nav-link {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(1) {
+        transition-delay: 0.1s;
+      }
+
+      /* Magnetic effect for buttons and links */
+      .magnetic-item {
+        display: inline-block;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+
+      /* Product page specific styles */
+      .size-option,
+      .color-option {
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .size-option.selected {
+        border: 1px solid var(--accent);
+        color: var(--accent);
+      }
+      .color-option.selected {
+        outline: 2px solid var(--accent);
+        outline-offset: 2px;
+      }
+      .image-thumbnail {
+        cursor: pointer;
+        opacity: 0.6;
+        transition: all 0.2s ease;
+      }
+      .image-thumbnail.selected,
+      .image-thumbnail:hover {
+        opacity: 1;
+        border: 1px solid var(--accent);
+      }
+
+      .back-to-products {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 2rem;
+        color: var(--secondary-text);
+        transition: color 0.2s ease;
+        font-size: 0.9rem;
+      }
+      .back-to-products:hover {
+        color: var(--text);
+      }
+      #cart-notification {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translate(-50%, 200%);
+        background-color: var(--background);
+        color: var(--text);
+        padding: 1rem 2rem;
+        border-radius: 9999px;
+        z-index: 5000;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        border: 1-px solid var(--border);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Add to Cart Notification -->
+    <div id="cart-notification">
+      <i class="ph-fill ph-check-circle text-green-400"></i>
+      <span>Item added to cart</span>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 bg-[var(--background)] z-5000 p-8 md:hidden"
+    >
+      <button id="close-menu" class="absolute top-8 right-8 text-white z-5001">
+        <i class="ph ph-x text-3xl magnetic-item"></i>
+      </button>
+      <nav class="flex flex-col items-center justify-center h-full">
+        <ul class="space-y-6">
+          <li>
+            <a href="home.html" class="mobile-nav-link hover-link magnetic-item"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a href="shop.html" class="mobile-nav-link hover-link magnetic-item"
+              >Shop</a
+            >
+          </li>
+          <li>
+            <a
+              href="gallery.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Gallery</a
+            >
+          </li>
+          <li>
+            <a
+              href="contact.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Contact</a
+            >
+          </li>
+          <li>
+            <a
+              href="our-studio.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Studio</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Header -->
+    <header
+      class="fixed top-0 left-0 w-full z-40 p-6 md:p-8 transition-all duration-500 bg-[var(--background)]/70 backdrop-blur-lg"
+    >
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="home.html">
+          <div
+            class="text-xl font-bold tracking-widest uppercase magnetic-item font-heading"
+          >
+            Aurora
+          </div>
+        </a>
+        <!-- Desktop Navigation -->
+        <nav
+          class="hidden md:flex items-center space-x-10 text-sm uppercase tracking-wider font-light"
+        >
+          <a href="home.html" class="hover-link magnetic-item">Home</a>
+          <a href="shop.html" class="hover-link magnetic-item">Shop</a>
+          <a href="gallery.html" class="hover-link magnetic-item">Gallery</a>
+          <a href="contact.html" class="hover-link magnetic-item">Contact</a>
+          <a href="our-studio.html" class="hover-link magnetic-item">Studio</a>
+        </nav>
+        <div class="flex items-center space-x-6">
+          <a
+            href="cart.html"
+            class="hover-link magnetic-item relative hover:text-gray-400 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+            <span
+              id="cart-count"
+              class="absolute -top-2 -right-2 bg-white text-black text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold"
+              >0</span
+            >
+          </a>
+          <button
+            id="hamburger-btn"
+            class="magnetic-item md:hidden z-5001"
+            aria-label="Open mobile menu"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="min-h-screen pt-32 pb-16">
+      <div class="container mx-auto px-6 max-w-7xl">
+        <!-- Dedicated Product Details Page Section -->
+        <section id="product-details-page">
+          <a href="index.html" class="back-to-products magnetic-item">
+            <i class="ph ph-arrow-left text-xl"></i> Back to Products
+          </a>
+          <div
+            id="product-content-wrapper"
+            class="flex flex-col lg:flex-row gap-8 lg:gap-16 items-start"
+          >
+            <!-- Product Image & Gallery -->
+            <div
+              class="w-full lg:w-3/5 flex flex-col gap-4 lg:sticky lg:top-32"
+            >
+              <div class="rounded-xl overflow-hidden">
+                <img
+                  id="page-product-image"
+                  src=""
+                  alt=""
+                  class="w-full aspect-[3/4] object-cover"
+                  onerror="this.onerror=null;this.src='https://placehold.co/600x800/0d0d0d/e8e8e8?text=Product+Image';"
+                />
+              </div>
+              <!-- Image Thumbnails -->
+              <div
+                id="page-image-thumbnails"
+                class="flex gap-4 overflow-x-auto p-1"
+              ></div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="w-full lg:w-2/5 flex flex-col gap-4">
+              <div class="flex flex-col gap-2">
+                <!-- Wrapper for name, rating, and price -->
+                <div class="flex flex-col">
+                  <div class="flex items-center gap-4">
+                    <h2
+                      id="page-product-name"
+                      class="font-heading text-4xl font-semibold"
+                    ></h2>
+                  </div>
+                  <!-- New price and discount container -->
+                  <div class="flex items-center gap-2 mt-2">
+                    <p
+                      id="page-product-price"
+                      class="font-body text-2xl text-[var(--secondary-text)] flex items-center gap-2"
+                    ></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div class="mt-4">
+                <h3 class="font-semibold mb-2">Description</h3>
+                <p
+                  id="page-product-description"
+                  class="font-body text-sm text-[var(--secondary-text)] leading-relaxed"
+                ></p>
+              </div>
+
+              <!-- Specifications -->
+              <div id="page-product-specs" class="mt-4">
+                <h3 class="font-semibold mb-2">Specifications</h3>
+                <ul
+                  class="font-body text-sm text-[var(--secondary-text)] space-y-2"
+                >
+                  <!-- Specs list will be dynamically added here -->
+                </ul>
+              </div>
+
+              <!-- Size Options -->
+              <div id="page-size-options-container" class="mt-4">
+                <p class="text-sm font-semibold mb-2">Size</p>
+                <div id="page-sizes" class="flex gap-2 flex-wrap">
+                  <!-- Size buttons will be dynamically added here -->
+                </div>
+              </div>
+
+              <!-- Color Options -->
+              <div id="page-color-options-container" class="mt-4">
+                <p class="text-sm font-semibold mb-2">Color</p>
+                <div id="page-colors" class="flex gap-2 flex-wrap">
+                  <!-- Color buttons will be dynamically added here -->
+                </div>
+              </div>
+
+              <!-- Quantity Selector -->
+              <div class="flex items-center gap-4 mt-6">
+                <p class="text-sm font-semibold">Quantity</p>
+                <div
+                  class="flex items-center rounded-full border border-[var(--border)]"
+                >
+                  <button
+                    id="page-decrement-qty"
+                    class="p-2 h-8 w-8 flex items-center justify-center text-sm rounded-l-full hover:bg-white/10 transition-colors"
+                  >
+                    -
+                  </button>
+                  <input
+                    id="page-quantity-input"
+                    type="text"
+                    value="1"
+                    min="1"
+                    class="w-8 h-8 text-center bg-transparent border-x border-[var(--border)] focus:outline-none"
+                  />
+                  <button
+                    id="page-increment-qty"
+                    class="p-2 h-8 w-8 flex items-center justify-center text-sm rounded-r-full hover:bg-white/10 transition-colors"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              <!-- Add to Cart Button -->
+              <button
+                id="page-add-to-cart-btn"
+                class="add-to-cart-btn bg-white text-black py-4 rounded-full text-lg font-semibold uppercase tracking-wider hover:bg-gray-200 transition-all duration-300 magnetic-item mt-8"
+              >
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black py-16 border-t border-[var(--border)]">
+      <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12" id="footer-content">
+          <div class="col-span-1 md:col-span-2 footer-col">
+            <h3
+              class="text-xl font-bold mb-4 uppercase tracking-wider font-heading"
+            >
+              Connect
+            </h3>
+            <p class="text-gray-400 mb-6 max-w-sm font-body">
+              Follow us on our social media channels to see our latest designs
+              and updates.
+            </p>
+            <div class="flex space-x-4 mt-8">
+              <a
+                href="#"
+                class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                <!-- Social Media Icon placeholder: You can replace this with actual SVG or Font Awesome icons -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07c3.252.148 4.653 1.636 4.807 4.845.056 1.268.067 1.649.067 4.853 0 3.204-.011 3.585-.067 4.849-.155 3.208-1.556 4.646-4.808 4.811-1.267.056-1.648.066-4.85.066s-3.583-.01-4.85-.066c-3.252-.165-4.652-1.603-4.807-4.811-.056-1.267-.067-1.648-.067-4.849s.011-3.585.067-4.85c.155-3.208 1.555-4.646 4.807-4.811 1.267-.056 1.648-.066 4.85-.066zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.211-6.671 2.457-6.882 6.812-.058 1.281-.07 1.689-.07 4.946s.012 3.666.07 4.947c.211 4.357 2.455 6.671 6.811 6.882 1.28.058 1.689.07 4.946.07s3.666-.012 4.946-.07c4.356-.211 6.67-2.456 6.882-6.812.058-1.28.07-1.689.07-4.946s-.012-3.666-.07-4.947c-.212-4.357-2.456-6.671-6.812-6.882-1.28-.058-1.689-.07-4.946-.07zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.442.646-1.442 1.442s.646 1.442 1.442 1.442 1.442-.646 1.442-1.442-.646-1.442-1.442-1.442z"
+                  />
+                </svg>
+              </a>
+              <a
+                href="#"
+                class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.235 0-5.503 3.037-4.437 6.075-4.095-.205-7.781-2.179-10.232-5.187-1.342 2.3-1.87 4.975-.544 7.279-1.02-.033-1.97-.329-2.809-.775v.098c0 2.91 2.071 5.437 4.821 6.002-.676.182-1.385.279-2.11.279-.517 0-1.018-.049-1.493-.146.766 2.399 2.984 4.148 5.61 4.195-2.059 1.615-4.674 2.578-7.534 2.578-.489 0-.97-.029-1.444-.085 2.651 1.714 5.864 2.712 9.313 2.712 11.171 0 17.271-9.294 17.271-17.271 0-.263-.006-.525-.018-.787 1.18-.851 2.201-1.916 3.018-3.13z"
+                  />
+                </svg>
+              </a>
+              <a
+                href="#"
+                class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M24 12c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.753 4.022 10.573 9.385 11.666v-8.252h-3.084v-3.414h3.084v-2.617c0-3.059 1.85-4.73 4.595-4.73 1.312 0 2.433.102 2.753.148v3.189h-1.892c-1.517 0-1.815.72-1.815 1.777v2.333h3.585l-.466 3.414h-3.119v8.252c5.362-1.093 9.385-5.913 9.385-11.666z"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="col-span-1 footer-col">
+            <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
+              Shop
+            </h4>
+            <ul class="space-y-3 text-gray-400 font-body">
+              <li><a href="#" class="hover-link magnetic-item">Shop All</a></li>
+              <li><a href="#" class="hover-link magnetic-item">Men</a></li>
+              <li>
+                <a href="#" class="hover-link magnetic-item">Women</a>
+              </li>
+              <li>
+                <a href="#" class="hover-link magnetic-item">Accessories</a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-span-1 footer-col">
+            <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
+              About
+            </h4>
+            <ul class="space-y-3 text-gray-400 font-body">
+              <li>
+                <a href="#" class="hover-link magnetic-item">Our Studio</a>
+              </li>
+              <li><a href="#" class="hover-link magnetic-item">Gallery</a></li>
+              <li><a href="#" class="hover-link magnetic-item">Contact</a></li>
+              <li>
+                <a href="#" id="faq-link" class="hover-link magnetic-item"
+                  >FAQs</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="mt-16 pt-8 border-t border-[var(--border)] text-center text-gray-500 text-xs font-body"
+        >
+          <p>
+            &copy; 2025 Aurora. All Rights Reserved. A demonstration of
+            world-class web design.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- GSAP for smooth animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Lenis for smooth scrolling -->
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        signInAnonymously,
+        signInWithCustomToken,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // Global variables provided by the Canvas environment
+      const appId =
+        typeof __app_id !== "undefined" ? __app_id : "default-app-id";
+      const firebaseConfig =
+        typeof __firebase_config !== "undefined"
+          ? JSON.parse(__firebase_config)
+          : {
+              apiKey: "AIzaSyCPWe_VrV_Rq9HcKruC5uoC9jNFkwpzNcU",
+              authDomain: "aurora-e-commerce.firebaseapp.com",
+              projectId: "aurora-e-commerce",
+              storageBucket: "aurora-e-commerce.firebasestorage.app",
+              messagingSenderId: "177216689386",
+              appId: "1:177216689386:web:04f567db96218da3323393",
+              measurementId: "G-0Q9ZFHSFS1",
+            };
+      const initialAuthToken =
+        typeof __initial_auth_token !== "undefined"
+          ? __initial_auth_token
+          : null;
+
+      let db, auth;
+      // In-memory product data once fetched from Firestore
+      let currentProduct = null;
+
+      // --- Cart Management Functions (from cart.js) ---
+
+      /**
+       * Retrieves the current cart from local storage.
+       * @returns {Array} An array of cart items, or an empty array if no cart exists.
+       */
+      function getCart() {
+        try {
+          const cart = JSON.parse(localStorage.getItem("aurora-cart")) || [];
+          return cart;
+        } catch (e) {
+          console.error("Failed to parse cart from localStorage", e);
+          return [];
+        }
+      }
+
+      /**
+       * Saves the current cart array to local storage.
+       * @param {Array} cart The cart array to save.
+       */
+      function saveCart(cart) {
+        try {
+          localStorage.setItem("aurora-cart", JSON.stringify(cart));
+        } catch (e) {
+          console.error("Failed to save cart to localStorage", e);
+        }
+      }
+
+      /**
+       * Updates the cart icon count in the header.
+       */
+      function updateCartCount() {
+        const cart = getCart();
+        const cartCountElement = document.getElementById("cart-count");
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        if (cartCountElement) {
+          cartCountElement.textContent = totalItems;
+        }
+      }
+
+      /**
+       * Shows a temporary notification when an item is added to the cart.
+       */
+      function showNotification() {
+        const cartNotification = document.getElementById("cart-notification");
+        if (cartNotification) {
+          cartNotification.style.transform = "translate(-50%, 0)";
+          setTimeout(() => {
+            cartNotification.style.transform = "translate(-50%, 200%)";
+          }, 3000);
+        }
+      }
+
+      /**
+       * Adds a product to the cart. If the product with the same size and color
+       * already exists, it updates the quantity. Otherwise, it adds a new item.
+       * @param {Object} product The product object to add.
+       * @param {number} quantity The quantity to add.
+       * @param {string} [size=null] The selected size.
+       * @param {string} [color=null] The selected color.
+       */
+      function addToCart(product, quantity, size = null, color = null) {
+        let cart = getCart();
+        const existingItem = cart.find(
+          (item) =>
+            item.product.id === product.id &&
+            item.size === size &&
+            item.color === color
+        );
+
+        if (existingItem) {
+          existingItem.quantity += quantity;
+        } else {
+          // *** FIX STARTS HERE ***
+          // The 'product' object passed to this function contains all the necessary details.
+          // We create a new cart item object that includes the full product data,
+          // along with the user's selections for quantity, size, and color.
+          const cartItem = {
+            product: product, // The full product object as requested
+            quantity: quantity,
+            size: size,
+            color: color,
+          };
+          cart.push(cartItem);
+          // *** FIX ENDS HERE ***
+        }
+
+        saveCart(cart);
+        updateCartCount();
+        showNotification();
+      }
+
+      // --- Core Page Initialization and Rendering ---
+
+      // This function initializes all the core functionality that is not dependent on the product data
+      function initializeCorePage() {
+        // Smooth scrolling using Lenis
+        const lenis = new Lenis();
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // Custom cursor logic
+        const cursor = document.querySelector(".cursor");
+        const follower = document.querySelector(".cursor-follower");
+        gsap.set(cursor, { xPercent: -50, yPercent: -50 });
+        gsap.set(follower, { xPercent: -50, yPercent: -50 });
+        window.addEventListener("mousemove", (e) => {
+          gsap.to(cursor, { duration: 0.2, x: e.clientX, y: e.clientY });
+          gsap.to(follower, {
+            duration: 0.6,
+            x: e.clientX,
+            y: e.clientY,
+            ease: "power2.out",
+          });
+        });
+        document
+          .querySelectorAll(".hover-link, .add-to-cart-btn")
+          .forEach((el) => {
+            el.addEventListener("mouseenter", () =>
+              follower.classList.add("cursor-grow")
+            );
+            el.addEventListener("mouseleave", () =>
+              follower.classList.remove("cursor-grow")
+            );
+          });
+
+        // Magnetic effect
+        document.querySelectorAll(".magnetic-item").forEach((el) => {
+          el.addEventListener("mousemove", function (e) {
+            const position = this.getBoundingClientRect();
+            const x = e.clientX - position.left - position.width / 2;
+            const y = e.clientY - position.top - position.height / 2;
+            gsap.to(this, {
+              x: x * 0.3,
+              y: y * 0.3,
+              duration: 0.3,
+              ease: "power2.out",
+            });
+          });
+          el.addEventListener("mouseleave", function () {
+            gsap.to(this, {
+              x: 0,
+              y: 0,
+              duration: 0.3,
+              ease: "elastic.out(1, 0.3)",
+            });
+          });
+        });
+
+        // Mobile menu functionality
+        const hamburgerBtn = document.getElementById("hamburger-btn");
+        const closeMenuBtn = document.getElementById("close-menu");
+        const mobileMenu = document.getElementById("mobile-menu");
+        hamburgerBtn.addEventListener("click", () => {
+          mobileMenu.classList.add("open");
+          document.body.classList.add("no-scroll");
+        });
+        closeMenuBtn.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          document.body.classList.remove("no-scroll");
+        });
+      }
+
+      // Asynchronous function to fetch a product from Firestore
+      async function fetchProductFromFirestore(db) {
+        const params = new URLSearchParams(window.location.search);
+        const productId = params.get("id");
+
+        if (!productId) {
+          return null; // No product ID found in URL
+        }
+
+        try {
+          // Construct the dynamic path using the global appId
+          const productDocPath = `/artifacts/aurora-data/public/data/products`;
+          const docRef = doc(db, productDocPath, productId);
+          const docSnap = await getDoc(docRef);
+
+          if (docSnap.exists()) {
+            console.log("Document data:", docSnap.data());
+            return { id: docSnap.id, ...docSnap.data() };
+          } else {
+            console.log("No such document!");
+            return null; // Product not found
+          }
+        } catch (error) {
+          console.error("Error fetching document:", error);
+          return null; // Handle potential errors during fetch
+        }
+      }
+
+      // Main function to render product details and attach all event listeners
+      async function renderProductDetails() {
+        const productContentWrapper = document.getElementById(
+          "product-content-wrapper"
+        );
+        productContentWrapper.innerHTML =
+          '<p class="text-center text-xl font-heading">Loading product details...</p>';
+
+        const product = await fetchProductFromFirestore(db);
+        currentProduct = product; // Save product to a global variable
+
+        if (!product) {
+          productContentWrapper.innerHTML =
+            '<p class="text-center text-xl font-heading text-red-500">Product not found. Please provide a valid product ID in the URL, e.g., `?id=123`.</p>';
+          return;
+        }
+
+        // Re-populate the HTML content with the fetched product data
+        productContentWrapper.innerHTML = `
+          <!-- Product Image & Gallery -->
+          <div class="w-full lg:w-3/5 flex flex-col gap-4 lg:sticky lg:top-32">
+              <div class="rounded-xl overflow-hidden">
+                  <img id="page-product-image" src="" alt="" class="w-full aspect-[3/4] object-cover" onerror="this.onerror=null;this.src='https://placehold.co/600x800/0d0d0d/e8e8e8?text=Product+Image';">
+              </div>
+              <div id="page-image-thumbnails" class="flex gap-4 overflow-x-auto p-1"></div>
+          </div>
+          <!-- Product Details -->
+          <div class="w-full lg:w-2/5 flex flex-col gap-4">
+              <div class="flex flex-col gap-2">
+                  <div class="flex items-center gap-4">
+                      <h2 id="page-product-name" class="font-heading text-4xl font-semibold"></h2>
+                      <div id="page-product-rating" class="star-rating flex text-2xl"></div>
+                  </div>
+                  <div class="flex items-center gap-2 mt-2">
+                    <p id="page-product-price" class="font-body text-2xl text-[var(--secondary-text)] flex items-center gap-2"></p>
+                  </div>
+              </div>
+              <div class="mt-4">
+                  <h3 class="font-semibold mb-2">Description</h3>
+                  <p id="page-product-description" class="font-body text-sm text-[var(--secondary-text)] leading-relaxed"></p>
+              </div>
+              <div id="page-product-specs" class="mt-4">
+                  <h3 class="font-semibold mb-2">Specifications</h3>
+                  <ul class="font-body text-sm text-[var(--secondary-text)] space-y-2"></ul>
+              </div>
+              <div id="page-size-options-container" class="mt-4">
+                  <p class="text-sm font-semibold mb-2">Size</p>
+                  <div id="page-sizes" class="flex gap-2 flex-wrap"></div>
+              </div>
+              <div id="page-color-options-container" class="mt-4">
+                  <p class="text-sm font-semibold mb-2">Color</p>
+                  <div id="page-colors" class="flex gap-2 flex-wrap"></div>
+              </div>
+              <div class="flex items-center gap-4 mt-6">
+                  <p class="text-sm font-semibold">Quantity</p>
+                  <div class="flex items-center rounded-full border border-[var(--border)]">
+                      <button id="page-decrement-qty" class="p-2 h-8 w-8 flex items-center justify-center text-sm rounded-l-full hover:bg-white/10 transition-colors">-</button>
+                      <input id="page-quantity-input" type="text" value="1" min="1" class="w-8 h-8 text-center bg-transparent border-x border-[var(--border)] focus:outline-none"/>
+                      <button id="page-increment-qty" class="p-2 h-8 w-8 flex items-center justify-center text-sm rounded-r-full hover:bg-white/10 transition-colors">+</button>
+                  </div>
+              </div>
+              <button id="page-add-to-cart-btn" class="add-to-cart-btn bg-white text-black py-4 rounded-full text-lg font-semibold uppercase tracking-wider hover:bg-gray-200 transition-all duration-300 magnetic-item mt-8">
+                  Add to Cart
+              </button>
+          </div>
+        `;
+
+        const pageImage = document.getElementById("page-product-image");
+        const pageImageThumbnails = document.getElementById(
+          "page-image-thumbnails"
+        );
+        const pageName = document.getElementById("page-product-name");
+        const pageRating = document.getElementById("page-product-rating");
+        const pagePrice = document.getElementById("page-product-price");
+        const pageDescription = document.getElementById(
+          "page-product-description"
+        );
+        const pageSpecs = document.getElementById("page-product-specs");
+        const pageSize = document.getElementById("page-sizes");
+        const pageColors = document.getElementById("page-colors");
+        const pageQuantityInput = document.getElementById(
+          "page-quantity-input"
+        );
+        const pageDecrementBtn = document.getElementById("page-decrement-qty");
+        const pageIncrementBtn = document.getElementById("page-increment-qty");
+        const pageAddToCartBtn = document.getElementById(
+          "page-add-to-cart-btn"
+        );
+
+        // --- UPDATED PRICE LOGIC ---
+        const basePrice = product.basePrice; // Corrected to use basePrice from your data
+        const discountPercentage = product.discountPercentage;
+        let priceDisplay = "";
+
+        const isValidDiscount =
+          typeof discountPercentage === "number" &&
+          !isNaN(discountPercentage) &&
+          discountPercentage > 0 &&
+          discountPercentage <= 100;
+        const isValidBasePrice =
+          typeof basePrice === "number" && !isNaN(basePrice) && basePrice > 0;
+
+        if (isValidBasePrice && isValidDiscount) {
+          const discountPrice = basePrice * (1 - discountPercentage / 100);
+          priceDisplay = `
+            <span class="text-white text-3xl font-semibold">
+              &#2547;${discountPrice.toFixed(2)}
+            </span>
+            <span class="text-lg text-[var(--secondary-text)] line-through ml-2">
+              &#2547;${basePrice.toFixed(2)}
+            </span>
+            <span class="bg-red-600 text-white text-xs px-2 py-1 rounded-full uppercase font-bold tracking-wider ml-4">
+              ${discountPercentage}% Off
+            </span>
+          `;
+        } else if (isValidBasePrice) {
+          priceDisplay = `
+            <span class="text-white text-2xl font-semibold">
+              &#2547;${basePrice.toFixed(2)}
+            </span>
+          `;
+        } else {
+          // Fallback if no valid price data is found
+          priceDisplay = `<span class="text-red-500">Price not found</span>`;
+        }
+
+        pagePrice.innerHTML = priceDisplay;
+        // --- END OF UPDATED PRICE LOGIC ---
+
+        // Populate product details (the rest of the code remains the same)
+        pageImage.src = product.images[0];
+        pageImage.alt = product.name;
+        pageName.textContent = product.name;
+        pageDescription.textContent = product.details;
+        pageQuantityInput.value = 1;
+
+        // Render image thumbnails
+        pageImageThumbnails.innerHTML = "";
+        if (product.images) {
+          product.images.forEach((url, index) => {
+            const thumbnail = document.createElement("img");
+            thumbnail.src = url;
+            thumbnail.alt = `${product.name} view ${index + 1}`;
+            thumbnail.className = `image-thumbnail w-20 h-24 object-cover rounded-md border border-[var(--border)]`;
+            if (index === 0) thumbnail.classList.add("selected");
+            thumbnail.addEventListener("click", () => {
+              pageImage.src = url;
+              pageImageThumbnails
+                .querySelector(".selected")
+                ?.classList.remove("selected");
+              thumbnail.classList.add("selected");
+            });
+            pageImageThumbnails.appendChild(thumbnail);
+          });
+        }
+
+        // Render product specifications
+        const specsList = pageSpecs.querySelector("ul");
+        specsList.innerHTML = "";
+        if (product.specs) {
+          for (const [key, value] of Object.entries(product.specs)) {
+            const li = document.createElement("li");
+            li.innerHTML = `<span class="font-semibold">${
+              key.charAt(0).toUpperCase() + key.slice(1)
+            }:</span> ${value}`;
+            specsList.appendChild(li);
+          }
+        }
+
+        // Render size options
+        pageSize.innerHTML = "";
+        if (product.sizes) {
+          product.sizes.forEach((size, index) => {
+            const sizeBtn = document.createElement("button");
+            sizeBtn.className = `size-option font-body text-sm py-2 px-4 rounded-full border border-[var(--border)] uppercase hover:border-white transition-colors`;
+            if (index === 0) sizeBtn.classList.add("selected");
+            sizeBtn.textContent = size;
+            pageSize.appendChild(sizeBtn);
+          });
+        }
+
+        // Render color options
+        pageColors.innerHTML = "";
+        const colorMap = {
+          White: "bg-white",
+          Black: "bg-black",
+          Grey: "bg-gray-400",
+          Beige: "bg-amber-100",
+          Charcoal: "bg-slate-700",
+          Stone: "bg-stone-400",
+          Cream: "bg-yellow-50",
+          Navy: "bg-blue-950",
+          Indigo: "bg-indigo-950",
+          Brown: "bg-amber-900",
+          Red: "bg-red-600",
+        };
+        product.colors.forEach((color, index) => {
+          const colorBtn = document.createElement("button");
+          colorBtn.className = `color-option w-8 h-8 rounded-full border border-[var(--border)] shadow-md`;
+
+          // If it's a hex code, set background via style
+          if (color.startsWith("#")) {
+            colorBtn.style.backgroundColor = color;
+          } else if (colorMap[color]) {
+            // If it's a name that exists in colorMap
+            colorBtn.classList.add(colorMap[color]);
+          }
+
+          if (index === 0) colorBtn.classList.add("selected");
+          colorBtn.dataset.color = color;
+          pageColors.appendChild(colorBtn);
+        });
+
+        // --- Attaching Event Listeners AFTER rendering the HTML ---
+
+        // Event listeners for size and color selection
+        pageSize.querySelectorAll(".size-option").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            pageSize.querySelector(".selected")?.classList.remove("selected");
+            btn.classList.add("selected");
+          });
+        });
+        pageColors.querySelectorAll(".color-option").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            pageColors.querySelector(".selected")?.classList.remove("selected");
+            btn.classList.add("selected");
+          });
+        });
+
+        // Quantity selector functionality
+        pageDecrementBtn.addEventListener("click", () => {
+          let currentQty = parseInt(pageQuantityInput.value);
+          if (currentQty > 1) {
+            pageQuantityInput.value = currentQty - 1;
+          }
+        });
+        pageIncrementBtn.addEventListener("click", () => {
+          let currentQty = parseInt(pageQuantityInput.value);
+          if (isNaN(currentQty) || currentQty < 1) {
+            currentQty = 0; // Reset to 0 if invalid input
+          }
+          pageQuantityInput.value = currentQty + 1;
+        });
+        pageQuantityInput.addEventListener("change", () => {
+          let currentQty = parseInt(pageQuantityInput.value);
+          if (isNaN(currentQty) || currentQty < 1) {
+            pageQuantityInput.value = 1;
+          }
+        });
+
+        // Add to cart button functionality
+        pageAddToCartBtn.addEventListener("click", () => {
+          const quantity = parseInt(pageQuantityInput.value);
+          const sizeElement = pageSize.querySelector(".selected");
+          const colorElement = pageColors.querySelector(".selected");
+
+          if (!sizeElement || !colorElement) {
+            // Replaced alert with a console log as alerts are not supported
+            console.log("Please select a size and color.");
+            return;
+          }
+
+          const size = sizeElement ? sizeElement.textContent : null;
+          const color = colorElement ? colorElement.dataset.color : null;
+
+          if (currentProduct && quantity > 0) {
+            addToCart(currentProduct, quantity, size, color);
+          } else {
+            console.error("Cannot add to cart. Product data is missing.");
+          }
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        // Initialize core page functionality first
+        initializeCorePage();
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        db = getFirestore(app);
+        auth = getAuth(app);
+
+        // Sign in to Firebase Auth with the provided token
+        onAuthStateChanged(auth, async (user) => {
+          if (!user) {
+            if (initialAuthToken) {
+              await signInWithCustomToken(auth, initialAuthToken);
+            } else {
+              await signInAnonymously(auth);
+            }
+          }
+          console.log(
+            "Firebase Auth is ready. User ID:",
+            auth.currentUser?.uid
+          );
+          // Once authenticated, render the product details and update cart count
+          renderProductDetails();
+          updateCartCount();
+        });
+      });
+    </script>
+    <script src="footer.js"></script>
+  </body>
+</html>

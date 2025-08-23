@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURORA - Contact</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.0.3"></script>
+
+    <style>
+      /* --- Global Styles & Variables (Consistent with Gallery Page) --- */
+      :root {
+        --background: #0a0a0a;
+        --text: #e8e8e8;
+        --accent: #ffffff;
+        --border: #2a2a2a;
+        --secondary-text: #a8a8a8;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--background);
+        color: var(--text);
+        overflow-x: hidden;
+        font-weight: 300;
+      }
+      body.no-scroll {
+        overflow: hidden;
+      }
+      .font-heading {
+        font-family: "Cormorant Garamond", serif;
+      }
+      .font-body {
+        font-family: "Poppins", sans-serif;
+      }
+      .cursor {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent);
+        pointer-events: none;
+        mix-blend-mode: difference;
+        transition: transform 0.2s ease-out, width 0.3s ease, height 0.3s ease;
+        z-index: 9999;
+        transform-origin: center center;
+      }
+      .cursor-follower {
+        position: fixed;
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--accent);
+        border-radius: 50%;
+        pointer-events: none;
+        mix-blend-mode: difference;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        z-index: 9999;
+      }
+      .cursor-grow {
+        transform: scale(3);
+        background: var(--accent);
+      }
+      @media (max-width: 768px) {
+        .cursor,
+        .cursor-follower {
+          display: none;
+        }
+      }
+      #mobile-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--background);
+        z-index: 5000;
+        transform: translateX(100%);
+        transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      #mobile-menu.open {
+        transform: translateX(0);
+      }
+      .mobile-nav-link {
+        font-size: 2.5rem;
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        line-height: 1.5;
+        color: var(--text);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(1) {
+        transition-delay: 0.1s;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(2) {
+        transition-delay: 0.2s;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(3) {
+        transition-delay: 0.3s;
+      }
+      .magnetic-item {
+        display: inline-block;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .hover-link {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+      }
+      .hover-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: var(--accent);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+      }
+      .hover-link:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+
+      .split-word {
+        display: inline-block;
+        overflow: hidden;
+      }
+      .split-char {
+        display: inline-block;
+        transform: translateY(110%);
+        transition: transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+      .clip-img {
+        clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
+        transition: clip-path 1s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      .is-inview .clip-img {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+      }
+      .scroll-indicator {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        animation: fadeIn 1s 2s forwards, bounce 2s infinite 3s;
+      }
+      .scroll-indicator span {
+        display: block;
+        width: 1px;
+        height: 40px;
+        background-color: white;
+        margin: 0 auto;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes bounce {
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-15px);
+        }
+        60% {
+          transform: translateY(-10px);
+        }
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Mobile Navigation Menu -->
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 bg-[var(--background)] z-5000 p-8 md:hidden"
+    >
+      <button id="close-menu" class="absolute top-8 right-8 text-white z-5001">
+        <i class="ph ph-x text-3xl magnetic-item"></i>
+      </button>
+      <nav class="flex flex-col items-center justify-center h-full">
+        <ul class="space-y-6">
+          <li>
+            <a href="home.html" class="mobile-nav-link hover-link magnetic-item"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a href="shop.html" class="mobile-nav-link hover-link magnetic-item"
+              >Shop</a
+            >
+          </li>
+          <li>
+            <a
+              href="gallery.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Gallery</a
+            >
+          </li>
+          <li>
+            <a
+              href="contact.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Contact</a
+            >
+          </li>
+          <li>
+            <a
+              href="our-studio.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Studio</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Header -->
+    <header
+      class="fixed top-0 left-0 w-full z-40 p-6 md:p-8 transition-all duration-500 bg-transparent"
+      id="main-header"
+    >
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="home.html">
+          <div
+            class="text-xl font-bold tracking-widest uppercase magnetic-item font-heading"
+          >
+            Aurora
+          </div>
+        </a>
+        <!-- Desktop Navigation -->
+        <nav
+          class="hidden md:flex items-center space-x-10 text-sm uppercase tracking-wider font-light"
+        >
+          <a href="home.html" class="hover-link magnetic-item">Home</a>
+          <a href="shop.html" class="hover-link magnetic-item">Shop</a>
+          <a href="gallery.html" class="hover-link magnetic-item">Gallery</a>
+          <a href="contact.html" class="hover-link magnetic-item">Contact</a>
+          <a href="our-studio.html" class="hover-link magnetic-item">Studio</a>
+        </nav>
+        <div class="flex items-center space-x-6">
+          <a
+            href="cart.html"
+            style="overflow: visible;"
+            class="hover-link magnetic-item relative hover:text-gray-400 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewbox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+            <span
+              id="cart-count"
+              class="absolute -top-2 -right-2 bg-white text-black text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold"
+              >0</span
+            >
+          </a>
+          <button
+            id="hamburger-btn"
+            class="magnetic-item md:hidden z-5001"
+            aria-label="Open mobile menu"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="min-h-screen">
+      <!-- Hero Section for Contact Page -->
+      <div
+        class="container mx-auto px-6 max-w-5xl pt-48 pb-16 relative min-h-screen flex flex-col justify-center text-center"
+      >
+        <div class="reveal-text-container">
+          <h1
+            id="main-title"
+            class="text-7xl md:text-9xl font-heading uppercase leading-none reveal-text"
+          >
+            Get In Touch
+          </h1>
+        </div>
+        <div class="reveal-text-container">
+          <p
+            id="hero-scroll-text"
+            class="text-lg md:text-xl text-[var(--secondary-text)] font-body italic tracking-wide mt-8 reveal-text"
+          >
+            Let's start a conversation.
+          </p>
+        </div>
+        <div class="scroll-indicator">
+          <span></span>
+        </div>
+      </div>
+
+      <!-- Contact Information Section - Improved Design -->
+      <section class="py-24" id="contact-info-section">
+        <div class="container mx-auto px-6 max-w-7xl">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+            <!-- Contact Details Column -->
+            <div
+              class="transform translate-y-16 opacity-0 animate-in"
+              data-animate-target
+            >
+              <h2 class="font-heading text-4xl md:text-5xl font-semibold mb-8">
+                Contact Us
+              </h2>
+              <div class="space-y-8 text-[var(--secondary-text)]">
+                <div>
+                  <h3
+                    class="font-heading text-xl font-semibold text-[var(--text)] mb-2"
+                  >
+                    Address
+                  </h3>
+                  <p>
+                    123 Aurora Street, Suite 500<br />
+                    New York, NY 10001
+                  </p>
+                </div>
+                <div>
+                  <h3
+                    class="font-heading text-xl font-semibold text-[var(--text)] mb-2"
+                  >
+                    Email
+                  </h3>
+                  <p>
+                    <a href="mailto:info@aurora.com" class="hover-link"
+                      >info@aurora.com</a
+                    >
+                  </p>
+                </div>
+                <div>
+                  <h3
+                    class="font-heading text-xl font-semibold text-[var(--text)] mb-2"
+                  >
+                    Phone
+                  </h3>
+                  <p>
+                    <a href="tel:+12125550123" class="hover-link"
+                      >+1 (212) 555-0123</a
+                    >
+                  </p>
+                </div>
+                <div>
+                  <h3
+                    class="font-heading text-xl font-semibold text-[var(--text)] mb-2"
+                  >
+                    Hours
+                  </h3>
+                  <p>
+                    Monday - Friday: 10:00 AM - 6:00 PM<br />
+                    Saturday: By Appointment Only<br />
+                    Sunday: Closed
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Placeholder for Map/Image -->
+            <div
+              class="bg-[var(--border)] h-96 w-full rounded-2xl flex items-center justify-center p-8 text-center transform translate-y-16 opacity-0 animate-in"
+              data-animate-target
+            >
+              <div>
+                <h3
+                  class="font-heading text-3xl font-semibold text-[var(--text)] mb-4"
+                >
+                  Studio Location
+                </h3>
+                <p class="text-[var(--secondary-text)]">
+                  A dynamic map or a beautiful photo of the studio would go
+                  here.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-black py-16 border-t border-[var(--border)]">
+        <div class="container mx-auto px-6">
+          <div
+            class="grid grid-cols-1 md:grid-cols-4 gap-12"
+            id="footer-content"
+            data-animation-trigger
+          >
+            <div
+              class="col-span-1 md:col-span-2 footer-col"
+              data-animation-target
+            >
+              <h3
+                class="text-xl font-bold mb-4 uppercase tracking-wider font-heading"
+              >
+                Stay in the loop
+              </h3>
+              <p class="text-[var(--secondary-text)] mb-6 max-w-sm font-body">
+                Receive updates on new arrivals, special offers and our creative
+                process.
+              </p>
+              <form class="flex items-center mt-8">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  class="bg-transparent border-b border-[var(--border)] w-full max-w-xs py-2 px-0 focus:outline-none focus:border-white transition-colors placeholder-[var(--secondary-text)] font-body"
+                />
+                <button
+                  type="submit"
+                  class="hover-link magnetic-item bg-transparent border border-white text-white px-6 py-2 rounded-full font-bold text-sm ml-4 hover:bg-white hover:text-black transition-all duration-300"
+                >
+                  Subscribe
+                </button>
+              </form>
+            </div>
+            <div class="col-span-1 footer-col" data-animation-target>
+              <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
+                Shop
+              </h4>
+              <ul class="space-y-3 text-[var(--secondary-text)] font-body">
+                <li>
+                  <a href="#" class="hover-link magnetic-item">New In</a>
+                </li>
+                <li>
+                  <a href="#" class="hover-link magnetic-item">Clothing</a>
+                </li>
+                <li>
+                  <a href="#" class="hover-link magnetic-item">Accessories</a>
+                </li>
+                <li>
+                  <a href="#" class="hover-link magnetic-item">Collections</a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-span-1 footer-col" data-animation-target>
+              <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
+                About
+              </h4>
+              <ul class="space-y-3 text-[var(--secondary-text)] font-body">
+                <li>
+                  <a href="index.html" class="hover-link magnetic-item"
+                    >Our Studio</a
+                  >
+                </li>
+                <li>
+                  <a href="gallery.html" class="hover-link magnetic-item"
+                    >Gallery</a
+                  >
+                </li>
+                <li>
+                  <a href="contact.html" class="hover-link magnetic-item"
+                    >Contact</a
+                  >
+                </li>
+                <li><a href="#" class="hover-link magnetic-item">FAQs</a></li>
+              </ul>
+            </div>
+          </div>
+          <div
+            class="mt-16 pt-8 border-t border-[var(--border)] text-center text-gray-500 text-xs font-body"
+          >
+            <p>
+              &copy; 2025 Aurora. All Rights Reserved. A demonstration of
+              world-class web design.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Scripts for animations and functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
+    <script>
+      // Smooth Scroll
+      const lenis = new Lenis();
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // Custom Cursor
+      const cursor = document.querySelector(".cursor");
+      const follower = document.querySelector(".cursor-follower");
+      gsap.set(cursor, { xPercent: -50, yPercent: -50 });
+      gsap.set(follower, { xPercent: -50, yPercent: -50 });
+      window.addEventListener("mousemove", (e) => {
+        gsap.to(cursor, { duration: 0.2, x: e.clientX, y: e.clientY });
+        gsap.to(follower, {
+          duration: 0.6,
+          x: e.clientX,
+          y: e.clientY,
+          ease: "power2.out",
+        });
+      });
+      document
+        .querySelectorAll(".hover-link, .magnetic-item, a, button")
+        .forEach((el) => {
+          el.addEventListener("mouseenter", () =>
+            follower.classList.add("cursor-grow")
+          );
+          el.addEventListener("mouseleave", () =>
+            follower.classList.remove("cursor-grow")
+          );
+        });
+      document.querySelectorAll(".magnetic-item").forEach((el) => {
+        el.addEventListener("mousemove", function (e) {
+          const position = this.getBoundingClientRect();
+          const x = e.clientX - position.left - position.width / 2;
+          const y = e.clientY - position.top - position.height / 2;
+          gsap.to(this, {
+            x: x * 0.3,
+            y: y * 0.3,
+            duration: 0.3,
+            ease: "power2.out",
+          });
+        });
+        el.addEventListener("mouseleave", function () {
+          gsap.to(this, {
+            x: 0,
+            y: 0,
+            duration: 0.3,
+            ease: "elastic.out(1, 0.3)",
+          });
+        });
+      });
+
+      // Mobile Menu Logic
+      const hamburgerBtn = document.getElementById("hamburger-btn");
+      const closeMenuBtn = document.getElementById("close-menu");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const mobileLinks = document.querySelectorAll(".mobile-nav-link");
+
+      hamburgerBtn.addEventListener("click", () => {
+        mobileMenu.classList.add("open");
+        document.body.classList.add("no-scroll");
+        mobileLinks.forEach((link) => {
+          link.style.opacity = 1;
+          link.style.transform = "translateY(0)";
+        });
+      });
+      closeMenuBtn.addEventListener("click", () => {
+        mobileMenu.classList.remove("open");
+        document.body.classList.remove("no-scroll");
+        mobileLinks.forEach((link) => {
+          link.style.opacity = 0;
+          link.style.transform = "translateY(20px)";
+        });
+      });
+      mobileLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          document.body.classList.remove("no-scroll");
+        });
+      });
+
+      // GSAP Animations with ScrollTrigger
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Header scroll effect
+      const header = document.getElementById("main-header");
+
+      ScrollTrigger.create({
+        start: "top top",
+        end: 99999,
+        onUpdate: (self) => {
+          if (self.direction === 1 && self.progress > 0) {
+            gsap.set(header, { y: "-100%" });
+          } else {
+            gsap.set(header, { y: "0%" });
+          }
+
+          if (self.progress > 0.01) {
+            header.style.backgroundColor = "rgba(13, 13, 13, 0.7)";
+            header.style.backdropFilter = "blur(10px)";
+          } else {
+            header.style.backgroundColor = "transparent";
+            header.style.backdropFilter = "none";
+          }
+        },
+      });
+
+      // Main title animation
+      const mainTitle = document.getElementById("main-title");
+      function splitText(element) {
+        const text = element.textContent.trim();
+        element.innerHTML = "";
+        text.split(" ").forEach((word) => {
+          const wordSpan = document.createElement("span");
+          wordSpan.className = "split-word";
+          word.split("").forEach((char) => {
+            const charSpan = document.createElement("span");
+            charSpan.className = "split-char";
+            charSpan.textContent = char === " " ? "\u00A0" : char;
+            wordSpan.appendChild(charSpan);
+          });
+          element.appendChild(wordSpan);
+          element.appendChild(document.createTextNode(" "));
+        });
+      }
+
+      if (mainTitle) {
+        splitText(mainTitle);
+        gsap.fromTo(
+          mainTitle.querySelectorAll(".split-char"),
+          {
+            y: "110%",
+          },
+          {
+            y: "0%",
+            stagger: {
+              each: 0.03,
+              from: "start",
+            },
+            duration: 1.5,
+            ease: "power4.out",
+            delay: 0.5,
+          }
+        );
+      }
+
+      // Hero Scroll Text Fade-out Animation
+      gsap.to("#hero-scroll-text", {
+        opacity: 0,
+        y: -50,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#main-content",
+          start: "top top",
+          end: "center top",
+          scrub: 1,
+        },
+      });
+
+      // General Fade-in/Slide-up animation for new sections
+      function setupFadeInAnimation(containerSelector, elementSelector) {
+        gsap.utils.toArray(elementSelector).forEach((element) => {
+          gsap.fromTo(
+            element,
+            { y: 50, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 1,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: element,
+                start: "top 85%",
+                toggleActions: "play none none none",
+              },
+            }
+          );
+        });
+      }
+
+      // Set up the animation for the contact form and info section
+      setupFadeInAnimation("#contact-info-section", "[data-animate-target]");
+    </script>
+    <script src="cart-count.js"></script>
+  </body>
+</html>

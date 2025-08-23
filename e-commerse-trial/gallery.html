@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AURORA - Gallery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.0.3"></script>
+
+    <style>
+      :root {
+        --background: #0a0a0a;
+        --text: #e8e8e8;
+        --accent: #ffffff;
+        --border: #2a2a2a;
+        --secondary-text: #a8a8a8;
+      }
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--background);
+        color: var(--text);
+        overflow-x: hidden;
+        font-weight: 300;
+      }
+      body.no-scroll {
+        overflow: hidden;
+      }
+      .font-heading {
+        font-family: "Cormorant Garamond", serif;
+      }
+      .font-body {
+        font-family: "Poppins", sans-serif;
+      }
+      .cursor {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--accent);
+        pointer-events: none;
+        mix-blend-mode: difference;
+        transition: transform 0.2s ease-out, width 0.3s ease, height 0.3s ease;
+        z-index: 9999;
+        transform-origin: center center;
+      }
+      .cursor-follower {
+        position: fixed;
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--accent);
+        border-radius: 50%;
+        pointer-events: none;
+        mix-blend-mode: difference;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        z-index: 9999;
+      }
+      .cursor-grow {
+        transform: scale(3);
+        background: var(--accent);
+      }
+      @media (max-width: 768px) {
+        .cursor,
+        .cursor-follower {
+          display: none;
+        }
+      }
+      #mobile-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--background);
+        z-index: 5000;
+        transform: translateX(100%);
+        transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      #mobile-menu.open {
+        transform: translateX(0);
+      }
+      .mobile-nav-link {
+        font-size: 2.5rem;
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        line-height: 1.5;
+        color: var(--text);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(1) {
+        transition-delay: 0.1s;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(2) {
+        transition-delay: 0.2s;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(3) {
+        transition-delay: 0.3s;
+      }
+      .magnetic-item {
+        display: inline-block;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .hover-link {
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+      }
+      .hover-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: var(--accent);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+      }
+      .hover-link:hover::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+      .split-word {
+        display: inline-block;
+        overflow: hidden;
+      }
+      .split-char {
+        display: inline-block;
+        transform: translateY(110%);
+        transition: transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+      }
+      .clip-img {
+        clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0% 100%);
+        transition: clip-path 1s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+      .is-inview .clip-img {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+      }
+      .scroll-indicator {
+        position: absolute;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        animation: fadeIn 1s 2s forwards, bounce 2s infinite 3s;
+      }
+      .scroll-indicator span {
+        display: block;
+        width: 1px;
+        height: 40px;
+        background-color: white;
+        margin: 0 auto;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+      @keyframes bounce {
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+          transform: translateY(0);
+        }
+        40% {
+          transform: translateY(-15px);
+        }
+        60% {
+          transform: translateY(-10px);
+        }
+      }
+
+      /* Horizontal Gallery Specific Styles */
+      .horizontal-gallery-container {
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: 100vh;
+      }
+      .horizontal-gallery {
+        display: flex;
+        flex-direction: row;
+        width: 400vw;
+        height: 100%;
+        position: relative;
+      }
+      .gallery-item {
+        width: 100vw;
+        height: 100vh;
+        flex-shrink: 0;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .gallery-item-content {
+        position: relative;
+        width: 78%;
+        height: 78%;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+      .gallery-item-content img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        will-change: transform;
+      }
+      .item-overlay {
+        position: absolute;
+        inset: 0;
+        background: #0a0a0a89;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-start;
+        padding: 4rem;
+        z-index: 10;
+        cursor: pointer;
+      }
+      .gallery-item:hover .item-overlay {
+        opacity: 1;
+      }
+      .item-overlay h3,
+      .item-overlay p {
+        transform: translateY(10px);
+        transition: transform 0.5s ease;
+      }
+      .gallery-item:hover .item-overlay h3,
+      .gallery-item:hover .item-overlay p {
+        transform: translateY(0);
+      }
+
+      /* New styles for added sections */
+      .reveal-text-container {
+        overflow: hidden;
+      }
+      .reveal-text {
+        transform: translateY(110%);
+      }
+      .testimonial-quote {
+        position: relative;
+      }
+      .testimonial-quote::before {
+        content: '"';
+        position: absolute;
+        top: -40px;
+        left: -25px;
+        font-size: 5rem;
+        color: var(--secondary-text);
+        opacity: 0.2;
+        font-family: "Cormorant Garamond", serif;
+      }
+      .collaboration-item {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 2rem;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      /* Full Page Article View Styles */
+      #full-page-article-view {
+        position: fixed;
+        inset: 0;
+        background-color: var(--background);
+        z-index: 5000;
+        display: none; /* Hidden by default */
+        opacity: 0;
+        overflow-y: scroll;
+        padding: 0;
+      }
+
+      #full-page-article-view.show {
+        display: block;
+      }
+
+      .article-close-btn {
+        position: fixed;
+        top: 2rem;
+        right: 2rem;
+        z-index: 5010;
+        color: white;
+        border: 1px solid white;
+        background-color: rgba(10, 10, 10, 0.7);
+        backdrop-filter: blur(5px);
+        transition: all 0.3s ease;
+      }
+
+      .article-close-btn:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      /* Article Hero Section */
+      .article-hero {
+        position: relative;
+        height: 80vh;
+        width: 100%;
+        overflow: hidden;
+      }
+      .article-hero-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: absolute;
+        top: 0;
+        left: 0;
+        will-change: transform;
+      }
+
+      /* Article Content Section */
+      .article-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 4rem 1rem 8rem 1rem;
+        transform: translateY(100px);
+        opacity: 0;
+      }
+
+      .article-content h1 {
+        line-height: 1.1;
+      }
+
+      .article-content h2,
+      .article-content h3 {
+        font-weight: 600;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .article-content p {
+        margin-bottom: 1.5rem;
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Mobile Navigation Menu -->
+    <div
+      id="mobile-menu"
+      class="fixed inset-0 bg-[var(--background)] z-5000 p-8 md:hidden"
+    >
+      <button id="close-menu" class="absolute top-8 right-8 text-white z-5001">
+        <i class="ph ph-x text-3xl magnetic-item"></i>
+      </button>
+      <nav class="flex flex-col items-center justify-center h-full">
+        <ul class="space-y-6">
+          <li>
+            <a href="home.html" class="mobile-nav-link hover-link magnetic-item"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a href="shop.html" class="mobile-nav-link hover-link magnetic-item"
+              >Shop</a
+            >
+          </li>
+          <li>
+            <a
+              href="gallery.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Gallery</a
+            >
+          </li>
+          <li>
+            <a
+              href="contact.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Contact</a
+            >
+          </li>
+          <li>
+            <a
+              href="our-studio.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Studio</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Header -->
+    <header
+      class="fixed top-0 left-0 w-full z-40 p-6 md:p-8 transition-all duration-500 bg-transparent"
+      id="main-header"
+    >
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="home.html">
+          <div
+            class="text-xl font-bold tracking-widest uppercase magnetic-item font-heading"
+          >
+            Aurora
+          </div>
+        </a>
+        <!-- Desktop Navigation -->
+        <nav
+          class="hidden md:flex items-center space-x-10 text-sm uppercase tracking-wider font-light"
+        >
+          <a href="home.html" class="hover-link magnetic-item">Home</a>
+          <a href="shop.html" class="hover-link magnetic-item">Shop</a>
+          <a href="gallery.html" class="hover-link magnetic-item">Gallery</a>
+          <a href="contact.html" class="hover-link magnetic-item">Contact</a>
+          <a href="our-studio.html" class="hover-link magnetic-item">Studio</a>
+        </nav>
+        <div class="flex items-center space-x-6">
+          <a
+            href="cart.html"
+            style="overflow: visible;"
+            class="hover-link magnetic-item relative hover:text-gray-400 transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewbox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+            <span
+              id="cart-count"
+              class="absolute -top-2 -right-2 bg-white text-black text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold"
+              >0</span
+            >
+          </a>
+          <button
+            id="hamburger-btn"
+            class="magnetic-item md:hidden z-5001"
+            aria-label="Open mobile menu"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="min-h-screen">
+      <!-- Hero Section for Gallery -->
+      <div
+        class="container mx-auto px-6 max-w-5xl pt-48 pb-16 relative min-h-screen flex flex-col justify-center"
+      >
+        <h1
+          id="main-title"
+          class="text-7xl md:text-9xl font-heading text-center uppercase leading-none overflow-hidden"
+        >
+          Our Gallery
+        </h1>
+        <p
+          id="hero-scroll-text"
+          class="text-lg md:text-xl text-[var(--secondary-text)] font-heading italic tracking-wide text-center mt-8"
+        >
+          A visual journey through our world.
+        </p>
+        <div class="scroll-indicator">
+          <span></span>
+        </div>
+      </div>
+
+      <!-- Horizontal Gallery Section -->
+      <section
+        class="horizontal-gallery-container my-16"
+        id="horizontal-scroll-section"
+      >
+        <div class="horizontal-gallery" id="horizontal-gallery">
+          <!-- Gallery Item 1 -->
+          <div class="gallery-item">
+            <div class="gallery-item-content">
+              <img
+                src="https://images.unsplash.com/photo-1614765254651-431998232486?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Fashion designer at work"
+                class="parallax-image"
+                onerror="this.onerror=null;this.src='https://placehold.co/1200x800/1a1a1a/a8a8a8?text=Image+1';"
+              />
+              <div class="item-overlay">
+                <h3 class="font-heading text-4xl font-semibold mb-2">
+                  The Sketch
+                </h3>
+                <p
+                  class="font-body text-[var(--secondary-text)] text-sm max-w-sm"
+                >
+                  Our designs are born from a moment of pure inspiration,
+                  meticulously refined on paper.
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- Gallery Item 2 -->
+          <div class="gallery-item">
+            <div class="gallery-item-content">
+              <img
+                src="https://images.unsplash.com/photo-1523381294911-8d3cead13475?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Fashion studio"
+                class="parallax-image"
+                onerror="this.onerror=null;this.src='https://placehold.co/1200x800/1a1a1a/a8a8a8?text=Image+2';"
+              />
+              <div class="item-overlay">
+                <h3 class="font-heading text-4xl font-semibold mb-2">
+                  The Studio
+                </h3>
+                <p
+                  class="font-body text-[var(--secondary-text)] text-sm max-w-sm"
+                >
+                  Where concepts are brought to life, filled with fabric,
+                  patterns, and passion.
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- Gallery Item 3 -->
+          <div class="gallery-item">
+            <div class="gallery-item-content">
+              <img
+                src="https://images.unsplash.com/photo-1695694477689-bef8ba8fc5c6?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Fashion model"
+                class="parallax-image"
+                onerror="this.onerror=null;this.src='https://placehold.co/1200x800/1a1a1a/a8a8a8?text=Image+3';"
+              />
+              <div class="item-overlay">
+                <h3 class="font-heading text-4xl font-semibold mb-2">
+                  The Creation
+                </h3>
+                <p
+                  class="font-body text-[var(--secondary-text)] text-sm max-w-sm"
+                >
+                  Every stitch and seam is a testament to our commitment to
+                  quality and elegance.
+                </p>
+              </div>
+            </div>
+          </div>
+          <!-- Gallery Item 4 -->
+          <div class="gallery-item">
+            <div class="gallery-item-content">
+              <img
+                src="https://images.unsplash.com/photo-1600201319331-27d31ecd7850?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Textile production"
+                class="parallax-image"
+                onerror="this.onerror=null;this.src='https://placehold.co/1200x800/1a1a1a/a8a8a8?text=Image+4';"
+              />
+              <div class="item-overlay">
+                <h3 class="font-heading text-4xl font-semibold mb-2">
+                  The Legacy
+                </h3>
+                <p
+                  class="font-body text-[var(--secondary-text)] text-sm max-w-sm"
+                >
+                  Timeless designs, crafted to be cherished for generations to
+                  come.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Collaborations & Features Section -->
+      <section class="py-24" id="collaborations">
+        <div class="container mx-auto px-6 max-w-7xl">
+          <div class="flex flex-col md:flex-row items-center mb-12">
+            <div class="flex-1">
+              <div class="reveal-text-container">
+                <h2
+                  class="text-5xl md:text-6xl font-heading font-semibold reveal-text"
+                >
+                  Collaborations & Features
+                </h2>
+              </div>
+              <div class="reveal-text-container">
+                <p
+                  class="text-[var(--secondary-text)] mt-4 text-lg reveal-text"
+                >
+                  As seen in and in partnership with.
+                </p>
+              </div>
+            </div>
+            <a
+              href="#"
+              class="magnetic-item hover-link border border-white text-sm py-2 px-8 rounded-full mt-6 md:mt-0 md:ml-auto"
+              >View All</a
+            >
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Collaboration Item 1 -->
+            <div
+              class="collaboration-item transform translate-y-16 opacity-0 animate-in"
+            >
+              <div>
+                <i
+                  class="ph ph-newspaper text-5xl mb-4 text-[var(--secondary-text)]"
+                ></i>
+                <h3 class="font-heading text-xl font-semibold mb-2">
+                  The Fashion Chronicle
+                </h3>
+                <p class="text-[var(--secondary-text)] text-sm mb-4">
+                  "Aurora is redefining elegance with a commitment to
+                  sustainable practices."
+                </p>
+              </div>
+              <a
+                href="#"
+                class="read-article hover-link text-sm font-semibold"
+                data-article-id="1"
+                >Read the Article →</a
+              >
+            </div>
+            <!-- Collaboration Item 2 -->
+            <div
+              class="collaboration-item transform translate-y-16 opacity-0 animate-in"
+            >
+              <div>
+                <i
+                  class="ph ph-sparkle text-5xl mb-4 text-[var(--secondary-text)]"
+                ></i>
+
+                <h3 class="font-heading text-xl font-semibold mb-2">
+                  Style Magazine
+                </h3>
+                <p class="text-[var(--secondary-text)] text-sm mb-4">
+                  "The 'Aurora' collection is a masterclass in modern minimalism
+                  and timeless design."
+                </p>
+              </div>
+              <a
+                href="#"
+                class="read-article hover-link text-sm font-semibold"
+                data-article-id="2"
+                >Read the Article →</a
+              >
+            </div>
+            <!-- Collaboration Item 3 -->
+            <div
+              class="collaboration-item transform translate-y-16 opacity-0 animate-in"
+            >
+              <div>
+                <i
+                  class="ph ph-plant text-5xl mb-4 text-[var(--secondary-text)]"
+                ></i>
+                <h3 class="font-heading text-xl font-semibold mb-2">
+                  Eco-Conscious Collective
+                </h3>
+                <p class="text-[var(--secondary-text)] text-sm mb-4">
+                  "A brand that proves sustainable fashion can be both beautiful
+                  and luxurious."
+                </p>
+              </div>
+              <a
+                href="#"
+                class="read-article hover-link text-sm font-semibold"
+                data-article-id="3"
+                >Read the Article →</a
+              >
+            </div>
+            <!-- Collaboration Item 4 -->
+            <div
+              class="collaboration-item transform translate-y-16 opacity-0 animate-in"
+            >
+              <div>
+                <i
+                  class="ph ph-hands-clapping text-5xl mb-4 text-[var(--secondary-text)]"
+                ></i>
+                <h3 class="font-heading text-xl font-semibold mb-2">
+                  Creative Partners
+                </h3>
+                <p class="text-[var(--secondary-text)] text-sm mb-4">
+                  "We partnered with Aurora to create a capsule collection that
+                  embodies both of our creative visions."
+                </p>
+              </div>
+              <a
+                href="#"
+                class="read-article hover-link text-sm font-semibold"
+                data-article-id="4"
+                >View the Collection →</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Studio Story Section -->
+      <section class="py-24" id="studio-story">
+        <div class="container mx-auto px-6 max-w-7xl">
+          <div
+            class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
+            data-animation-trigger
+          >
+            <div class="order-2 lg:order-1">
+              <div class="reveal-text-container mb-4">
+                <p
+                  class="text-[var(--secondary-text)] uppercase tracking-wide text-sm reveal-text"
+                >
+                  The Story Behind
+                </p>
+              </div>
+              <div class="reveal-text-container mb-6">
+                <h2
+                  class="text-5xl md:text-6xl font-heading font-semibold leading-tight reveal-text"
+                >
+                  Crafted in Our Studio
+                </h2>
+              </div>
+              <div class="reveal-text-container mb-8">
+                <p class="text-lg reveal-text">
+                  Every piece is a testament to the art of craftsmanship. We
+                  believe in slow fashion, where quality and attention to detail
+                  are paramount. Our studio is a sanctuary of creativity, where
+                  ideas are brought to life with passion and purpose.
+                </p>
+              </div>
+              <div class="reveal-text-container">
+                <a
+                  href="#"
+                  class="magnetic-item hover-link border border-white text-sm py-2 px-8 rounded-full reveal-text"
+                  >Our Studio</a
+                >
+              </div>
+            </div>
+            <div class="order-1 lg:order-2">
+              <div
+                class="rounded-lg overflow-hidden w-full h-[500px] md:h-[600px] clip-img"
+              >
+                <img
+                  src="https://images.unsplash.com/photo-1708515902649-b65d59cd6aec?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                  alt="A person sewing in a studio"
+                  class="w-full h-full object-cover parallax-image"
+                  onerror="this.onerror=null;this.src='https://placehold.co/1200x800/1a1a1a/a8a8a8?text=Studio';"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials Section -->
+      <section class="py-24" id="testimonials">
+        <div class="container mx-auto px-6 max-w-5xl">
+          <div class="text-center">
+            <div class="reveal-text-container">
+              <h2
+                class="text-5xl md:text-6xl font-heading font-semibold reveal-text"
+              >
+                What Our Customers Say
+              </h2>
+            </div>
+            <div class="reveal-text-container">
+              <p class="text-[var(--secondary-text)] mt-4 text-lg reveal-text">
+                Authentic feedback from our community.
+              </p>
+            </div>
+          </div>
+          <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-12">
+            <!-- Testimonial 1 -->
+            <div class="transform translate-y-16 opacity-0 animate-in">
+              <p
+                class="text-lg leading-relaxed text-[var(--secondary-text)] testimonial-quote"
+              >
+                Aurora's clothing is more than just fashion; it's a statement.
+                The quality is impeccable, and I feel incredible every time I
+                wear one of their pieces.
+              </p>
+              <p class="font-heading font-bold mt-4">- Arman Mirza</p>
+            </div>
+            <!-- Testimonial 2 -->
+            <div class="transform translate-y-16 opacity-0 animate-in">
+              <p
+                class="text-lg leading-relaxed text-[var(--secondary-text)] testimonial-quote"
+              >
+                I was looking for something unique and timeless, and Aurora
+                delivered. The attention to detail is evident in every stitch.
+                Truly a work of art.
+              </p>
+              <p class="font-heading font-bold mt-4">- Meghla</p>
+            </div>
+            <!-- Testimonial 3 -->
+            <div class="transform translate-y-16 opacity-0 animate-in">
+              <p
+                class="text-lg leading-relaxed text-[var(--secondary-text)] testimonial-quote"
+              >
+                The fabric is so luxurious, and the design is so elegant. I've
+                received countless compliments. Aurora has become my go-to for
+                high-quality, ethical fashion.
+              </p>
+              <p class="font-heading font-bold mt-4">- Shadik Hossain</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="bg-black py-16 border-t border-[var(--border)]">
+        <div class="container mx-auto px-6">
+          <div
+            class="grid grid-cols-1 md:grid-cols-4 gap-12"
+            id="footer-content"
+            data-animation-trigger
+          >
+            <div
+              class="col-span-1 md:col-span-2 footer-col"
+              data-animation-target
+            >
+              <h3
+                class="text-xl font-bold mb-4 uppercase tracking-wider font-heading"
+              >
+                Stay in the loop
+              </h3>
+              <p class="text-[var(--secondary-text)] mb-6 max-w-sm font-body">
+                Receive updates on new arrivals, special offers and our creative
+                process.
+              </p>
+              <form class="flex items-center mt-8">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  class="bg-transparent border-b border-[var(--border)] w-full max-w-xs py-2 px-0 focus:outline-none focus:border-white transition-colors placeholder-[var(--secondary-text)] font-body"
+                />
+                <button
+                  type="submit"
+                  class="hover-link magnetic-item bg-transparent border border-white text-white px-6 py-2 rounded-full font-bold text-sm ml-4 hover:bg-white hover:text-black transition-all duration-300"
+                >
+                  Subscribe
+                </button>
+              </form>
+            </div>
+            <div class="col-span-1 footer-col" data-animation-target>
+              <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
+                Shop
+              </h4>
+              <ul class="space-y-3 text-[var(--secondary-text)] font-body">
+                <li>
+                  <a href="#" class="hover-link magnetic-item">New In</a>
+                </li>
+                <li>
+                  <a href="#" class="hover-link magnetic-item">Clothing</a>
+                </li>
+                <li>
+                  <a href="#" class="hover-link magnetic-item">Accessories</a>
+                </li>
+                <li>
+                  <a href="#" class="hover-link magnetic-item">Collections</a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-span-1 footer-col" data-animation-target>
+              <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
+                About
+              </h4>
+              <ul class="space-y-3 text-[var(--secondary-text)] font-body">
+                <li>
+                  <a href="index.html" class="hover-link magnetic-item"
+                    >Our Studio</a
+                  >
+                </li>
+                <li>
+                  <a href="gallery.html" class="hover-link magnetic-item"
+                    >Gallery</a
+                  >
+                </li>
+                <li>
+                  <a href="#" class="hover-link magnetic-item">Contact</a>
+                </li>
+                <li><a href="#" class="hover-link magnetic-item">FAQs</a></li>
+              </ul>
+            </div>
+          </div>
+          <div
+            class="mt-16 pt-8 border-t border-[var(--border)] text-center text-gray-500 text-xs font-body"
+          >
+            <p>
+              &copy; 2025 Aurora. All Rights Reserved. A demonstration of
+              world-class web design.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </main>
+
+    <!-- Full-page Article View -->
+    <div
+      id="full-page-article-view"
+      class="fixed inset-0 bg-black z-[5000] opacity-0 overflow-y-auto"
+    >
+      <div class="relative min-h-screen">
+        <button
+          id="article-close-btn"
+          class="article-close-btn magnetic-item p-3 rounded-full hover:bg-white/20 transition-colors"
+        >
+          <i class="ph ph-x text-xl"></i>
+        </button>
+
+        <div class="article-hero relative">
+          <img
+            id="article-hero-image"
+            src=""
+            alt="Article Hero Image"
+            class="article-hero-image"
+          />
+        </div>
+
+        <div class="article-content" id="article-content">
+          <p
+            id="article-publication"
+            class="text-xs uppercase tracking-widest text-[var(--secondary-text)] mb-2 animate-in-text"
+          ></p>
+          <h1
+            id="article-title"
+            class="font-heading text-5xl md:text-6xl font-semibold mb-2 leading-tight animate-in-text"
+          ></h1>
+          <p
+            id="article-date"
+            class="text-sm text-[var(--secondary-text)] mb-12 animate-in-text"
+          ></p>
+          <div
+            id="article-body"
+            class="prose prose-invert max-w-none text-base leading-relaxed text-[var(--text)]"
+          >
+            <!-- Article body will be injected here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts for animations and functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
+    <script>
+      // Smooth Scroll
+      const lenis = new Lenis();
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // Custom Cursor
+      const cursor = document.querySelector(".cursor");
+      const follower = document.querySelector(".cursor-follower");
+      gsap.set(cursor, { xPercent: -50, yPercent: -50 });
+      gsap.set(follower, { xPercent: -50, yPercent: -50 });
+      window.addEventListener("mousemove", (e) => {
+        gsap.to(cursor, { duration: 0.2, x: e.clientX, y: e.clientY });
+        gsap.to(follower, {
+          duration: 0.6,
+          x: e.clientX,
+          y: e.clientY,
+          ease: "power2.out",
+        });
+      });
+      document
+        .querySelectorAll(
+          ".hover-link, .magnetic-item, a, button, .gallery-item"
+        )
+        .forEach((el) => {
+          el.addEventListener("mouseenter", () =>
+            follower.classList.add("cursor-grow")
+          );
+          el.addEventListener("mouseleave", () =>
+            follower.classList.remove("cursor-grow")
+          );
+        });
+      document.querySelectorAll(".magnetic-item").forEach((el) => {
+        el.addEventListener("mousemove", function (e) {
+          const position = this.getBoundingClientRect();
+          const x = e.clientX - position.left - position.width / 2;
+          const y = e.clientY - position.top - position.height / 2;
+          gsap.to(this, {
+            x: x * 0.3,
+            y: y * 0.3,
+            duration: 0.3,
+            ease: "power2.out",
+          });
+        });
+        el.addEventListener("mouseleave", function () {
+          gsap.to(this, {
+            x: 0,
+            y: 0,
+            duration: 0.3,
+            ease: "elastic.out(1, 0.3)",
+          });
+        });
+      });
+
+      // Mobile Menu Logic
+      const hamburgerBtn = document.getElementById("hamburger-btn");
+      const closeMenuBtn = document.getElementById("close-menu");
+      const mobileMenu = document.getElementById("mobile-menu");
+      const mobileLinks = document.querySelectorAll(".mobile-nav-link");
+
+      hamburgerBtn.addEventListener("click", () => {
+        mobileMenu.classList.add("open");
+        document.body.classList.add("no-scroll");
+        mobileLinks.forEach((link) => {
+          link.style.opacity = 1;
+          link.style.transform = "translateY(0)";
+        });
+      });
+      closeMenuBtn.addEventListener("click", () => {
+        mobileMenu.classList.remove("open");
+        document.body.classList.remove("no-scroll");
+        mobileLinks.forEach((link) => {
+          link.style.opacity = 0;
+          link.style.transform = "translateY(20px)";
+        });
+      });
+      mobileLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          document.body.classList.remove("no-scroll");
+        });
+      });
+
+      // GSAP Animations with ScrollTrigger
+      gsap.registerPlugin(ScrollTrigger);
+
+      // Header scroll effect
+      const header = document.getElementById("main-header");
+
+      ScrollTrigger.create({
+        start: "top top",
+        end: 99999,
+        onUpdate: (self) => {
+          if (self.direction === 1 && self.progress > 0) {
+            gsap.set(header, { y: "-100%" });
+          } else {
+            gsap.set(header, { y: "0%" });
+          }
+
+          if (self.progress > 0.01) {
+            header.style.backgroundColor = "rgba(13, 13, 13, 0.7)";
+            header.style.backdropFilter = "blur(10px)";
+          } else {
+            header.style.backgroundColor = "transparent";
+            header.style.backdropFilter = "none";
+          }
+        },
+      });
+
+      // Main title animation
+      const mainTitle = document.getElementById("main-title");
+      function splitText(element) {
+        const text = element.textContent.trim();
+        element.innerHTML = "";
+        text.split(" ").forEach((word) => {
+          const wordSpan = document.createElement("span");
+          wordSpan.className = "split-word";
+          word.split("").forEach((char) => {
+            const charSpan = document.createElement("span");
+            charSpan.className = "split-char";
+            charSpan.textContent = char === " " ? "\u00A0" : char;
+            wordSpan.appendChild(charSpan);
+          });
+          element.appendChild(wordSpan);
+          element.appendChild(document.createTextNode(" "));
+        });
+      }
+
+      if (mainTitle) {
+        splitText(mainTitle);
+        gsap.fromTo(
+          mainTitle.querySelectorAll(".split-char"),
+          {
+            y: "110%",
+          },
+          {
+            y: "0%",
+            stagger: {
+              each: 0.03,
+              from: "start",
+            },
+            duration: 1.5,
+            ease: "power4.out",
+            delay: 0.5,
+          }
+        );
+      }
+
+      // Hero Scroll Text Fade-out Animation
+      gsap.to("#hero-scroll-text", {
+        opacity: 0,
+        y: -50,
+        ease: "none",
+        scrollTrigger: {
+          trigger: "#main-content",
+          start: "top top",
+          end: "center top",
+          scrub: 1,
+        },
+      });
+
+      // ---------------------------------------------------------------------------------------
+      // REFINED HORIZONTAL GALLERY SCROLL ANIMATION
+      // ---------------------------------------------------------------------------------------
+      const gallery = document.getElementById("horizontal-gallery");
+      const scrollableWidth = gallery.scrollWidth - window.innerWidth;
+
+      // Create the main horizontal tween for the gallery
+      const horizontalTween = gsap.to(gallery, {
+        x: -scrollableWidth,
+        ease: "none",
+      });
+
+      // Create a ScrollTrigger that pins the container and links to the horizontal tween
+      ScrollTrigger.create({
+        trigger: ".horizontal-gallery-container",
+        pin: true,
+        scrub: 1,
+        start: "top top",
+        end: `+=${scrollableWidth}`,
+        animation: horizontalTween,
+      });
+
+      // Parallax effect for gallery images - linked to the main horizontal scroll
+      const galleryItems = gsap.utils.toArray(".gallery-item");
+      galleryItems.forEach((item, i) => {
+        const image = item.querySelector(".parallax-image");
+        // Using `fromTo` for more control and a percentage-based `xPercent` for responsiveness.
+        // This ensures the animation is consistent and clearly visible on every image.
+        gsap.fromTo(
+          image,
+          {
+            xPercent: -15, // Starts the image shifted to the left by 15% of its own width
+          },
+          {
+            xPercent: 15, // Ends the animation shifted to the right by 15%
+            ease: "none",
+            scrollTrigger: {
+              trigger: item,
+              start: "left right",
+              end: "right left",
+              containerAnimation: horizontalTween,
+              scrub: true,
+            },
+          }
+        );
+      });
+      // ---------------------------------------------------------------------------------------
+
+      // General Fade-in/Slide-up animation for new sections
+      function setupFadeInAnimation(containerSelector, elementSelector) {
+        gsap.utils.toArray(elementSelector).forEach((element) => {
+          gsap.fromTo(
+            element,
+            { y: 50, opacity: 0 },
+            {
+              y: 0,
+              opacity: 1,
+              duration: 1,
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: element,
+                start: "top 85%",
+                toggleActions: "play none none none",
+              },
+            }
+          );
+        });
+      }
+
+      // Set up the animation for the featured collection and testimonials
+      setupFadeInAnimation("#collaborations", ".animate-in");
+      setupFadeInAnimation("#testimonials", ".animate-in");
+
+      // Text reveal animation
+      gsap.utils.toArray(".reveal-text").forEach((element) => {
+        gsap.fromTo(
+          element,
+          { y: "110%" },
+          {
+            y: "0%",
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: element,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      });
+
+      // Clip image animation for Studio Story section
+      gsap.utils.toArray(".clip-img").forEach((element) => {
+        gsap.to(element, {
+          clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+          duration: 1.5,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: element,
+            start: "top 75%",
+            toggleActions: "play none none none",
+          },
+        });
+      });
+
+      // ---------------------------------------------------------------------------------------
+      // FULL-PAGE ARTICLE LOGIC
+      // ---------------------------------------------------------------------------------------
+      const fullPageArticleView = document.getElementById(
+        "full-page-article-view"
+      );
+      const articleCloseBtn = document.getElementById("article-close-btn");
+      const articleHeroImage = document.getElementById("article-hero-image");
+      const articleTitle = document.getElementById("article-title");
+      const articlePublication = document.getElementById("article-publication");
+      const articleDate = document.getElementById("article-date");
+      const articleBody = document.getElementById("article-body");
+      const articleContent = document.getElementById("article-content");
+      const mainContent = document.getElementById("main-content");
+
+      const articles = {
+        "1": {
+          publication: "The Fashion Chronicle",
+          title: "Aurora: Redefining Elegance with Sustainable Practices",
+          date: "October 1, 2024",
+          image:
+            "https://images.unsplash.com/photo-1614765254651-431998232486?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          body: `
+            <p>In a world of fast-fashion consumption, a new movement is emerging, led by brands that prioritize both style and substance. Aurora, a company quickly becoming a household name in high fashion, is at the forefront of this revolution. Their latest collection, a testament to thoughtful design and ethical production, has captured the attention of critics and consumers alike.</p>
+            <p>The brand's philosophy is simple yet powerful: elegance should not come at the cost of the environment. By sourcing materials from certified sustainable suppliers and implementing a zero-waste policy in their local studio, Aurora is setting a new standard for the industry. Their garments are crafted to be timeless, durable pieces, encouraging a more conscious approach to clothing that stands in stark contrast to the disposable nature of current trends.</p>
+            <h2>The Art of Conscious Creation</h2>
+            <p>We had the pleasure of visiting their studio, a sanctuary of creativity and meticulous craftsmanship. The artisans work with a passion that is palpable, and every stitch tells a story of dedication to quality. The result is a collection that feels as good as it looks, with luxurious fabrics and impeccable tailoring that promise to last a lifetime. Aurora is more than just a brand; it's a statement about the future of fashion—one that is both beautiful and responsible.</p>
+          `,
+        },
+        "2": {
+          publication: "Style Magazine",
+          title: 'The "Aurora" Collection: A Masterclass in Modern Minimalism',
+          date: "September 15, 2024",
+          image:
+            "https://images.unsplash.com/photo-1523381294911-8d3cead13475?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          body: `
+            <p>Minimalism, in its purest form, is about intentionality and clarity. The new "Aurora" collection embodies these principles flawlessly, offering a refreshing antidote to the noise of over-designed fashion. With clean lines, muted color palettes, and an emphasis on texture, each piece in the collection is a study in quiet sophistication.</p>
+            <p>What truly sets this collection apart is the extraordinary attention to detail. Seams are invisible, cuts are precise, and every silhouette is designed to flatter. The materials, from rich silks to structured cottons, are chosen not only for their aesthetic appeal but also for their enduring quality. This is clothing meant to be lived in, not just looked at, and the comfort and versatility are second to none.</p>
+            <h2>Simplicity as the Ultimate Sophistication</h2>
+            <p>The collection proves that less is indeed more. It's an invitation to build a wardrobe of essentials that transcend seasonal trends, allowing for personal expression without sacrificing timeless style. Aurora has created a collection that is both a canvas and a masterpiece, giving us the building blocks for an elegant and effortless life.</p>
+            <p>This approach to design speaks to a growing consumer demand for quality over quantity, a desire to invest in pieces that are both meaningful and lasting. Aurora's success is a clear indicator that the future of fashion is one rooted in intentional design and a deep respect for the craft.</p>
+          `,
+        },
+        "3": {
+          publication: "Eco-Conscious Collective",
+          title: "Aurora: Proving Sustainable Fashion Can Be Luxurious",
+          date: "August 28, 2024",
+          image:
+            "https://images.unsplash.com/photo-1695694477689-bef8ba8fc5c6?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          body: `
+            <p>For too long, the narrative around sustainable fashion has been one of compromise—either you had to sacrifice style for ethics, or vice versa. Aurora is shattering this misconception with a business model that proves sustainability and luxury are not mutually exclusive but can, in fact, enhance one another. Their commitment to eco-friendly processes is woven into the very fabric of their brand.</p>
+            <p>Using innovative recycled fabrics and organic materials, Aurora creates garments that are not only gentle on the planet but also feel incredible to wear. The brand's transparency is a breath of fresh air; they are open about their supply chain and their production processes, allowing consumers to make informed choices. This level of integrity builds a trust that is rare in the industry.</p>
+            <h2>Beyond Aesthetics: A Commitment to Integrity</h2>
+            <p>The pieces themselves are a joy to behold. The craftsmanship is on par with the world's most exclusive luxury houses, and the designs possess a unique blend of modernity and classic appeal. Aurora is more than a fashion brand; it's a movement towards a more responsible and beautiful future, one garment at a time.</p>
+            <p>Their approach serves as a powerful case study for how businesses can thrive by aligning their values with those of their customers. It's a clear message that consumers are increasingly seeking out brands that not only produce high-quality goods but also operate with a sense of purpose and ethical responsibility.</p>
+          `,
+        },
+        "4": {
+          publication: "Creative Partners",
+          title: "Aurora x [Creative Partner]: The Art of Collaboration",
+          date: "July 10, 2024",
+          image:
+            "https://images.unsplash.com/photo-1600201319331-27d31ecd7850?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          body: `
+            <p>In a rare and exciting partnership, Aurora has joined forces with a renowned creative partner to create a capsule collection that perfectly blends both of their distinct artistic visions. This collaboration is a showcase of how two different worlds—fashion and art—can collide to produce something truly magical and unexpected.</p>
+            <p>The collection features limited-edition pieces that are both wearable works of art and functional fashion statements. The partner's signature aesthetic is integrated seamlessly into Aurora's minimalist silhouettes, resulting in a collection that is bold, expressive, and deeply personal. Every detail, from the hand-painted motifs to the custom-designed hardware, speaks to the unique synergy between the two collaborators.</p>
+            <h2>Synergy of Style and Substance</h2>
+            <p>This project is a testament to the power of creative partnership and a celebration of mutual respect and shared passion. The "Aurora" capsule collection is not just about the clothes; it's about the story they tell—a story of innovation, creativity, and the endless possibilities that arise when we work together.</p>
+            <p>The success of the collection has been met with critical acclaim and high demand, proving that consumers are hungry for unique, meaningful collaborations. It sets a precedent for future partnerships that prioritize artistic integrity and a shared commitment to pushing creative boundaries.</p>
+          `,
+        },
+      };
+
+      document.querySelectorAll(".read-article").forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const articleId = e.target.getAttribute("data-article-id");
+          const article = articles[articleId];
+
+          if (article) {
+            articleHeroImage.src = article.image;
+            articlePublication.textContent = article.publication;
+            articleTitle.textContent = article.title;
+            articleDate.textContent = article.date;
+            articleBody.innerHTML = article.body;
+
+            // Show the article view with animation
+            fullPageArticleView.classList.add("show");
+            gsap.to(fullPageArticleView, {
+              opacity: 1,
+              duration: 0.8,
+              ease: "power2.out",
+              onComplete: () => {
+                document.body.classList.add("no-scroll");
+                fullPageArticleView.scrollTop = 0; // Reset scroll to top
+              },
+            });
+
+            // Parallax effect for the hero image within the article view
+            gsap.to(articleHeroImage, {
+              yPercent: 20,
+              ease: "none",
+              scrollTrigger: {
+                trigger: fullPageArticleView,
+                start: "top top",
+                end: "bottom top",
+                scrub: 1,
+              },
+            });
+
+            // Animate article content in
+            gsap.fromTo(
+              articleContent,
+              {
+                y: 100,
+                opacity: 0,
+              },
+              {
+                y: 0,
+                opacity: 1,
+                duration: 1.2,
+                ease: "power3.out",
+                delay: 0.5,
+              }
+            );
+
+            // Hide the main content
+            gsap.to(mainContent, {
+              opacity: 0,
+              display: "none",
+              duration: 0.8,
+              ease: "power2.out",
+            });
+          }
+        });
+      });
+
+      articleCloseBtn.addEventListener("click", () => {
+        // Hide the article view with animation
+        gsap.to(fullPageArticleView, {
+          opacity: 0,
+          duration: 0.8,
+          ease: "power2.out",
+          onComplete: () => {
+            fullPageArticleView.classList.remove("show");
+            document.body.classList.remove("no-scroll");
+          },
+        });
+
+        // Show the main content
+        gsap.to(mainContent, {
+          opacity: 1,
+          display: "block",
+          duration: 0.8,
+          ease: "power2.out",
+        });
+      });
+    </script>
+    <script src="cart-count.js"></script>
+  </body>
+</html>
