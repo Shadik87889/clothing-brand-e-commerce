@@ -21,6 +21,7 @@
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/utc.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/timezone.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
 
     <style>
       /* --- Global CSS Variables & Styling for a premium feel --- */
@@ -268,6 +269,35 @@
         cursor: not-allowed;
       }
 
+      /* --- Notification Styling --- */
+      .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -8px;
+        background-color: #ef4444;
+        color: white;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        border: 2px solid var(--primary-bg);
+      }
+      .notification-dropdown {
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.2s ease-in-out;
+      }
+      .notification-dropdown.open {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+      }
+
       /* --- Invoice Styling --- */
       @media print {
         body * {
@@ -289,36 +319,78 @@
       }
     </style>
   </head>
-  <body class="antialiased flex flex-col min-h-screen lg:flex-row">
-    <!-- Main Admin Layout -->
-    <aside
-      class="admin-sidebar w-full lg:w-64 flex flex-col p-6 border-b lg:border-r lg:border-b-0 border-[var(--border)]"
+  <body class="antialiased">
+    <!-- Login Section -->
+    <div
+      id="login-section"
+      class="flex items-center justify-center min-h-screen w-full"
     >
-      <div class="flex items-center justify-between mb-12">
+      <div
+        class="card p-8 sm:p-12 rounded-2xl w-full max-w-md mx-4 text-center"
+      >
         <h1
-          class="text-3xl font-bold tracking-widest uppercase font-heading text-[var(--accent)]"
+          class="text-5xl font-bold tracking-widest uppercase font-heading text-[var(--accent)] mb-4"
         >
           AURORA
         </h1>
-        <button id="hamburger-btn" class="lg:hidden text-white">
-          <i class="ph ph-list text-2xl"></i>
-        </button>
+        <p class="text-[var(--secondary-text)] mb-8">Admin Panel</p>
+        <form id="login-form" class="space-y-6">
+          <div>
+            <input
+              type="email"
+              id="login-email"
+              placeholder="Email"
+              class="form-input w-full text-center"
+              required
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              id="login-password"
+              placeholder="Password"
+              class="form-input w-full text-center"
+              required
+            />
+          </div>
+          <p id="login-error" class="text-red-500 text-sm h-4"></p>
+          <button
+            type="submit"
+            class="w-full py-3 rounded-full text-lg font-semibold btn btn-primary"
+          >
+            Sign In
+          </button>
+        </form>
       </div>
-      <!-- Mobile menu container -->
+    </div>
+
+    <!-- Main Admin Panel (Initially Hidden) -->
+    <div id="admin-panel" class="hidden flex">
+      <!-- Mobile Sidebar Overlay -->
       <div
-        id="mobile-sidebar-menu"
-        class="hidden fixed inset-0 bg-[var(--primary-bg)] z-50 p-6 flex-col"
+        id="sidebar-overlay"
+        class="fixed inset-0 bg-black/60 z-40 lg:hidden hidden"
+      ></div>
+
+      <!-- Sidebar -->
+      <aside
+        id="admin-sidebar"
+        class="admin-sidebar w-64 flex-shrink-0 flex flex-col p-6 border-r border-[var(--border)] fixed lg:sticky top-0 h-full lg:h-screen z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out"
       >
-        <div class="flex justify-between items-center mb-8">
+        <div class="flex items-center justify-between mb-12">
           <h1
             class="text-3xl font-bold tracking-widest uppercase font-heading text-[var(--accent)]"
           >
             AURORA
           </h1>
-          <button id="close-mobile-sidebar" class="text-white">
-            <i class="ph ph-x text-2xl"></i>
+          <button
+            id="sidebar-close-btn"
+            class="lg:hidden text-2xl text-[var(--secondary-text)]"
+          >
+            <i class="ph ph-x"></i>
           </button>
         </div>
+
         <nav>
           <ul
             class="flex flex-col space-y-2 text-sm uppercase tracking-wider font-light"
@@ -350,7 +422,15 @@
                 <i class="ph ph-bag"></i> Orders
               </a>
             </li>
-            <li></li>
+            <li>
+              <a
+                href="#"
+                class="admin-link flex items-center gap-3 p-3 rounded-lg"
+                data-view="invoices"
+              >
+                <i class="ph ph-receipt"></i> Invoices
+              </a>
+            </li>
             <li>
               <a
                 href="#"
@@ -362,96 +442,90 @@
             </li>
           </ul>
         </nav>
-      </div>
 
-      <!-- Desktop Sidebar Navigation -->
-      <nav class="hidden lg:block">
-        <ul
-          class="flex flex-col space-y-2 text-sm uppercase tracking-wider font-light"
-        >
-          <li>
-            <a
-              href="#"
-              class="admin-link flex items-center gap-3 p-3 rounded-lg active"
-              data-view="dashboard"
+        <div class="mt-auto pt-6 border-t border-[var(--border)]">
+          <div class="text-sm text-[var(--secondary-text)]">
+            <p>User ID:</p>
+            <code
+              id="user-id-display"
+              class="block font-mono text-xs break-all mt-1"
+              >...</code
             >
-              <i class="ph ph-chart-line-up"></i> Dashboard
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="admin-link flex items-center gap-3 p-3 rounded-lg"
-              data-view="products"
-            >
-              <i class="ph ph-tag"></i> Products
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="admin-link flex items-center gap-3 p-3 rounded-lg"
-              data-view="orders"
-            >
-              <i class="ph ph-bag"></i> Orders
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="admin-link flex items-center gap-3 p-3 rounded-lg"
-              data-view="invoices"
-            >
-              <i class="ph ph-receipt"></i> Invoices
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="admin-link flex items-center gap-3 p-3 rounded-lg"
-              data-view="settings"
-            >
-              <i class="ph ph-gear"></i> Settings
-            </a>
-          </li>
-        </ul>
-      </nav>
-
-      <!-- User ID Display for Collaboration -->
-      <div
-        class="mt-auto pt-6 text-sm text-[var(--secondary-text)] border-t border-[var(--border)]"
-      >
-        <p>User ID:</p>
-        <code
-          id="user-id-display"
-          class="block font-mono text-xs break-all mt-1"
-          >...</code
-        >
-      </div>
-    </aside>
-
-    <main class="flex-1 p-6 lg:p-12 overflow-y-auto">
-      <div id="content-area">
-        <!-- Dynamic content will be rendered here -->
-        <div
-          class="flex items-center justify-center p-8 text-center text-[var(--secondary-text)]"
-        >
-          <div id="loading-indicator" class="flex flex-col items-center">
-            <i
-              class="ph ph-gear-six text-5xl animate-spin text-[var(--accent)] mb-4"
-            ></i>
-            <p>Initializing Firebase...</p>
           </div>
-          <div id="firebase-error" class="hidden flex-col items-center">
-            <i class="ph ph-warning-circle text-5xl text-red-500 mb-4"></i>
-            <p class="text-red-400 font-semibold mb-2">Initialization Error</p>
-            <p class="text-sm">
-              Firebase could not be initialized. Please check the configuration.
-            </p>
-          </div>
+          <button
+            id="logout-btn"
+            class="w-full mt-4 py-2 px-4 rounded-full text-sm font-semibold btn-secondary flex items-center justify-center gap-2"
+          >
+            <i class="ph ph-sign-out"></i> Logout
+          </button>
         </div>
+      </aside>
+
+      <!-- Main Content Area -->
+      <div class="flex-1 flex flex-col h-screen">
+        <!-- Fixed Header -->
+        <header
+          class="bg-[var(--primary-bg)] border-b border-[var(--border)] p-4 flex-shrink-0"
+        >
+          <div
+            class="flex items-center justify-between max-w-full mx-auto px-4 lg:px-8"
+          >
+            <!-- Hamburger Menu for Mobile -->
+            <button
+              id="hamburger-btn"
+              class="lg:hidden text-2xl text-[var(--secondary-text)]"
+            >
+              <i class="ph ph-list"></i>
+            </button>
+            <div class="relative w-full max-w-xs hidden sm:block">
+              <i
+                class="ph ph-magnifying-glass text-[var(--secondary-text)] absolute left-4 top-1/2 -translate-y-1/2"
+              ></i>
+              <input
+                type="text"
+                placeholder="Search anything..."
+                class="form-input w-full pl-10 text-sm"
+              />
+            </div>
+            <div class="relative">
+              <button
+                id="notification-bell"
+                class="relative text-[var(--secondary-text)] hover:text-white"
+              >
+                <i class="ph ph-bell text-2xl"></i>
+                <span id="notification-badge" class="notification-badge hidden"
+                  >0</span
+                >
+              </button>
+              <div
+                id="notification-dropdown"
+                class="notification-dropdown absolute right-0 mt-4 w-80 card rounded-xl shadow-lg z-20"
+              >
+                <div class="p-4 border-b border-[var(--border)]">
+                  <h4 class="font-heading text-lg font-semibold">
+                    Notifications
+                  </h4>
+                </div>
+                <div id="notification-list" class="max-h-96 overflow-y-auto">
+                  <!-- Notifications will be injected here -->
+                  <p
+                    class="text-center text-sm text-[var(--secondary-text)] p-8"
+                  >
+                    No new notifications
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <main class="flex-1 p-6 lg:p-12 overflow-y-auto">
+          <div id="content-area">
+            <!-- Content will be rendered here after successful login -->
+          </div>
+        </main>
       </div>
-    </main>
+    </div>
 
     <!-- Modal for confirmation/error messages -->
     <div
@@ -488,9 +562,12 @@
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
       import {
         getAuth,
-        signInAnonymously,
-        signInWithCustomToken,
         onAuthStateChanged,
+        signInWithEmailAndPassword,
+        signOut,
+        updatePassword,
+        reauthenticateWithCredential,
+        EmailAuthProvider,
       } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
       import {
         getFirestore,
@@ -515,18 +592,13 @@
       let app, db, auth;
       let userId;
 
-      // These variables are provided by the canvas environment
+      dayjs.extend(dayjs_plugin_utc);
+      dayjs.extend(dayjs_plugin_timezone);
+      dayjs.extend(dayjs_plugin_relativeTime);
+
       const appId =
         typeof __app_id !== "undefined" ? __app_id : "default-app-id";
-      const initialAuthToken =
-        typeof __initial_auth_token !== "undefined"
-          ? __initial_auth_token
-          : null;
 
-      // ---------------------------------------------------------------------
-      // IMPORTANT: Paste your Firebase config here if you are not using the
-      // live canvas environment. This will resolve the initialization errors.
-      // ---------------------------------------------------------------------
       const localFirebaseConfig = {
         apiKey: "AIzaSyCPWe_VrV_Rq9HcKruC5uoC9jNFkwpzNcU",
         authDomain: "aurora-e-commerce.firebaseapp.com",
@@ -553,20 +625,24 @@
       let currentOrderStatusFilter = "All";
       let currentSearchQuery = "";
       let currentOrderSearchQuery = "";
-      let currentInvoiceSearchQuery = ""; // New state for invoice search
+      let currentInvoiceSearchQuery = "";
 
       // --- State for Dashboard Charts ---
       let revenueChartInstance = null;
       let categoryChartInstance = null;
-      let dateFilter = "30D"; // Default filter: 7D, 30D, MTD, YTD
+      let dateFilter = "30D";
       let allOrdersForCharts = [];
-      let allProductsForCharts = new Map();
+      let allProductsForCharts = [];
+
+      // --- State for Notifications ---
+      let knownOrderIds = null; // Use a Set to track seen orders
+      let newNotificationCount = 0;
 
       // --- State for Pagination ---
       let productsCurrentPage = 1;
       const productsItemsPerPage = 10;
       let ordersCurrentPage = 1;
-      const ordersItemsPerPage = 9; // Ideal for a 3-column grid
+      const ordersItemsPerPage = 9;
       let invoicesCurrentPage = 1;
       const invoicesItemsPerPage = 15;
 
@@ -576,6 +652,13 @@
       let allOrdersInView = [];
       let allInvoicesInView = [];
 
+      // --- UI Elements ---
+      const loginSection = document.getElementById("login-section");
+      const adminPanel = document.getElementById("admin-panel");
+      const loginForm = document.getElementById("login-form");
+      const loginError = document.getElementById("login-error");
+      const logoutBtn = document.getElementById("logout-btn");
+
       // Initialize Firebase and set up auth listener
       async function setupFirebase() {
         try {
@@ -583,12 +666,8 @@
             console.error(
               "Firebase config is missing or invalid. Cannot initialize app."
             );
-            document
-              .getElementById("loading-indicator")
-              ?.classList.add("hidden");
-            document
-              .getElementById("firebase-error")
-              ?.classList.remove("hidden");
+            if (loginError)
+              loginError.textContent = "Firebase configuration error.";
             return;
           }
 
@@ -596,44 +675,96 @@
           db = getFirestore(app);
           auth = getAuth(app);
 
-          if (initialAuthToken) {
-            await signInWithCustomToken(auth, initialAuthToken);
-          } else {
-            await signInAnonymously(auth);
-          }
-
-          onAuthStateChanged(auth, (user) => {
+          // The core authentication logic
+          onAuthStateChanged(auth, async (user) => {
             if (user) {
-              userId = user.uid;
-              const userIdDisplay = document.getElementById("user-id-display");
-              if (userIdDisplay) userIdDisplay.textContent = userId;
-              console.log(
-                "Firebase initialized and user authenticated:",
-                userId
-              );
-              document
-                .getElementById("loading-indicator")
-                ?.classList.add("hidden");
-              renderUI("dashboard");
+              // User is signed in, now check their role
+              const adminUserRef = doc(db, "adminUsers", user.uid);
+              const adminUserSnap = await getDoc(adminUserRef);
+
+              if (
+                adminUserSnap.exists() &&
+                ["admin", "moderator"].includes(adminUserSnap.data().role)
+              ) {
+                // User has the correct role, show the admin panel
+                userId = user.uid;
+                const userIdDisplay = document.getElementById(
+                  "user-id-display"
+                );
+                if (userIdDisplay) userIdDisplay.textContent = userId;
+                showAdminPanel();
+              } else {
+                // User does not have the correct role, sign them out
+                console.log("Unauthorized user. Signing out.");
+                await signOut(auth);
+                if (loginError)
+                  loginError.textContent =
+                    "You do not have permission to access this panel.";
+              }
             } else {
-              console.log("No user is signed in.");
-              const userIdDisplay = document.getElementById("user-id-display");
-              if (userIdDisplay)
-                userIdDisplay.textContent = "Not authenticated";
+              // No user is signed in, show the login form
+              showLoginSection();
             }
           });
         } catch (error) {
           console.error("Error setting up Firebase:", error);
-          document.getElementById("loading-indicator")?.classList.add("hidden");
-          document.getElementById("firebase-error")?.classList.remove("hidden");
+          if (loginError)
+            loginError.textContent = "Failed to initialize Firebase.";
         }
       }
 
-      /**
-       * Generates a human-readable ID with a prefix, date, time, and random component.
-       * @param {string} prefix - The prefix for the ID (e.g., 'PROD', 'ORD', 'INV').
-       * @returns {string} A readable ID string.
-       */
+      function showAdminPanel() {
+        if (loginSection) loginSection.style.display = "none";
+        if (adminPanel) adminPanel.style.display = "flex";
+        // Load initial data for the dashboard
+        renderUI("dashboard");
+      }
+
+      function showLoginSection() {
+        if (loginSection) loginSection.style.display = "flex";
+        if (adminPanel) adminPanel.style.display = "none";
+        // Clear any sensitive data when logging out
+        const contentArea = document.getElementById("content-area");
+        if (contentArea) contentArea.innerHTML = "";
+        const userIdDisplay = document.getElementById("user-id-display");
+        if (userIdDisplay) userIdDisplay.textContent = "Not logged in";
+      }
+
+      async function handleLogin(e) {
+        e.preventDefault();
+        if (loginError) loginError.textContent = "";
+        const email = document.getElementById("login-email").value;
+        const password = document.getElementById("login-password").value;
+
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+          // onAuthStateChanged will handle the rest
+        } catch (error) {
+          console.error("Login failed:", error.code);
+          if (loginError) {
+            switch (error.code) {
+              case "auth/invalid-email":
+              case "auth/user-not-found":
+              case "auth/wrong-password":
+              case "auth/invalid-credential":
+                loginError.textContent = "Invalid email or password.";
+                break;
+              default:
+                loginError.textContent = "An error occurred during login.";
+            }
+          }
+        }
+      }
+
+      async function handleLogout() {
+        try {
+          await signOut(auth);
+          // onAuthStateChanged will handle showing the login screen
+        } catch (error) {
+          console.error("Error signing out:", error);
+        }
+      }
+
       function generateReadableId(prefix) {
         const now = new Date();
         const year = now.getFullYear();
@@ -671,8 +802,12 @@
           }
         });
 
-        const mobileSidebar = document.getElementById("mobile-sidebar-menu");
-        if (mobileSidebar) mobileSidebar.classList.add("hidden");
+        // Close sidebar on navigation for mobile
+        const sidebar = document.getElementById("admin-sidebar");
+        const overlay = document.getElementById("sidebar-overlay");
+        sidebar?.classList.add("-translate-x-full");
+        sidebar?.classList.remove("translate-x-0");
+        overlay?.classList.add("hidden");
 
         switch (view) {
           case "dashboard":
@@ -702,7 +837,6 @@
           case "invoice_detail":
             renderInvoiceDetailView(data);
             break;
-
           case "settings":
             renderSettingsView();
             break;
@@ -714,7 +848,7 @@
         contentArea.innerHTML = `
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                 <h2 class="text-4xl font-heading text-[var(--accent)]">Dashboard</h2>
-                <div class="flex gap-2">
+                <div class="flex gap-2 flex-wrap">
                     <button data-filter="7D" class="date-filter-btn text-sm py-2 px-4 rounded-full btn-secondary">7 Days</button>
                     <button data-filter="30D" class="date-filter-btn text-sm py-2 px-4 rounded-full btn-secondary active">30 Days</button>
                     <button data-filter="MTD" class="date-filter-btn text-sm py-2 px-4 rounded-full btn-secondary">Month to Date</button>
@@ -797,7 +931,7 @@
             
             <!-- Filter, Search, and Bulk Actions -->
             <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-                <div class="flex gap-4">
+                <div class="flex gap-4 flex-wrap">
                     <button data-filter="All" class="filter-btn text-sm py-2 px-4 rounded-full btn-secondary">All</button>
                     <button data-filter="Published" class="filter-btn text-sm py-2 px-4 rounded-full btn-secondary">Published</button>
                     <button data-filter="Draft" class="filter-btn text-sm py-2 px-4 rounded-full btn-secondary">Draft</button>
@@ -933,11 +1067,11 @@
               
               <!-- Tab Navigation for the Form -->
               <div class="relative mb-8 tab-nav-container">
-                <div class="flex border-b border-[var(--border)]">
-                  <button type="button" class="tab-link active py-4 px-4 text-sm font-semibold" data-tab="product-info">Product Info</button>
-                  <button type="button" class="tab-link py-4 px-4 text-sm font-semibold text-[var(--secondary-text)]" data-tab="media">Media & Variants</button>
-                  <button type="button" class="tab-link py-4 px-4 text-sm font-semibold text-[var(--secondary-text)]" data-tab="shipping">Shipping & Tax</button>
-                  <button type="button" class="tab-link py-4 px-4 text-sm font-semibold text-[var(--secondary-text)]" data-tab="seo">SEO & Metadata</button>
+                <div class="flex border-b border-[var(--border)] overflow-x-auto">
+                  <button type="button" class="tab-link active py-4 px-4 text-sm font-semibold flex-shrink-0" data-tab="product-info">Product Info</button>
+                  <button type="button" class="tab-link py-4 px-4 text-sm font-semibold text-[var(--secondary-text)] flex-shrink-0" data-tab="media">Media & Variants</button>
+                  <button type="button" class="tab-link py-4 px-4 text-sm font-semibold text-[var(--secondary-text)] flex-shrink-0" data-tab="shipping">Shipping & Tax</button>
+                  <button type="button" class="tab-link py-4 px-4 text-sm font-semibold text-[var(--secondary-text)] flex-shrink-0" data-tab="seo">SEO & Metadata</button>
                 </div>
                 <div class="tab-underline"></div>
               </div>
@@ -1263,7 +1397,7 @@
         });
 
         window.addEventListener("resize", updateTabUnderline);
-        updateTabUnderline();
+        setTimeout(updateTabUnderline, 50); // Use timeout to ensure DOM is ready
 
         // Pricing Calculation Logic
         const basePriceInput = document.getElementById("base-price");
@@ -1944,7 +2078,6 @@
         contentArea.innerHTML = `
             <h2 class="text-4xl font-heading mb-8 text-[var(--accent)]">Invoices</h2>
             
-            <!-- NEW: Search bar for invoices -->
             <div class="flex justify-end mb-8">
                 <div class="relative w-full md:w-1/3">
                     <i class="ph ph-magnifying-glass text-[var(--secondary-text)] absolute left-4 top-1/2 -translate-y-1/2"></i>
@@ -2119,6 +2252,28 @@
         contentArea.innerHTML = `
             <h2 class="text-4xl font-heading mb-8 text-[var(--accent)]">Settings</h2>
             <div class="w-full mx-auto space-y-8">
+                <!-- Account Security -->
+                <div class="card p-8 rounded-xl">
+                    <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] mb-6">Account Security</h3>
+                    <form id="change-password-form" class="space-y-4">
+                        <div>
+                            <label for="current-password" class="block text-sm font-light mb-2">Current Password</label>
+                            <input type="password" id="current-password" class="form-input w-full md:w-1/2" required>
+                        </div>
+                        <div>
+                            <label for="new-password" class="block text-sm font-light mb-2">New Password</label>
+                            <input type="password" id="new-password" class="form-input w-full md:w-1/2" required>
+                        </div>
+                        <div>
+                            <label for="confirm-password" class="block text-sm font-light mb-2">Confirm New Password</label>
+                            <input type="password" id="confirm-password" class="form-input w-full md:w-1/2" required>
+                        </div>
+                        <div class="flex justify-end pt-4">
+                            <button type="submit" class="py-2 px-6 rounded-full text-sm font-semibold btn btn-primary">Update Password</button>
+                        </div>
+                    </form>
+                </div>
+
                 <!-- Shipping Settings -->
                 <div class="card p-8 rounded-xl">
                     <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] mb-6">Shipping Settings</h3>
@@ -2153,6 +2308,10 @@
         `;
 
         document
+          .getElementById("change-password-form")
+          ?.addEventListener("submit", handleChangePassword);
+
+        document
           .getElementById("save-shipping-settings")
           ?.addEventListener("click", () => {
             const baseCost = document.getElementById("base-shipping-cost")
@@ -2178,6 +2337,74 @@
 
       // --- Firestore Logic ---
 
+      async function handleChangePassword(e) {
+        e.preventDefault();
+        const currentPassword = document.getElementById("current-password")
+          .value;
+        const newPassword = document.getElementById("new-password").value;
+        const confirmPassword = document.getElementById("confirm-password")
+          .value;
+
+        if (newPassword !== confirmPassword) {
+          openMessageModal({
+            title: "Error",
+            message: "New passwords do not match.",
+            isError: true,
+          });
+          return;
+        }
+
+        if (newPassword.length < 6) {
+          openMessageModal({
+            title: "Error",
+            message: "New password must be at least 6 characters long.",
+            isError: true,
+          });
+          return;
+        }
+
+        const user = auth.currentUser;
+        if (!user) {
+          openMessageModal({
+            title: "Error",
+            message: "No user is currently signed in.",
+            isError: true,
+          });
+          return;
+        }
+
+        const credential = EmailAuthProvider.credential(
+          user.email,
+          currentPassword
+        );
+
+        try {
+          // Re-authenticate the user to confirm their identity
+          await reauthenticateWithCredential(user, credential);
+
+          // If re-authentication is successful, update the password
+          await updatePassword(user, newPassword);
+
+          openMessageModal({
+            title: "Success",
+            message: "Your password has been updated successfully.",
+          });
+          e.target.reset(); // Clear the form fields
+        } catch (error) {
+          console.error("Password change error:", error);
+          let errorMessage = "An error occurred. Please try again.";
+          if (error.code === "auth/wrong-password") {
+            errorMessage =
+              "The current password you entered is incorrect. Please try again.";
+          }
+          openMessageModal({
+            title: "Password Change Failed",
+            message: errorMessage,
+            isError: true,
+          });
+        }
+      }
+
       async function listenForDashboardData() {
         if (!db) return;
 
@@ -2190,15 +2417,10 @@
           "products"
         );
         const productsSnap = await getDocs(productsRef);
-        productsSnap.docs.forEach((doc) =>
-          allProductsForCharts.set(doc.id, doc.data())
-        );
-
-        const totalProductsCountEl = document.getElementById(
-          "total-products-count"
-        );
-        if (totalProductsCountEl)
-          totalProductsCountEl.textContent = allProductsForCharts.size;
+        allProductsForCharts = productsSnap.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
         const ordersQuery = query(collectionGroup(db, "orders"));
         dashboardUnsubscribe = onSnapshot(
@@ -2217,7 +2439,7 @@
       }
 
       function updateDashboardCharts() {
-        if (!allOrdersForCharts.length) return;
+        if (!allOrdersForCharts.length && !allProductsForCharts.length) return;
 
         const now = dayjs();
         let startDate;
@@ -2244,11 +2466,19 @@
           return order.status === "Delivered" && orderDate.isAfter(startDate);
         });
 
+        const filteredProducts = allProductsForCharts.filter((product) => {
+          const productDate = dayjs(product.dateAdded);
+          return productDate.isAfter(startDate);
+        });
+
         // Update stat cards
         const totalRevenueEl = document.getElementById("total-revenue");
         const totalProfitEl = document.getElementById("total-profit");
         const totalOrdersCountEl = document.getElementById(
           "total-orders-count"
+        );
+        const totalProductsCountEl = document.getElementById(
+          "total-products-count"
         );
 
         let totalRevenue = 0;
@@ -2256,8 +2486,9 @@
         filteredOrders.forEach((order) => {
           totalRevenue += order.totals?.total || 0;
           order.cart?.forEach((item) => {
-            // FIX: Use item.product.id to get the correct product from the map
-            const product = allProductsForCharts.get(item.product?.id);
+            const product = allProductsForCharts.find(
+              (p) => p.id === item.product?.id
+            );
             if (product) {
               const cost = product.costPrice || product.basePrice || 0;
               totalCost += cost * (item.quantity || 1);
@@ -2271,10 +2502,10 @@
           totalProfitEl.textContent = (totalRevenue - totalCost).toFixed(2);
         if (totalOrdersCountEl)
           totalOrdersCountEl.textContent = filteredOrders.length;
+        if (totalProductsCountEl)
+          totalProductsCountEl.textContent = filteredProducts.length;
 
         // --- Process data for charts ---
-
-        // Revenue & Profit Chart
         const dailyData = {};
         filteredOrders.forEach((order) => {
           const date = dayjs(order.timestamp.toDate()).format("YYYY-MM-DD");
@@ -2284,8 +2515,9 @@
           const orderRevenue = order.totals?.total || 0;
           let orderCost = 0;
           order.cart?.forEach((item) => {
-            // FIX: Use item.product.id to get the correct product from the map
-            const product = allProductsForCharts.get(item.product?.id);
+            const product = allProductsForCharts.find(
+              (p) => p.id === item.product?.id
+            );
             if (product) {
               orderCost +=
                 (product.costPrice || product.basePrice || 0) *
@@ -2310,8 +2542,6 @@
         const categorySales = {};
         filteredOrders.forEach((order) => {
           order.cart?.forEach((item) => {
-            // FIX: Use the product data snapshot stored within the cart item.
-            // This is more reliable for historical data.
             const productSnapshot = item.product;
             if (productSnapshot && productSnapshot.category) {
               const category = productSnapshot.category;
@@ -2469,19 +2699,21 @@
         );
       }
 
+      // --- UPDATED FUNCTION ---
       function listenForOrders() {
         if (!db) {
           console.error("Firestore not initialized.");
           return;
         }
 
+        // The query no longer asks Firestore to sort the data, avoiding the index error.
         let ordersQuery = query(collectionGroup(db, "orders"));
 
         try {
           ordersUnsubscribe = onSnapshot(
             ordersQuery,
             (snapshot) => {
-              allOrdersInView = snapshot.docs.map((doc) => {
+              const currentOrders = snapshot.docs.map((doc) => {
                 const orderData = doc.data();
                 const orderId = doc.id;
                 const pathParts = doc.ref.path.split("/");
@@ -2494,25 +2726,52 @@
                 };
               });
 
-              // Sort the orders by timestamp in descending order (newest first) on the client-side
-              allOrdersInView.sort(
+              // We now sort the data here in the browser after receiving it.
+              currentOrders.sort(
                 (a, b) =>
                   (b.timestamp?.toDate() || 0) - (a.timestamp?.toDate() || 0)
               );
 
+              // --- Notification logic using Set for reliability ---
+              if (knownOrderIds === null) {
+                // First run: establish a baseline of existing orders.
+                knownOrderIds = new Set(currentOrders.map((order) => order.id));
+              } else {
+                // Subsequent runs: check for any new order IDs.
+                currentOrders.forEach((order) => {
+                  if (!knownOrderIds.has(order.id)) {
+                    addNotification(order);
+                    knownOrderIds.add(order.id); // Add new ID to the set.
+                  }
+                });
+              }
+
+              allOrdersInView = currentOrders;
               displayOrders(allOrdersInView);
             },
             (error) => {
               console.error("Error fetching orders:", error);
               const ordersListElement = document.getElementById("orders-list");
-              if (ordersListElement) {
+              // Improved error message for the indexing issue
+              if (error.code === "failed-precondition") {
+                console.error(
+                  "Firestore Index Required: The query requires an index. Please check the error message in the Firebase console for a link to create it."
+                );
+                if (ordersListElement) {
+                  ordersListElement.innerHTML = `
+                        <div class="col-span-full flex flex-col items-center justify-center p-8 text-red-500">
+                            <i class="ph ph-warning-circle text-5xl text-red-500 mb-4"></i>
+                            <p class="font-semibold mb-2">Firestore Index Required</p>
+                            <p class="text-sm text-center">A database index is needed for this query. Please check the browser console for a link to create it in Firebase.</p>
+                        </div>`;
+                }
+              } else if (ordersListElement) {
                 ordersListElement.innerHTML = `
                         <div class="col-span-full flex flex-col items-center justify-center p-8 text-red-500">
                             <i class="ph ph-warning-circle text-5xl text-red-500 mb-4"></i>
                             <p class="font-semibold mb-2">Error loading orders.</p>
                             <p class="text-sm text-center">There was an issue fetching the orders. Please check your permissions or try again.</p>
-                        </div>
-                        `;
+                        </div>`;
               }
             }
           );
@@ -2525,8 +2784,7 @@
                     <i class="ph ph-warning-circle text-5xl text-red-500 mb-4"></i>
                     <p class="font-semibold mb-2">Query Error</p>
                     <p class="text-sm text-center">Failed to run the collection group query. Please check your Firestore security rules.</p>
-                </div>
-                `;
+                </div>`;
           }
         }
       }
@@ -2572,14 +2830,12 @@
         const filteredProducts = products.filter((product) => {
           const name = product.name?.toLowerCase() || "";
           const category = product.category?.toLowerCase() || "";
-          // --- ADD THIS LINE ---
           const department = product.department?.toLowerCase() || "";
           const id = product.id?.toLowerCase() || "";
           return (
             id.includes(currentSearchQuery) ||
             name.includes(currentSearchQuery) ||
             category.includes(currentSearchQuery) ||
-            // --- AND ADD THIS CONDITION ---
             department.includes(currentSearchQuery)
           );
         });
@@ -2887,7 +3143,6 @@
         );
         if (!invoicesTableBody) return;
 
-        // NEW: Filter invoices based on the search query
         const filteredInvoices = invoices.filter((invoice) => {
           if (!currentInvoiceSearchQuery) return true;
           const query = currentInvoiceSearchQuery;
@@ -2938,6 +3193,8 @@
             .join("");
         }
 
+        // The pagination controls will only appear if the total number of invoices
+        // is greater than the number of items displayed per page (15).
         renderPaginationControls(
           "invoices-pagination",
           invoicesCurrentPage,
@@ -3461,16 +3718,16 @@
         const endItem = Math.min(currentPage * itemsPerPage, totalItems);
 
         container.innerHTML = `
-            <div class="flex items-center justify-between text-sm text-[var(--secondary-text)]">
+            <div class="flex flex-col sm:flex-row items-center justify-between text-sm text-[var(--secondary-text)] gap-4">
                 <p>Showing ${startItem} to ${endItem} of ${totalItems} results</p>
                 <div class="pagination-controls flex items-center gap-2">
-                    <button id="${containerId}-prev" class="px-3 py-1 rounded-md" ${
+                    <button id="${containerId}-prev" class="px-3 py-1 rounded-md flex items-center gap-1" ${
           currentPage === 1 ? "disabled" : ""
         }>
                         <i class="ph ph-arrow-left"></i> Previous
                     </button>
                     <span class="font-semibold text-white">${currentPage} / ${totalPages}</span>
-                    <button id="${containerId}-next" class="px-3 py-1 rounded-md" ${
+                    <button id="${containerId}-next" class="px-3 py-1 rounded-md flex items-center gap-1" ${
           currentPage === totalPages ? "disabled" : ""
         }>
                         Next <i class="ph ph-arrow-right"></i>
@@ -3489,6 +3746,94 @@
           ?.addEventListener("click", () => {
             if (currentPage < totalPages) onPageChange(currentPage + 1);
           });
+      }
+
+      // --- Notification Logic ---
+      function addNotification(order) {
+        const notificationList = document.getElementById("notification-list");
+        const notificationBadge = document.getElementById("notification-badge");
+        if (!notificationList || !notificationBadge) return;
+
+        // Remove the "No new notifications" placeholder if it exists
+        const placeholder = notificationList.querySelector("p");
+        if (placeholder) placeholder.remove();
+
+        newNotificationCount++;
+        notificationBadge.textContent = newNotificationCount;
+        notificationBadge.classList.remove("hidden");
+
+        const timeAgo = dayjs(order.timestamp.toDate()).fromNow();
+        const total = (order.totals?.total || 0).toFixed(2);
+        const customerName = `${order.shippingAddress?.firstName || ""} ${
+          order.shippingAddress?.lastName || ""
+        }`;
+
+        // Add data attributes for the order and user ID to make it clickable
+        const notificationHTML = `
+              <div class="notification-item p-4 border-b border-[var(--border)] hover:bg-[var(--primary-bg)] cursor-pointer" data-order-id="${
+                order.id
+              }" data-user-id="${order.userId}">
+                  <div class="flex items-start gap-3">
+                      <div class="bg-blue-500/20 text-blue-400 p-2 rounded-full">
+                          <i class="ph ph-shopping-cart-simple text-xl"></i>
+                      </div>
+                      <div class="flex-1">
+                          <p class="text-sm font-semibold">New Order Received!</p>
+                          <p class="text-xs text-[var(--secondary-text)]">
+                              Order <span class="font-mono text-[var(--accent)]">#${order.id.substring(
+                                0,
+                                8
+                              )}</span> from ${customerName} for <span class="font-semibold text-white">&#2547;${total}</span>.
+                          </p>
+                          <p class="text-xs text-[var(--secondary-text)] mt-1">${timeAgo}</p>
+                      </div>
+                  </div>
+              </div>
+          `;
+        notificationList.insertAdjacentHTML("afterbegin", notificationHTML);
+      }
+
+      // --- New function to handle clicks on individual notifications ---
+      function setupNotificationClickListener() {
+        const notificationList = document.getElementById("notification-list");
+        if (notificationList) {
+          notificationList.addEventListener("click", (e) => {
+            const notificationItem = e.target.closest(".notification-item");
+            if (notificationItem) {
+              const orderId = notificationItem.dataset.orderId;
+              const userId = notificationItem.dataset.userId;
+
+              // Find the order and render the detail view
+              const orderToView = allOrdersInView.find(
+                (o) => o.id === orderId && o.userId === userId
+              );
+              if (orderToView) {
+                renderUI("order_detail", orderToView);
+              }
+
+              // Remove the notification from the UI
+              notificationItem.remove();
+
+              // Update the badge count
+              newNotificationCount--;
+              const notificationBadge = document.getElementById(
+                "notification-badge"
+              );
+              if (notificationBadge) {
+                if (newNotificationCount > 0) {
+                  notificationBadge.textContent = newNotificationCount;
+                } else {
+                  notificationBadge.classList.add("hidden");
+                  // Add back placeholder if list is now empty
+                  if (notificationList.children.length === 0) {
+                    notificationList.innerHTML =
+                      '<p class="text-center text-sm text-[var(--secondary-text)] p-8">No new notifications</p>';
+                  }
+                }
+              }
+            }
+          });
+        }
       }
 
       // --- Custom Modal Logic ---
@@ -3557,25 +3902,6 @@
         });
       }
 
-      // --- Mobile Sidebar Logic ---
-      const hamburgerBtn = document.getElementById("hamburger-btn");
-      const closeMobileSidebarBtn = document.getElementById(
-        "close-mobile-sidebar"
-      );
-      const mobileSidebar = document.getElementById("mobile-sidebar-menu");
-
-      if (hamburgerBtn && mobileSidebar) {
-        hamburgerBtn.addEventListener("click", () => {
-          mobileSidebar.classList.remove("hidden");
-        });
-      }
-
-      if (closeMobileSidebarBtn && mobileSidebar) {
-        closeMobileSidebarBtn.addEventListener("click", () => {
-          mobileSidebar.classList.add("hidden");
-        });
-      }
-
       // --- Event Listeners and Initial Call ---
       navLinks.forEach((link) => {
         link.addEventListener("click", (e) => {
@@ -3585,7 +3911,69 @@
         });
       });
 
+      const notificationBell = document.getElementById("notification-bell");
+      const notificationDropdown = document.getElementById(
+        "notification-dropdown"
+      );
+      const notificationBadge = document.getElementById("notification-badge");
+
+      if (notificationBell && notificationDropdown && notificationBadge) {
+        notificationBell.addEventListener("click", () => {
+          notificationDropdown.classList.toggle("open");
+          // This part can act as a "mark all as read" if the user doesn't click individual notifications
+          if (notificationDropdown.classList.contains("open")) {
+            newNotificationCount = 0;
+            notificationBadge.classList.add("hidden");
+          }
+        });
+      }
+
+      // --- Mobile Sidebar Logic ---
+      const hamburgerBtn = document.getElementById("hamburger-btn");
+      const sidebarCloseBtn = document.getElementById("sidebar-close-btn");
+      const sidebar = document.getElementById("admin-sidebar");
+      const overlay = document.getElementById("sidebar-overlay");
+
+      hamburgerBtn?.addEventListener("click", () => {
+        sidebar?.classList.remove("-translate-x-full");
+        sidebar?.classList.add("translate-x-0");
+        overlay?.classList.remove("hidden");
+      });
+
+      sidebarCloseBtn?.addEventListener("click", () => {
+        sidebar?.classList.add("-translate-x-full");
+        sidebar?.classList.remove("translate-x-0");
+        overlay?.classList.add("hidden");
+      });
+
+      overlay?.addEventListener("click", () => {
+        sidebar?.classList.add("-translate-x-full");
+        sidebar?.classList.remove("translate-x-0");
+        overlay?.classList.add("hidden");
+      });
+
+      // Close dropdown if clicked outside
+      window.addEventListener("click", (e) => {
+        if (
+          notificationDropdown &&
+          !notificationBell.contains(e.target) &&
+          !notificationDropdown.contains(e.target)
+        ) {
+          notificationDropdown.classList.remove("open");
+        }
+      });
+
+      // --- Add Event Listeners for Login/Logout ---
+      if (loginForm) {
+        loginForm.addEventListener("submit", handleLogin);
+      }
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", handleLogout);
+      }
+
+      // --- Initialize App ---
       setupFirebase();
+      setupNotificationClickListener(); // Set up the new listener
     </script>
   </body>
 </html>
