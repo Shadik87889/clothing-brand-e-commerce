@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AURORA - Checkout</title>
+    <title>Novofit - Checkout</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -302,7 +302,7 @@
           <div
             class="text-xl font-bold tracking-widest uppercase magnetic-item font-heading"
           >
-            Aurora
+            Novofit
           </div>
         </a>
         <!-- Desktop Navigation -->
@@ -608,7 +608,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-black py-16 border-t border-[var(--border)]">
+    <footer class="relative bg-black py-16 border-t border-[var(--border)]">
       <div class="container mx-auto px-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-12" id="footer-content">
           <div class="col-span-1 md:col-span-2 footer-col">
@@ -707,10 +707,20 @@
           class="mt-16 pt-8 border-t border-[var(--border)] text-center text-gray-500 text-xs font-body"
         >
           <p>
-            &copy; 2025 Aurora. All Rights Reserved. A demonstration of
+            &copy; 2025 Novofit. All Rights Reserved. A demonstration of
             world-class web design.
           </p>
         </div>
+        <a
+          href="https://www.ruralpeace.org/portfolio.html"
+          class="creator-pic absolute bottom-6 left-6"
+        >
+          <img
+            class="lg:h-[28px] lg:w-[28px] h-[22px] w-[22px] rounded-full object-cover"
+            src="assets/my-pic.jpg"
+            alt="Profile Picture"
+          />
+        </a>
       </div>
     </footer>
 
@@ -728,29 +738,30 @@
     <!-- Payment Verification Modal -->
     <div id="payment-verification-modal" class="payment-modal">
       <div class="payment-modal-content">
-        <h3 class="font-heading text-2xl">Confirm Your Delivery</h3>
+        <h3 class="font-heading text-2xl">আপনার ডেলিভারি নিশ্চিত করুন</h3>
         <p class="text-base pb-2 text-white">
-          To secure your order, please pay the
+          আপনার অর্ডার সুরক্ষিত করতে হলে, অনুগ্রহ করে
           <strong id="delivery-charge-amount" class="text-white">$0.00</strong>
-          delivery fee.
+          ডেলিভারি চার্জ পরিশোধ করুন।
         </p>
 
         <p class="text-sm text-[var(--secondary-text)]">
-          You can either scan the QR code or send money to the number below.
+          আপনি চাইলে QR কোড স্ক্যান করতে পারেন অথবা নিচের নাম্বারে টাকা পাঠাতে
+          পারেন।
         </p>
 
         <div class="my-6">
           <img
             id="qr-code-image"
             src="https://placehold.co/200x200/1a1a1a/e8e8e8?text=QR+Code"
-            alt="Scan to pay with bKash or Nagad"
+            alt="bKash অথবা Nagad এ পেমেন্ট করার জন্য স্ক্যান করুন"
             class="mx-auto rounded-lg border border-[var(--border)] w-40 h-40"
           />
         </div>
 
         <div class="my-6 text-left bg-black/30 p-4 rounded-lg">
           <p class="text-sm mb-2 text-[var(--secondary-text)]">
-            Use the 'Send Money' option in your app:
+            আপনার অ্যাপ থেকে 'Send Money' অপশন ব্যবহার করুন:
           </p>
           <div class="flex items-center justify-between gap-4">
             <p
@@ -763,26 +774,26 @@
               id="copy-number-btn"
               class="bg-[var(--border)] text-white px-4 py-2 rounded-md text-xs font-semibold transition-all duration-200"
             >
-              COPY
+              কপি করুন
             </button>
           </div>
         </div>
 
         <div class="text-left w-full mt-4">
           <label for="trx-id" class="text-sm text-[var(--secondary-text)]"
-            >Transaction ID (TrxID)</label
+            >ট্রান্সঅ্যাকশন আইডি (TrxID)</label
           >
           <input
             type="text"
             id="trx-id"
             required
-            placeholder="Enter the TrxID from your payment confirmation"
+            placeholder="পেমেন্ট কনফার্মেশন থেকে প্রাপ্ত TrxID লিখুন"
             class="form-input w-full mt-2 py-2 px-0 mb-6"
           />
         </div>
 
         <button id="confirm-payment-btn" class="w-full checkout-btn">
-          Place Order
+          অর্ডার সম্পন্ন করুন
         </button>
       </div>
     </div>

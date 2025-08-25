@@ -3,79 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- =================================================================== -->
-    <!-- ========================= SEO Meta Tags ========================= -->
-    <!-- =================================================================== -->
-
-    <!-- Primary Meta Tags -->
-    <title id="meta-title">Novofit - Shop All Collections</title>
-    <meta
-      id="meta-description"
-      name="description"
-      content="Explore the latest collection at Novofit. Shop high-quality apparel for men, women, and kids. Discover timeless elegance and modern craftsmanship."
-    />
-    <meta
-      name="keywords"
-      content="Novofit, fashion, apparel, clothing, online shop, men's fashion, women's fashion, kids wear, modern craftsmanship"
-    />
-    <meta name="author" content="Novofit" />
-    <link
-      rel="canonical"
-      id="canonical-url"
-      href="https://novofitbd.com/shop.html"
-    />
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta
-      id="og-url"
-      property="og:url"
-      content="https://novofitbd.com/shop.html"
-    />
-    <meta
-      id="og-title"
-      property="og:title"
-      content="Novofit - Shop All Collections"
-    />
-    <meta
-      id="og-description"
-      property="og:description"
-      content="Explore the latest collection at Novofit. Shop high-quality apparel for men, women, and kids. Discover timeless elegance and modern craftsmanship."
-    />
-    <meta
-      id="og-image"
-      property="og:image"
-      content="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3"
-    />
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta
-      id="twitter-url"
-      property="twitter:url"
-      content="https://novofitbd.com/shop.html"
-    />
-    <meta
-      id="twitter-title"
-      property="twitter:title"
-      content="Novofit - Shop All Collections"
-    />
-    <meta
-      id="twitter-description"
-      property="twitter:description"
-      content="Explore the latest collection at Novofit. Shop high-quality apparel for men, women, and kids. Discover timeless elegance and modern craftsmanship."
-    />
-    <meta
-      id="twitter-image"
-      property="twitter:image"
-      content="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3"
-    />
-
-    <!-- =================================================================== -->
-    <!-- ======================= End of SEO Meta Tags ====================== -->
-    <!-- =================================================================== -->
-
+    <title>AURORA - Shop</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -661,7 +589,7 @@
           <div
             class="text-xl font-bold tracking-widest uppercase magnetic-item font-heading"
           >
-            Novofit
+            Aurora
           </div>
         </a>
         <!-- Desktop Navigation -->
@@ -996,7 +924,7 @@
           class="mt-16 pt-8 border-t border-[var(--border)] text-center text-gray-500 text-xs font-body"
         >
           <p>
-            &copy; 2025 Novofit. All Rights Reserved. A demonstration of
+            &copy; 2025 Aurora. All Rights Reserved. A demonstration of
             world-class web design.
           </p>
         </div>
@@ -1197,58 +1125,6 @@
       const productsPerPage = 12;
 
       // --- Functions ---
-
-      /**
-       * Updates the page's SEO meta tags dynamically.
-       * @param {object|null} productData - The product object from Firestore. If null, sets default tags for the main shop page.
-       */
-      function updatePageSEO(productData) {
-        const defaultTitle = "AURORA - Shop All Collections";
-        const defaultDesc =
-          "Explore the latest collection at Aurora. Shop high-quality apparel for men, women, and kids. Discover timeless elegance and modern craftsmanship.";
-        const defaultImage =
-          "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3"; // A generic, high-quality fashion image for social sharing
-        const siteBaseUrl = `${window.location.protocol}//${window.location.host}`;
-
-        // Use product data if available, otherwise use defaults
-        const title = productData?.seo?.metaTitle || defaultTitle;
-        const description = productData?.seo?.metaDescription || defaultDesc;
-        const image =
-          productData?.images && productData.images.length > 0
-            ? productData.images[0]
-            : defaultImage;
-        const url = productData
-          ? `${siteBaseUrl}/product-details.html?id=${productData.id}`
-          : `${siteBaseUrl}/shop.html`;
-
-        // Update standard meta tags
-        document.title = title;
-        document
-          .getElementById("meta-description")
-          ?.setAttribute("content", description);
-        document.getElementById("canonical-url")?.setAttribute("href", url);
-
-        // Update Open Graph tags for social sharing
-        document.getElementById("og-title")?.setAttribute("content", title);
-        document
-          .getElementById("og-description")
-          ?.setAttribute("content", description);
-        document.getElementById("og-image")?.setAttribute("content", image);
-        document.getElementById("og-url")?.setAttribute("content", url);
-
-        // Update Twitter Card tags for social sharing
-        document
-          .getElementById("twitter-title")
-          ?.setAttribute("content", title);
-        document
-          .getElementById("twitter-description")
-          ?.setAttribute("content", description);
-        document
-          .getElementById("twitter-image")
-          ?.setAttribute("content", image);
-        document.getElementById("twitter-url")?.setAttribute("content", url);
-      }
-
       function getFilterOptions(key) {
         const options = {};
         products.forEach((p) => {
@@ -1931,21 +1807,6 @@
           isAuthReady = true;
           console.log("Firebase initialized and user authenticated:", userId);
 
-          // SEO LOGIC: On a dedicated product-details.html page, you would get the product ID
-          // from the URL and fetch only that product. Then you would call updatePageSEO(product).
-          // Example:
-          // const urlParams = new URLSearchParams(window.location.search);
-          // const productId = urlParams.get('id');
-          // if (productId) {
-          //   const docRef = doc(db, `/artifacts/aurora-data/public/data/products`, productId);
-          //   const docSnap = await getDoc(docRef);
-          //   if (docSnap.exists()) {
-          //     updatePageSEO({ id: docSnap.id, ...docSnap.data() });
-          //   }
-          // } else {
-          //   updatePageSEO(null); // Set defaults for the main shop page
-          // }
-
           const productsCollectionRef = collection(
             db,
             `/artifacts/aurora-data/public/data/products`
@@ -2009,9 +1870,6 @@
       }
 
       document.addEventListener("DOMContentLoaded", () => {
-        // Set default SEO tags for this shop page on initial load
-        updatePageSEO(null);
-
         gsap.registerPlugin();
         const lenis = new Lenis();
         function raf(time) {
@@ -2183,23 +2041,7 @@
               closeModal();
             }
           });
-        // Header Animation on Scroll
-        const header = document.querySelector("header");
-        let lastScroll = 0;
-        window.addEventListener("scroll", () => {
-          const currentScroll = window.pageYOffset;
-          if (currentScroll > lastScroll && currentScroll > 100) {
-            header.style.transform = "translateY(-100%)";
-          } else {
-            header.style.transform = "translateY(0)";
-          }
-          if (currentScroll > 50) {
-            header.classList.add("bg-black/70", "backdrop-blur-lg");
-          } else {
-            header.classList.remove("bg-black/70", "backdrop-blur-lg");
-          }
-          lastScroll = currentScroll <= 0 ? 0 : currentScroll;
-        });
+
         setupFirebase();
         updateCartCount();
         updateActiveDepartmentButton();

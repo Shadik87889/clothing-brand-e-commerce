@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AURORA - Admin Panel</title>
+    <title>NOVOFIT - Admin Panel</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Phosphor Icons for a clean, modern look -->
@@ -331,7 +331,7 @@
         <h1
           class="text-5xl font-bold tracking-widest uppercase font-heading text-[var(--accent)] mb-4"
         >
-          AURORA
+          Novofit
         </h1>
         <p class="text-[var(--secondary-text)] mb-8">Admin Panel</p>
         <form id="login-form" class="space-y-6">
@@ -381,7 +381,7 @@
           <h1
             class="text-3xl font-bold tracking-widest uppercase font-heading text-[var(--accent)]"
           >
-            AURORA
+            Novofit
           </h1>
           <button
             id="sidebar-close-btn"
@@ -614,11 +614,10 @@
           ? JSON.parse(__firebase_config)
           : localFirebaseConfig;
 
-      // Unsubscribe functions for real-time listeners
+      // --- Unsubscribe functions for listeners ---
       let productUnsubscribe = null;
-      let dashboardUnsubscribe = null;
-      let ordersUnsubscribe = null;
       let invoicesUnsubscribe = null;
+      let globalOrdersUnsubscribe = null; // For the persistent order/notification listener
 
       // --- State for Filters and Search ---
       let currentProductStatusFilter = "All";
@@ -631,12 +630,10 @@
       let revenueChartInstance = null;
       let categoryChartInstance = null;
       let dateFilter = "30D";
-      let allOrdersForCharts = [];
       let allProductsForCharts = [];
 
       // --- State for Notifications ---
-      let knownOrderIds = null; // Use a Set to track seen orders
-      let newNotificationCount = 0;
+      let readOrderIds = new Set(); // To track orders that have been read/clicked
 
       // --- State for Pagination ---
       let productsCurrentPage = 1;
@@ -649,7 +646,7 @@
       // State to manage selected products and all data in view
       let selectedProducts = new Set();
       let allProductsInView = [];
-      let allOrdersInView = [];
+      let allOrdersInView = []; // This will be kept up-to-date by the global listener
       let allInvoicesInView = [];
 
       // --- UI Elements ---
@@ -658,6 +655,24 @@
       const loginForm = document.getElementById("login-form");
       const loginError = document.getElementById("login-error");
       const logoutBtn = document.getElementById("logout-btn");
+
+      // --- Notification LocalStorage Helpers ---
+      // MODIFIED: Functions now accept a userId to make storage user-specific
+      function getReadOrderIdsFromStorage(currentUserId) {
+        if (!currentUserId) return new Set();
+        const storedIds = localStorage.getItem(
+          `auroraAdminReadOrderIds_${currentUserId}`
+        );
+        return storedIds ? new Set(JSON.parse(storedIds)) : new Set();
+      }
+
+      function saveReadOrderIdsToStorage(idsSet, currentUserId) {
+        if (!currentUserId) return;
+        localStorage.setItem(
+          `auroraAdminReadOrderIds_${currentUserId}`,
+          JSON.stringify(Array.from(idsSet))
+        );
+      }
 
       // Initialize Firebase and set up auth listener
       async function setupFirebase() {
@@ -716,7 +731,7 @@
       function showAdminPanel() {
         if (loginSection) loginSection.style.display = "none";
         if (adminPanel) adminPanel.style.display = "flex";
-        // Load initial data for the dashboard
+        setupGlobalListeners(); // Start the persistent listeners
         renderUI("dashboard");
       }
 
@@ -728,6 +743,28 @@
         if (contentArea) contentArea.innerHTML = "";
         const userIdDisplay = document.getElementById("user-id-display");
         if (userIdDisplay) userIdDisplay.textContent = "Not logged in";
+
+        // Unsubscribe from all listeners on logout
+        if (productUnsubscribe) productUnsubscribe();
+        if (invoicesUnsubscribe) invoicesUnsubscribe();
+        if (globalOrdersUnsubscribe) {
+          globalOrdersUnsubscribe();
+          globalOrdersUnsubscribe = null;
+        }
+
+        // MODIFIED: Do NOT clear notification state on logout.
+        // It should persist for the next time the user logs in.
+        // readOrderIds.clear();
+        // localStorage.removeItem("auroraAdminReadOrderIds");
+
+        // Reset the visual part of notifications
+        const notificationBadge = document.getElementById("notification-badge");
+        if (notificationBadge) notificationBadge.classList.add("hidden");
+        const notificationList = document.getElementById("notification-list");
+        if (notificationList) {
+          notificationList.innerHTML =
+            '<p class="text-center text-sm text-[var(--secondary-text)] p-8">No new notifications</p>';
+        }
       }
 
       async function handleLogin(e) {
@@ -789,11 +826,10 @@
         currentView = view;
         if (contentArea) contentArea.innerHTML = "";
 
-        // Stop any active Firestore listeners to prevent memory leaks
+        // Stop any active VIEW-SPECIFIC listeners to prevent memory leaks
         if (productUnsubscribe) productUnsubscribe();
-        if (dashboardUnsubscribe) dashboardUnsubscribe();
-        if (ordersUnsubscribe) ordersUnsubscribe();
         if (invoicesUnsubscribe) invoicesUnsubscribe();
+        // NOTE: The globalOrdersUnsubscribe is NOT detached here, as it should persist.
 
         navLinks.forEach((link) => {
           link.classList.remove("active");
@@ -915,7 +951,8 @@
           });
         });
 
-        listenForDashboardData();
+        // The global listener will populate the data and call this function.
+        updateDashboardCharts();
       }
 
       function renderProductsView() {
@@ -2171,7 +2208,7 @@
             <div id="invoice-container" class="card p-8 md:p-12 rounded-xl bg-[var(--primary-bg)] text-white">
                 <header class="flex justify-between items-start pb-8 border-b border-[var(--border)]">
                     <div>
-                        <h1 class="text-4xl font-bold tracking-widest uppercase font-heading text-[var(--accent)]">AURORA</h1>
+                        <h1 class="text-4xl font-bold tracking-widest uppercase font-heading text-[var(--accent)]">NOVOFIT</h1>
                         <p class="text-sm text-[var(--secondary-text)]">123 Luxury Lane, Fashion City, 10001</p>
                     </div>
                     <div>
@@ -2337,6 +2374,79 @@
 
       // --- Firestore Logic ---
 
+      // Persistent listener for orders and notifications
+      function setupGlobalListeners() {
+        if (!db || !userId) {
+          console.error(
+            "Firestore or User ID not initialized. Cannot set up global listeners."
+          );
+          return;
+        }
+        if (globalOrdersUnsubscribe) globalOrdersUnsubscribe(); // Ensure no duplicates
+
+        // MODIFIED: Load read order IDs from local storage specific to the current user
+        readOrderIds = getReadOrderIdsFromStorage(userId);
+
+        let ordersQuery = query(collectionGroup(db, "orders"));
+
+        globalOrdersUnsubscribe = onSnapshot(
+          ordersQuery,
+          (snapshot) => {
+            const currentOrders = snapshot.docs.map((doc) => {
+              const orderData = doc.data();
+              const orderId = doc.id;
+              const pathParts = doc.ref.path.split("/");
+              const userIdFromPath = pathParts[3];
+              return { id: orderId, userId: userIdFromPath, ...orderData };
+            });
+
+            currentOrders.sort(
+              (a, b) =>
+                (b.timestamp?.toDate() || 0) - (a.timestamp?.toDate() || 0)
+            );
+
+            // Notification logic using persistent storage
+            const unreadOrders = currentOrders.filter(
+              (order) => !readOrderIds.has(order.id)
+            );
+            updateNotificationsUI(unreadOrders);
+
+            // Update global state
+            allOrdersInView = currentOrders;
+
+            // Update UI if relevant view is active
+            if (currentView === "orders") {
+              displayOrders(allOrdersInView);
+            }
+            if (currentView === "dashboard") {
+              updateDashboardCharts();
+            }
+          },
+          (error) => {
+            console.error("Global orders listener error:", error);
+          }
+        );
+
+        // We also need product data for the dashboard charts
+        const productsRef = collection(
+          db,
+          "artifacts",
+          "aurora-data",
+          "public",
+          "data",
+          "products"
+        );
+        getDocs(productsRef).then((productsSnap) => {
+          allProductsForCharts = productsSnap.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          if (currentView === "dashboard") {
+            updateDashboardCharts(); // Update again once products are loaded
+          }
+        });
+      }
+
       async function handleChangePassword(e) {
         e.preventDefault();
         const currentPassword = document.getElementById("current-password")
@@ -2405,41 +2515,8 @@
         }
       }
 
-      async function listenForDashboardData() {
-        if (!db) return;
-
-        const productsRef = collection(
-          db,
-          "artifacts",
-          "aurora-data",
-          "public",
-          "data",
-          "products"
-        );
-        const productsSnap = await getDocs(productsRef);
-        allProductsForCharts = productsSnap.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-
-        const ordersQuery = query(collectionGroup(db, "orders"));
-        dashboardUnsubscribe = onSnapshot(
-          ordersQuery,
-          (snapshot) => {
-            allOrdersForCharts = snapshot.docs.map((doc) => ({
-              id: doc.id,
-              ...doc.data(),
-            }));
-            updateDashboardCharts();
-          },
-          (error) => {
-            console.error("Dashboard listener error:", error);
-          }
-        );
-      }
-
       function updateDashboardCharts() {
-        if (!allOrdersForCharts.length && !allProductsForCharts.length) return;
+        if (!allOrdersInView.length && !allProductsForCharts.length) return;
 
         const now = dayjs();
         let startDate;
@@ -2461,7 +2538,7 @@
             startDate = now.subtract(30, "day");
         }
 
-        const filteredOrders = allOrdersForCharts.filter((order) => {
+        const filteredOrders = allOrdersInView.filter((order) => {
           const orderDate = dayjs(order.timestamp?.toDate());
           return order.status === "Delivered" && orderDate.isAfter(startDate);
         });
@@ -2699,94 +2776,9 @@
         );
       }
 
-      // --- UPDATED FUNCTION ---
+      // MODIFIED: This function now just renders the data from the global state.
       function listenForOrders() {
-        if (!db) {
-          console.error("Firestore not initialized.");
-          return;
-        }
-
-        // The query no longer asks Firestore to sort the data, avoiding the index error.
-        let ordersQuery = query(collectionGroup(db, "orders"));
-
-        try {
-          ordersUnsubscribe = onSnapshot(
-            ordersQuery,
-            (snapshot) => {
-              const currentOrders = snapshot.docs.map((doc) => {
-                const orderData = doc.data();
-                const orderId = doc.id;
-                const pathParts = doc.ref.path.split("/");
-                const userIdFromPath = pathParts[3];
-
-                return {
-                  id: orderId,
-                  userId: userIdFromPath,
-                  ...orderData,
-                };
-              });
-
-              // We now sort the data here in the browser after receiving it.
-              currentOrders.sort(
-                (a, b) =>
-                  (b.timestamp?.toDate() || 0) - (a.timestamp?.toDate() || 0)
-              );
-
-              // --- Notification logic using Set for reliability ---
-              if (knownOrderIds === null) {
-                // First run: establish a baseline of existing orders.
-                knownOrderIds = new Set(currentOrders.map((order) => order.id));
-              } else {
-                // Subsequent runs: check for any new order IDs.
-                currentOrders.forEach((order) => {
-                  if (!knownOrderIds.has(order.id)) {
-                    addNotification(order);
-                    knownOrderIds.add(order.id); // Add new ID to the set.
-                  }
-                });
-              }
-
-              allOrdersInView = currentOrders;
-              displayOrders(allOrdersInView);
-            },
-            (error) => {
-              console.error("Error fetching orders:", error);
-              const ordersListElement = document.getElementById("orders-list");
-              // Improved error message for the indexing issue
-              if (error.code === "failed-precondition") {
-                console.error(
-                  "Firestore Index Required: The query requires an index. Please check the error message in the Firebase console for a link to create it."
-                );
-                if (ordersListElement) {
-                  ordersListElement.innerHTML = `
-                        <div class="col-span-full flex flex-col items-center justify-center p-8 text-red-500">
-                            <i class="ph ph-warning-circle text-5xl text-red-500 mb-4"></i>
-                            <p class="font-semibold mb-2">Firestore Index Required</p>
-                            <p class="text-sm text-center">A database index is needed for this query. Please check the browser console for a link to create it in Firebase.</p>
-                        </div>`;
-                }
-              } else if (ordersListElement) {
-                ordersListElement.innerHTML = `
-                        <div class="col-span-full flex flex-col items-center justify-center p-8 text-red-500">
-                            <i class="ph ph-warning-circle text-5xl text-red-500 mb-4"></i>
-                            <p class="font-semibold mb-2">Error loading orders.</p>
-                            <p class="text-sm text-center">There was an issue fetching the orders. Please check your permissions or try again.</p>
-                        </div>`;
-              }
-            }
-          );
-        } catch (e) {
-          console.error("Collection group query failed:", e);
-          const ordersListElement = document.getElementById("orders-list");
-          if (ordersListElement) {
-            ordersListElement.innerHTML = `
-                <div class="col-span-full flex flex-col items-center justify-center p-8 text-red-500">
-                    <i class="ph ph-warning-circle text-5xl text-red-500 mb-4"></i>
-                    <p class="font-semibold mb-2">Query Error</p>
-                    <p class="text-sm text-center">Failed to run the collection group query. Please check your Firestore security rules.</p>
-                </div>`;
-          }
-        }
+        displayOrders(allOrdersInView);
       }
 
       function listenForInvoices() {
@@ -3749,27 +3741,22 @@
       }
 
       // --- Notification Logic ---
-      function addNotification(order) {
+      function updateNotificationsUI(unreadOrders) {
         const notificationList = document.getElementById("notification-list");
         const notificationBadge = document.getElementById("notification-badge");
         if (!notificationList || !notificationBadge) return;
 
-        // Remove the "No new notifications" placeholder if it exists
-        const placeholder = notificationList.querySelector("p");
-        if (placeholder) placeholder.remove();
-
-        newNotificationCount++;
-        notificationBadge.textContent = newNotificationCount;
-        notificationBadge.classList.remove("hidden");
-
-        const timeAgo = dayjs(order.timestamp.toDate()).fromNow();
-        const total = (order.totals?.total || 0).toFixed(2);
-        const customerName = `${order.shippingAddress?.firstName || ""} ${
-          order.shippingAddress?.lastName || ""
-        }`;
-
-        // Add data attributes for the order and user ID to make it clickable
-        const notificationHTML = `
+        if (unreadOrders.length > 0) {
+          notificationBadge.textContent = unreadOrders.length;
+          notificationBadge.classList.remove("hidden");
+          notificationList.innerHTML = unreadOrders
+            .map((order) => {
+              const timeAgo = dayjs(order.timestamp.toDate()).fromNow();
+              const total = (order.totals?.total || 0).toFixed(2);
+              const customerName = `${order.shippingAddress?.firstName || ""} ${
+                order.shippingAddress?.lastName || ""
+              }`;
+              return `
               <div class="notification-item p-4 border-b border-[var(--border)] hover:bg-[var(--primary-bg)] cursor-pointer" data-order-id="${
                 order.id
               }" data-user-id="${order.userId}">
@@ -3790,10 +3777,16 @@
                   </div>
               </div>
           `;
-        notificationList.insertAdjacentHTML("afterbegin", notificationHTML);
+            })
+            .join("");
+        } else {
+          notificationBadge.classList.add("hidden");
+          notificationList.innerHTML =
+            '<p class="text-center text-sm text-[var(--secondary-text)] p-8">No new notifications</p>';
+        }
       }
 
-      // --- New function to handle clicks on individual notifications ---
+      // Handle clicks on individual notifications
       function setupNotificationClickListener() {
         const notificationList = document.getElementById("notification-list");
         if (notificationList) {
@@ -3801,27 +3794,35 @@
             const notificationItem = e.target.closest(".notification-item");
             if (notificationItem) {
               const orderId = notificationItem.dataset.orderId;
-              const userId = notificationItem.dataset.userId;
+              const userIdFromNotification = notificationItem.dataset.userId;
 
               // Find the order and render the detail view
               const orderToView = allOrdersInView.find(
-                (o) => o.id === orderId && o.userId === userId
+                (o) => o.id === orderId && o.userId === userIdFromNotification
               );
               if (orderToView) {
                 renderUI("order_detail", orderToView);
               }
 
+              // Mark as read and save to storage
+              readOrderIds.add(orderId);
+              // MODIFIED: Save to user-specific storage
+              saveReadOrderIdsToStorage(readOrderIds, userId);
+
               // Remove the notification from the UI
               notificationItem.remove();
 
               // Update the badge count
-              newNotificationCount--;
               const notificationBadge = document.getElementById(
                 "notification-badge"
               );
+              const currentBadgeCount =
+                parseInt(notificationBadge.textContent) || 0;
+              const newBadgeCount = currentBadgeCount - 1;
+
               if (notificationBadge) {
-                if (newNotificationCount > 0) {
-                  notificationBadge.textContent = newNotificationCount;
+                if (newBadgeCount > 0) {
+                  notificationBadge.textContent = newBadgeCount;
                 } else {
                   notificationBadge.classList.add("hidden");
                   // Add back placeholder if list is now empty
@@ -3920,11 +3921,6 @@
       if (notificationBell && notificationDropdown && notificationBadge) {
         notificationBell.addEventListener("click", () => {
           notificationDropdown.classList.toggle("open");
-          // This part can act as a "mark all as read" if the user doesn't click individual notifications
-          if (notificationDropdown.classList.contains("open")) {
-            newNotificationCount = 0;
-            notificationBadge.classList.add("hidden");
-          }
         });
       }
 
