@@ -243,6 +243,15 @@
       .payment-option input[type="radio"] {
         display: none;
       }
+      .payment-modal-content {
+        height: 100vh;
+        overflow-y: auto;
+      }
+      @media (max-width: 768px) {
+        .payment-modal-content {
+          height: 98vh;
+        }
+      }
     </style>
   </head>
   <body class="antialiased">
@@ -677,13 +686,31 @@
               Shop
             </h4>
             <ul class="space-y-3 text-gray-400 font-body">
-              <li><a href="#" class="hover-link magnetic-item">Shop All</a></li>
-              <li><a href="#" class="hover-link magnetic-item">Men</a></li>
               <li>
-                <a href="#" class="hover-link magnetic-item">Women</a>
+                <a href="shop.html" class="hover-link magnetic-item"
+                  >Shop All</a
+                >
               </li>
               <li>
-                <a href="#" class="hover-link magnetic-item">Accessories</a>
+                <a
+                  href="shop.html?category=Men"
+                  class="hover-link magnetic-item"
+                  >Men</a
+                >
+              </li>
+              <li>
+                <a
+                  href="shop.html?category=Women"
+                  class="hover-link magnetic-item"
+                  >Women</a
+                >
+              </li>
+              <li>
+                <a
+                  href="shop.html?category=Others"
+                  class="hover-link magnetic-item"
+                  >Accessories</a
+                >
               </li>
             </ul>
           </div>
@@ -693,10 +720,20 @@
             </h4>
             <ul class="space-y-3 text-gray-400 font-body">
               <li>
-                <a href="#" class="hover-link magnetic-item">Our Studio</a>
+                <a href="our-studio.html" class="hover-link magnetic-item"
+                  >Our Studio</a
+                >
               </li>
-              <li><a href="#" class="hover-link magnetic-item">Gallery</a></li>
-              <li><a href="#" class="hover-link magnetic-item">Contact</a></li>
+              <li>
+                <a href="gallery.html" class="hover-link magnetic-item"
+                  >Gallery</a
+                >
+              </li>
+              <li>
+                <a href="contact.html" class="hover-link magnetic-item"
+                  >Contact</a
+                >
+              </li>
               <li>
                 <a href="#" id="faq-link" class="hover-link magnetic-item"
                   >FAQs</a
@@ -794,9 +831,18 @@
           />
         </div>
 
-        <button id="confirm-payment-btn" class="w-full checkout-btn">
-          অর্ডার সম্পন্ন করুন
-        </button>
+        <div class="flex flex-col sm:flex-row gap-4 mt-4">
+          <button
+            id="go-back-btn"
+            type="button"
+            class="w-full checkout-btn bg-transparent border border-[var(--border)] text-white hover:bg-gray-800"
+          >
+            Edit Details
+          </button>
+          <button id="confirm-payment-btn" class="w-full checkout-btn">
+            অর্ডার সম্পন্ন করুন
+          </button>
+        </div>
       </div>
     </div>
 
@@ -1021,7 +1067,40 @@
         );
         const copyNumberBtn = document.getElementById("copy-number-btn");
         const merchantNumberEl = document.getElementById("merchant-number");
+        const goBackBtn = document.getElementById("go-back-btn");
 
+        // --- State Persistence Logic ---
+        const FORM_DATA_KEY = "checkoutFormData";
+        const MODAL_STATE_KEY = "paymentModalOpen";
+
+        function saveFormData() {
+          const formData = new FormData(checkoutForm);
+          const data = Object.fromEntries(formData.entries());
+          localStorage.setItem(FORM_DATA_KEY, JSON.stringify(data));
+        }
+
+        function loadFormData() {
+          const savedData = localStorage.getItem(FORM_DATA_KEY);
+          if (savedData) {
+            const data = JSON.parse(savedData);
+            for (const key in data) {
+              const input = checkoutForm.elements[key];
+              if (input) {
+                input.value = data[key];
+              }
+            }
+          }
+        }
+
+        function clearSavedState() {
+          localStorage.removeItem(FORM_DATA_KEY);
+          localStorage.removeItem(MODAL_STATE_KEY);
+        }
+
+        // Add event listener to save form data on input
+        checkoutForm.addEventListener("input", saveFormData);
+
+        // --- Core Functions ---
         function calculateFinalPrice(product) {
           const discount =
             product.discountPercentage > 0 ? product.discountPercentage : 0;
@@ -1144,9 +1223,10 @@
           )}`;
         }
 
-        function showMessageBox(title, content) {
+        function showMessageBox(title, content, type = "success") {
           messageTitle.textContent = title;
           messageContent.innerHTML = content;
+          messageBox.dataset.type = type; // Set the type for the handler
           messageBox.classList.add("show");
           document.body.classList.add("no-scroll");
         }
@@ -1186,7 +1266,7 @@
               formIsValid = false;
               input.style.borderColor = "red";
             } else {
-              input.style.borderColor = "var(--border)";
+              input.style.borderColor = ""; // Reset to default
             }
           });
           return formIsValid;
@@ -1199,16 +1279,22 @@
           ).value;
 
           if (!validateForm()) {
-            showMessageBox("Error!", "Please fill out all required fields.");
+            showMessageBox(
+              "Error!",
+              "Please fill out all required fields.",
+              "error"
+            );
             return;
           }
 
           if (selectedPaymentMethod === "cod") {
+            localStorage.setItem(MODAL_STATE_KEY, "true");
             showPaymentModal();
           } else {
             showMessageBox(
               "Coming Soon",
-              "This payment method is not yet available."
+              "This payment method is not yet available.",
+              "info"
             );
           }
         });
@@ -1216,7 +1302,11 @@
         async function saveOrderToFirestore(orderData) {
           if (!userId) {
             console.error("User not authenticated. Cannot save order.");
-            showMessageBox("Error", "Authentication failed. Please try again.");
+            showMessageBox(
+              "Error",
+              "Authentication failed. Please try again.",
+              "error"
+            );
             return false;
           }
 
@@ -1239,7 +1329,8 @@
             console.error("Error saving order to Firestore:", error);
             showMessageBox(
               "Error",
-              "Failed to save your order. Please try again."
+              "Failed to save your order. Please try again.",
+              "error"
             );
             return false;
           }
@@ -1251,7 +1342,7 @@
             trxIdInput.style.borderColor = "red";
             return;
           }
-          trxIdInput.style.borderColor = "var(--border)";
+          trxIdInput.style.borderColor = "";
 
           const orderData = {
             contactInfo: {
@@ -1283,10 +1374,15 @@
               "Order Received!",
               "Thank you! We are verifying your payment. Your order has been saved and you will receive a final confirmation via email or SMS shortly. <br><br> Your TrxID: <strong>" +
                 trxId +
-                "</strong>"
+                "</strong>",
+              "success"
             );
-            localStorage.removeItem("aurora-cart");
           }
+        });
+
+        goBackBtn.addEventListener("click", () => {
+          hidePaymentModal();
+          localStorage.removeItem(MODAL_STATE_KEY); // Remove state so it doesn't pop up on refresh
         });
 
         copyNumberBtn.addEventListener("click", () => {
@@ -1330,16 +1426,35 @@
         });
 
         closeMessageBoxBtn.addEventListener("click", () => {
+          const messageType = messageBox.dataset.type;
           messageBox.classList.remove("show");
           document.body.classList.remove("no-scroll");
-          updateCartCount();
-          renderOrderSummary();
-          checkoutForm.reset();
+
+          // Only reset everything on a success message
+          if (messageType === "success") {
+            localStorage.removeItem("aurora-cart");
+            clearSavedState();
+            updateCartCount();
+            renderOrderSummary();
+            checkoutForm.reset();
+          }
         });
 
-        // Initial rendering
+        // --- Initial Rendering & State Restoration ---
         updateCartCount();
         renderOrderSummary();
+        loadFormData(); // Load saved form data on page load
+
+        // Check if the modal should be open on page load
+        if (localStorage.getItem(MODAL_STATE_KEY) === "true") {
+          // Before showing, validate the form. If it's invalid, don't show the modal.
+          if (validateForm()) {
+            showPaymentModal();
+          } else {
+            localStorage.removeItem(MODAL_STATE_KEY);
+          }
+        }
+
         // Header Animation on Scroll
         const header = document.querySelector("header");
         let lastScroll = 0;
