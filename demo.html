@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Novofit - Modern Minimalist Fashion</title>
+    <!-- SEO Optimization: Meta Tags -->
+    <meta
+      name="description"
+      content="Experience Novofit's new collection. Clean, modern, and minimalist designs for the conscious consumer. Sustainable and timeless fashion redefined."
+    />
+    <meta
+      name="keywords"
+      content="Novofit, minimalist fashion, modern apparel, sustainable clothing, clean design, men's fashion, women's fashion, online store"
+    />
+    <meta name="robots" content="index, follow" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- New Font Family -->
+    <link
+      href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=general-sans@400,500,600,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="shortcut icon" href="logo.png" type="image/x-icon" />
+
+    <style>
+      /* ==========================================================================
+      NEW DESIGN SYSTEM - MODERN MINIMALIST THEME
+      ==========================================================================
+      - **Palette**: Light, airy, and clean with a focus on typography.
+      - **Typography**: 'General Sans' for headings, 'Satoshi' for body text.
+      - **Layout**: Asymmetric grids, generous white space, and structured flow.
+      - **Interactions**: Subtle, fluid animations that enhance the user experience.
+      ==========================================================================
+      */
+      :root {
+        --background: #f5f5f3;
+        --text: #111111;
+        --accent: #8a8a8a;
+        --border: #dcdcdc;
+      }
+
+      /* Lenis Smooth Scroll Styles */
+      html.lenis {
+        height: auto;
+      }
+      .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+      }
+      .lenis.lenis-stopped {
+        overflow: hidden;
+      }
+
+      body {
+        font-family: "Satoshi", sans-serif;
+        background-color: var(--background);
+        color: var(--text);
+        overflow-x: hidden;
+        font-weight: 400;
+      }
+
+      body.no-scroll {
+        overflow: hidden;
+      }
+
+      /* Typography Helpers */
+      .font-heading {
+        font-family: "General Sans", sans-serif;
+      }
+      .font-body {
+        font-family: "Satoshi", sans-serif;
+      }
+
+      /* --- PRELOADER --- */
+      #preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--background);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text);
+      }
+      #preloader-content {
+        text-align: center;
+      }
+      #preloader-brand {
+        font-size: 5vw;
+        font-weight: 600;
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      #preloader-counter {
+        font-size: 10vw;
+        font-weight: 600;
+      }
+
+      /* --- HEADER --- */
+      header {
+        background-color: transparent;
+        transition: background-color 0.4s ease, border-color 0.4s ease;
+      }
+      header.scrolled {
+        background-color: rgba(245, 245, 243, 0.8);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border);
+      }
+
+      /* --- HERO --- */
+      .hero-section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding-top: 100px;
+      }
+      .hero-title {
+        font-size: clamp(3rem, 10vw, 9rem);
+        line-height: 1;
+        font-weight: 600;
+      }
+      .hero-image-container {
+        height: 80vh;
+        border-radius: 1rem;
+        overflow: hidden;
+      }
+      .hero-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scale(1.1);
+      }
+      .scroll-down {
+        opacity: 0;
+      }
+
+      /* --- CUSTOM CURSOR --- */
+      .cursor {
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--text);
+        pointer-events: none;
+        transition: transform 0.2s ease-out, width 0.3s ease, height 0.3s ease;
+        z-index: 9999;
+        transform-origin: center center;
+      }
+      .cursor-follower {
+        position: fixed;
+        width: 30px;
+        height: 30px;
+        border: 1px solid var(--text);
+        border-radius: 50%;
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        z-index: 9999;
+      }
+      .cursor-grow {
+        transform: scale(3);
+        background: var(--text);
+      }
+
+      /* --- MOBILE MENU --- */
+      #mobile-menu {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100vh;
+        background-color: var(--background);
+        z-index: 5000;
+        transform: translateX(100%);
+        transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      #mobile-menu.open {
+        transform: translateX(0);
+      }
+      .mobile-nav-link {
+        font-size: 2.5rem;
+        font-family: "General Sans", serif;
+        font-weight: 600;
+        color: var(--text);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+      }
+      #mobile-menu.open .mobile-nav-link {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(1) {
+        transition-delay: 0.1s;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(2) {
+        transition-delay: 0.2s;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(3) {
+        transition-delay: 0.3s;
+      }
+      #mobile-menu.open .mobile-nav-link:nth-child(4) {
+        transition-delay: 0.4s;
+      }
+
+      /* --- GENERAL SECTION STYLING --- */
+      .section-heading {
+        font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 600;
+      }
+
+      /* --- CATEGORY SECTION --- */
+      .category-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1rem;
+        border: 1px solid var(--border);
+        transition: border-color 0.3s ease;
+      }
+      .category-card:hover {
+        border-color: var(--text);
+      }
+      .category-card img {
+        transition: transform 0.5s ease;
+      }
+      .category-card:hover img {
+        transform: scale(1.05);
+      }
+      .category-text {
+        position: absolute;
+        bottom: 1.5rem;
+        left: 1.5rem;
+        background: var(--background);
+        color: var(--text);
+        padding: 0.5rem 1rem;
+        border-radius: 999px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+      .category-card:hover .category-text {
+        background: var(--text);
+        color: var(--background);
+      }
+
+      /* --- COLLECTIONS SECTION --- */
+      .collection-card {
+        border-radius: 1rem;
+        overflow: hidden;
+      }
+      .collection-card .img-reveal-container {
+        border-radius: 1rem;
+      }
+
+      /* --- LOOKBOOK MARQUEE --- */
+      .lookbook-marquee {
+        width: 100%;
+        overflow: hidden;
+        padding: 2rem 0;
+      }
+      .lookbook-track {
+        display: flex;
+        width: fit-content;
+        will-change: transform;
+      }
+      .lookbook-item {
+        width: 25vw;
+        height: 60vh;
+        margin: 0 1.5rem;
+        border-radius: 1rem;
+        overflow: hidden;
+      }
+      .lookbook-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      /* --- FAQ SECTION --- */
+      .faq-item {
+        border-bottom: 1px solid var(--border);
+      }
+      .faq-btn {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 2rem 0;
+        text-align: left;
+        color: var(--text);
+        font-size: 1.5rem;
+        font-family: "General Sans", serif;
+        font-weight: 500;
+        cursor: pointer;
+        transition: color 0.3s ease;
+      }
+      .faq-icon-wrapper {
+        transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      .faq-answer {
+        overflow: hidden;
+        height: 0;
+        transition: height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        will-change: height;
+      }
+      .faq-answer-content {
+        padding-bottom: 2rem;
+        color: #555;
+        max-width: 80%;
+        font-weight: 400;
+        line-height: 1.75;
+      }
+
+      /* --- UTILITIES & HELPERS --- */
+      .magnetic-item {
+        display: inline-block;
+        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .img-reveal-container {
+        position: relative;
+        overflow: hidden;
+        visibility: hidden;
+      }
+      .img-reveal-mask {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #d1d1d1;
+        z-index: 2;
+      }
+      #cart-notification {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translate(-50%, 200%);
+        background-color: var(--background);
+        color: var(--text);
+        padding: 1rem 2rem;
+        border-radius: 9999px;
+        z-index: 5000;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        border: 1px solid var(--border);
+        transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+    </style>
+    <!-- SEO Optimization: JSON-LD Schema -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Novofit",
+        "url": "https://www.novofitbd.com",
+        "logo": "https://www.novofitbd.com/logo.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+1-123-456-7890",
+          "contactType": "customer service"
+        },
+        "sameAs": [
+          "https://www.instagram.com/Novofit_fashion",
+          "https://twitter.com/Novofit_fashion",
+          "https://www.facebook.com/Novofit_fashion"
+        ]
+      }
+    </script>
+  </head>
+  <body class="antialiased">
+    <!-- Preloader -->
+    <div id="preloader">
+      <div id="preloader-content" class="font-heading">
+        <div id="preloader-counter">0</div>
+        <div id="preloader-brand">Novofit</div>
+      </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Add to Cart Notification -->
+    <div id="cart-notification">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="text-green-500"
+      >
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+      </svg>
+      <span>Item added to cart</span>
+    </div>
+
+    <!-- Mobile Navigation Menu -->
+    <div id="mobile-menu" class="fixed inset-0 p-8 md:hidden">
+      <button id="close-menu" class="absolute top-8 right-8 text-black">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="magnetic-item"
+        >
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
+      <nav class="flex flex-col items-center justify-center h-full">
+        <ul class="space-y-6 text-center">
+          <li>
+            <a href="home.html" class="mobile-nav-link hover-link magnetic-item"
+              >Home</a
+            >
+          </li>
+          <li>
+            <a href="shop.html" class="mobile-nav-link hover-link magnetic-item"
+              >Shop</a
+            >
+          </li>
+          <li>
+            <a
+              href="gallery.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Gallery</a
+            >
+          </li>
+          <li>
+            <a
+              href="contact.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Contact</a
+            >
+          </li>
+          <li>
+            <a
+              href="our-studio.html"
+              class="mobile-nav-link hover-link magnetic-item"
+              >Studio</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Header -->
+    <header class="fixed top-0 left-0 w-full z-50 p-6 md:p-8">
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="home.html">
+          <div
+            class="text-xl font-bold tracking-wider uppercase magnetic-item font-heading"
+          >
+            Novofit
+          </div>
+        </a>
+        <nav
+          class="hidden md:flex items-center space-x-10 text-sm uppercase tracking-wider font-medium"
+        >
+          <a href="home.html" class="hover-link magnetic-item">Home</a>
+          <a href="shop.html" class="hover-link magnetic-item">Shop</a>
+          <a href="gallery.html" class="hover-link magnetic-item">Gallery</a>
+          <a href="contact.html" class="hover-link magnetic-item">Contact</a>
+          <a href="our-studio.html" class="hover-link magnetic-item">Studio</a>
+        </nav>
+        <div class="flex items-center space-x-6">
+          <a
+            href="cart.html"
+            class="hover-link magnetic-item relative hover:opacity-70 transition-opacity"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.5"
+                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+              />
+            </svg>
+            <span
+              id="cart-count"
+              class="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold"
+              >0</span
+            >
+          </a>
+          <button
+            id="hamburger-btn"
+            class="magnetic-item md:hidden z-5001"
+            aria-label="Open mobile menu"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M3 12h18M3 6h18M3 18h18" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main id="main-content" class="opacity-0">
+      <!-- Hero Section -->
+      <section class="hero-section container mx-auto px-6">
+        <div class="grid md:grid-cols-2 gap-12 items-center">
+          <div class="text-left">
+            <h1 class="sr-only">
+              Novofit - Modern Minimalist Fashion for the Conscious Consumer
+            </h1>
+            <div class="hero-title-line overflow-hidden">
+              <h2 class="hero-title font-heading">Timeless by Design.</h2>
+            </div>
+            <p class="mt-6 text-lg max-w-md text-gray-600 hero-subtitle">
+              Discover foundational pieces crafted with sustainable materials
+              and a commitment to quality. Built for the modern wardrobe.
+            </p>
+            <a
+              href="shop.html"
+              class="mt-8 z-10 hover-link magnetic-item inline-block bg-black text-white px-10 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-gray-800 transition-colors text-sm"
+            >
+              Shop The Collection
+            </a>
+          </div>
+          <div class="hero-image-container">
+            <img
+              src="https://images.unsplash.com/photo-1551803091-e2ab652d5138?q=80&w=1887&auto=format&fit=crop"
+              alt="A model wearing a modern, minimalist beige outfit from Novofit"
+              class="hero-image"
+              onerror="this.onerror=null;this.src='https://placehold.co/800x1000/F5F5F3/111111?text=Novofit';"
+            />
+          </div>
+        </div>
+        <div
+          class="scroll-down absolute bottom-5 left-1/2 -translate-x-1/2"
+        ></div>
+        <!-- Hidden but kept for JS -->
+      </section>
+
+      <!-- Shop By Category Section -->
+      <section class="py-24 md:py-40 container mx-auto px-6 text-center">
+        <h2 class="section-heading font-heading section-title mb-16">
+          Shop by Category
+        </h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <a
+            href="shop.html?category=Men"
+            class="category-card aspect-w-3 aspect-h-4 block"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=1887&auto=format&fit=crop"
+              alt="Shop Novofit's men's minimalist fashion collection"
+              class="w-full h-full object-cover"
+            />
+            <span class="category-text">Men</span>
+          </a>
+          <a
+            href="shop.html?category=Women"
+            class="category-card aspect-w-3 aspect-h-4 block"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1525845859779-54d477ff291f?q=80&w=1887&auto=format&fit=crop"
+              alt="Shop Novofit's women's sustainable clothing collection"
+              class="w-full h-full object-cover"
+            />
+            <span class="category-text">Women</span>
+          </a>
+          <a
+            href="shop.html?category=Kids"
+            class="category-card aspect-w-3 aspect-h-4 block"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1519238263530-99bddc5d4304?q=80&w=1887&auto=format&fit=crop"
+              alt="Explore Novofit's collection of clothing for kids"
+              class="w-full h-full object-cover"
+            />
+            <span class="category-text">Kids</span>
+          </a>
+          <a
+            href="shop.html?category=Others"
+            class="category-card aspect-w-3 aspect-h-4 block"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1588099768531-a72d4a198538?q=80&w=1974&auto=format&fit=crop"
+              alt="Browse timeless accessories for men and women"
+              class="w-full h-full object-cover"
+            />
+            <span class="category-text">Accessories</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Collections Section -->
+      <section class="py-24 md:py-40 bg-white">
+        <div class="container mx-auto px-6 text-center">
+          <h2 class="section-heading font-heading section-title mb-16">
+            The Novofit Collections
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <a class="hover-link collection-card group relative block">
+              <div class="img-reveal-container w-full h-full aspect-[4/5]">
+                <div class="img-reveal-mask"></div>
+                <img
+                  src="https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=2787&auto=format&fit=crop"
+                  class="w-full h-full object-cover"
+                  alt="Urban Canvas collection"
+                  onerror="this.onerror=null;this.src='https://placehold.co/1000x1250/ffffff/111111?text=Urban+Canvas';"
+                />
+              </div>
+              <div class="absolute bottom-6 left-6 text-left">
+                <h3 class="text-3xl text-white font-semibold font-heading">
+                  Urban Canvas
+                </h3>
+                <p class="text-white/80">City-inspired essentials.</p>
+              </div>
+            </a>
+            <a class="hover-link collection-card group relative block">
+              <div class="img-reveal-container w-full h-full aspect-[4/5]">
+                <div class="img-reveal-mask"></div>
+                <img
+                  src="https://images.unsplash.com/photo-1545291730-faff8ca1d4b0?q=80&w=2787&auto=format&fit=crop"
+                  class="w-full h-full object-cover"
+                  alt="Desert Bloom collection"
+                  onerror="this.onerror=null;this.src='https://placehold.co/1000x1250/ffffff/111111?text=Desert+Bloom';"
+                />
+              </div>
+              <div class="absolute bottom-6 left-6 text-left">
+                <h3 class="text-3xl text-white font-semibold font-heading">
+                  Desert Bloom
+                </h3>
+                <p class="text-white/80">Earthy tones and natural fabrics.</p>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Lookbook Marquee Section -->
+      <section id="lookbook" class="py-24 md:py-32">
+        <div class="container mx-auto px-6 mb-16 text-center">
+          <h2 class="section-heading font-heading section-title">
+            Visual Diary
+          </h2>
+          <p class="text-lg text-gray-500 max-w-2xl mx-auto mt-4 font-body">
+            A glimpse into our world. Discover the stories and styles that
+            define Novofit.
+          </p>
+        </div>
+        <div class="lookbook-marquee">
+          <div class="lookbook-track">
+            <!-- Images are duplicated for a seamless loop -->
+            <div class="lookbook-item">
+              <img
+                src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=2787&auto=format&fit=crop"
+                alt="Lookbook image 1"
+              />
+            </div>
+            <div class="lookbook-item">
+              <img
+                src="https://plus.unsplash.com/premium_photo-1708110770188-3e4216b93119?q=80&w=693&auto=format&fit=crop"
+                alt="Lookbook image 2"
+              />
+            </div>
+            <div class="lookbook-item">
+              <img
+                src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=2787&auto=format&fit=crop"
+                alt="Lookbook image 3"
+              />
+            </div>
+            <div class="lookbook-item">
+              <img
+                src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2820&auto=format&fit=crop"
+                alt="Lookbook image 4"
+              />
+            </div>
+            <div class="lookbook-item">
+              <img
+                src="https://images.unsplash.com/photo-1625072651838-2a69ff8ed257?q=80&w=687&auto=format&fit=crop"
+                alt="Lookbook image 5"
+              />
+            </div>
+            <div class="lookbook-item">
+              <img
+                src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=2787&auto=format&fit=crop"
+                alt="Lookbook image 1"
+              />
+            </div>
+            <div class="lookbook-item">
+              <img
+                src="https://plus.unsplash.com/premium_photo-1708110770188-3e4216b93119?q=80&w=693&auto=format&fit=crop"
+                alt="Lookbook image 2"
+              />
+            </div>
+            <div class="lookbook-item">
+              <img
+                src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=2787&auto=format&fit=crop"
+                alt="Lookbook image 3"
+              />
+            </div>
+            <div class="lookbook-item">
+              <img
+                src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2820&auto=format&fit=crop"
+                alt="Lookbook image 4"
+              />
+            </div>
+            <div class="lookbook-item">
+              <img
+                src="https://images.unsplash.com/photo-1625072651838-2a69ff8ed257?q=80&w=687&auto=format&fit=crop"
+                alt="Lookbook image 5"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Section -->
+      <section class="py-24 md:py-40 container mx-auto px-6">
+        <div class="grid md:grid-cols-2 gap-16 items-center">
+          <div class="space-y-6">
+            <h2 class="section-heading font-heading section-title">
+              Conscious Craft
+            </h2>
+            <div
+              class="text-xl text-gray-600 leading-relaxed space-y-6 font-body"
+              id="about-text-container"
+            >
+              <p>
+                Novofit was born from a desire for refined simplicity. We create
+                foundational pieces with a focus on quality materials, ethical
+                production, and timeless design. Each garment is a testament to
+                thoughtful craftsmanship, made to be cherished for years to
+                come.
+              </p>
+            </div>
+            <a
+              href="our-studio.html"
+              class="hover-link magnetic-item inline-block bg-black text-white px-10 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-gray-800 transition-colors text-sm"
+              >Our Studio</a
+            >
+          </div>
+          <div class="img-reveal-container w-full h-full aspect-[4/5]">
+            <div class="img-reveal-mask"></div>
+            <img
+              src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1974&auto=format&fit=crop"
+              class="w-full h-full object-cover rounded-lg"
+              alt="Inside the Novofit design studio"
+            />
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ Section -->
+      <section id="faq-section" class="py-24 md:py-40 container mx-auto px-6">
+        <div class="max-w-4xl mx-auto">
+          <h2
+            class="section-heading font-heading section-title mb-16 text-center"
+          >
+            Common Questions
+          </h2>
+          <div class="space-y-4">
+            <!-- FAQ Items structure remains the same, but styles are new -->
+            <div class="faq-item">
+              <button
+                class="faq-btn"
+                aria-expanded="false"
+                aria-controls="faq-answer-1"
+              >
+                <span>What is your return policy?</span>
+                <span class="faq-icon-wrapper">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                </span>
+              </button>
+              <div
+                class="faq-answer"
+                id="faq-answer-1"
+                role="region"
+                aria-hidden="true"
+              >
+                <p class="faq-answer-content">
+                  We offer free returns within 30 days of purchase for all
+                  unworn and unwashed items. The product must be in its original
+                  packaging with all tags attached. Refunds will be processed
+                  within 5-7 business days of us receiving the return.
+                </p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button
+                class="faq-btn"
+                aria-expanded="false"
+                aria-controls="faq-answer-2"
+              >
+                <span>Do you ship internationally?</span>
+                <span class="faq-icon-wrapper">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                </span>
+              </button>
+              <div
+                class="faq-answer"
+                id="faq-answer-2"
+                role="region"
+                aria-hidden="true"
+              >
+                <p class="faq-answer-content">
+                  We currently do not offer international shipping, and orders
+                  can only be delivered within Bangladesh, but we are working to
+                  expand our shipping services in the future.
+                </p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button
+                class="faq-btn"
+                aria-expanded="false"
+                aria-controls="faq-answer-3"
+              >
+                <span>How do I choose the right size?</span>
+                <span class="faq-icon-wrapper">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                </span>
+              </button>
+              <div
+                class="faq-answer"
+                id="faq-answer-3"
+                role="region"
+                aria-hidden="true"
+              >
+                <p class="faq-answer-content">
+                  Please refer to our detailed sizing guide available on each
+                  product page. Our garments generally follow a modern, relaxed
+                  fit. If you're between sizes, we recommend sizing up for a
+                  more comfortable fit.
+                </p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button
+                class="faq-btn"
+                aria-expanded="false"
+                aria-controls="faq-answer-4"
+              >
+                <span>Are your products sustainable?</span>
+                <span class="faq-icon-wrapper">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
+                </span>
+              </button>
+              <div
+                class="faq-answer"
+                id="faq-answer-4"
+                role="region"
+                aria-hidden="true"
+              >
+                <p class="faq-answer-content">
+                  We are committed to ethical and sustainable practices. We use
+                  a variety of eco-friendly materials such as organic cotton and
+                  recycled polyester, and partner with factories that adhere to
+                  fair labor standards.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white py-16 border-t border-[var(--border)]">
+      <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12" id="footer-content">
+          <div class="col-span-1 md:col-span-2 footer-col">
+            <h3
+              class="text-xl font-bold mb-4 uppercase tracking-wider font-heading"
+            >
+              Novofit
+            </h3>
+            <p class="text-gray-500 mb-6 max-w-sm font-body">
+              Modern essentials for a timeless wardrobe. Crafted with conscious
+              intent.
+            </p>
+          </div>
+          <div class="col-span-1 footer-col">
+            <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
+              Shop
+            </h4>
+            <ul class="space-y-3 text-gray-500 font-body">
+              <li>
+                <a href="shop.html" class="hover-link magnetic-item"
+                  >Shop All</a
+                >
+              </li>
+              <li>
+                <a
+                  href="shop.html?category=Men"
+                  class="hover-link magnetic-item"
+                  >Men</a
+                >
+              </li>
+              <li>
+                <a
+                  href="shop.html?category=Women"
+                  class="hover-link magnetic-item"
+                  >Women</a
+                >
+              </li>
+              <li>
+                <a
+                  href="shop.html?category=Others"
+                  class="hover-link magnetic-item"
+                  >Accessories</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-span-1 footer-col">
+            <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
+              About
+            </h4>
+            <ul class="space-y-3 text-gray-500 font-body">
+              <li>
+                <a href="our-studio.html" class="hover-link magnetic-item"
+                  >Our Studio</a
+                >
+              </li>
+              <li>
+                <a href="gallery.html" class="hover-link magnetic-item"
+                  >Gallery</a
+                >
+              </li>
+              <li>
+                <a href="contact.html" class="hover-link magnetic-item"
+                  >Contact</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#faq-section"
+                  id="faq-link"
+                  class="hover-link magnetic-item"
+                  >FAQs</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          class="mt-16 pt-8 border-t border-[var(--border)] text-center text-gray-400 text-xs font-body"
+        >
+          <p>
+            &copy; 2025 Novofit. All Rights Reserved. A fresh take on modern web
+            design.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
+    <script src="https://unpkg.com/split-type"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- PRELOADER ---
+        const preloader = document.getElementById("preloader");
+        const counter = document.getElementById("preloader-counter");
+        const brand = document.getElementById("preloader-brand");
+        const mainContent = document.getElementById("main-content");
+        const counterValue = { value: 0 };
+        const preloaderTl = gsap.timeline({
+          onComplete: () => {
+            preloader.style.display = "none";
+            document.body.classList.remove("no-scroll");
+            runIntroAnimations();
+          },
+        });
+        preloaderTl
+          .to(counterValue, {
+            duration: 2.5,
+            value: 100,
+            ease: "power2.out",
+            onUpdate: () => {
+              counter.textContent = Math.floor(counterValue.value);
+            },
+          })
+          .to(
+            counter,
+            { duration: 0.5, opacity: 0, y: -20, ease: "power2.inOut" },
+            "-=0.5"
+          )
+          .to(
+            brand,
+            { duration: 0.8, opacity: 1, y: 0, ease: "power2.inOut" },
+            "-=0.3"
+          )
+          .to(preloader, {
+            duration: 1,
+            opacity: 0,
+            ease: "power3.inOut",
+            delay: 0.5,
+          })
+          .to(mainContent, { opacity: 1, duration: 0.1 }, "-=0.8");
+
+        // --- SMOOTH SCROLL (LENIS) ---
+        const lenis = new Lenis();
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
+        // --- CUSTOM CURSOR ---
+        const cursor = document.querySelector(".cursor");
+        const follower = document.querySelector(".cursor-follower");
+        gsap.set(cursor, { xPercent: -50, yPercent: -50 });
+        gsap.set(follower, { xPercent: -50, yPercent: -50 });
+        window.addEventListener("mousemove", (e) => {
+          gsap.to(cursor, { duration: 0.2, x: e.clientX, y: e.clientY });
+          gsap.to(follower, {
+            duration: 0.6,
+            x: e.clientX,
+            y: e.clientY,
+            ease: "power2.out",
+          });
+        });
+        document
+          .querySelectorAll(".hover-link, .category-card, .faq-btn")
+          .forEach((el) => {
+            el.addEventListener("mouseenter", () =>
+              follower.classList.add("cursor-grow")
+            );
+            el.addEventListener("mouseleave", () =>
+              follower.classList.remove("cursor-grow")
+            );
+          });
+
+        // --- MAGNETIC ELEMENTS ---
+        document.querySelectorAll(".magnetic-item").forEach((el) => {
+          el.addEventListener("mousemove", function (e) {
+            const position = this.getBoundingClientRect();
+            const x = e.clientX - position.left - position.width / 2;
+            const y = e.clientY - position.top - position.height / 2;
+            gsap.to(this, {
+              x: x * 0.3,
+              y: y * 0.3,
+              duration: 0.3,
+              ease: "power2.out",
+            });
+          });
+          el.addEventListener("mouseleave", function () {
+            gsap.to(this, {
+              x: 0,
+              y: 0,
+              duration: 0.3,
+              ease: "elastic.out(1, 0.3)",
+            });
+          });
+        });
+
+        // --- MOBILE MENU LOGIC ---
+        const hamburgerBtn = document.getElementById("hamburger-btn");
+        const closeMenuBtn = document.getElementById("close-menu");
+        const mobileMenu = document.getElementById("mobile-menu");
+        hamburgerBtn.addEventListener("click", () => {
+          mobileMenu.classList.add("open");
+          document.body.classList.add("no-scroll");
+        });
+        closeMenuBtn.addEventListener("click", () => {
+          mobileMenu.classList.remove("open");
+          document.body.classList.remove("no-scroll");
+        });
+        document.querySelectorAll(".mobile-nav-link").forEach((link) => {
+          link.addEventListener("click", () => {
+            mobileMenu.classList.remove("open");
+            document.body.classList.remove("no-scroll");
+          });
+        });
+
+        // --- CART LOGIC (UNCHANGED) ---
+        const cartCountEl = document.getElementById("cart-count");
+        const cartNotification = document.getElementById("cart-notification");
+        let cart = []; // In a real app, this would be loaded from storage
+        function updateCart() {
+          cartCountEl.textContent = cart.length;
+          gsap.fromTo(
+            cartCountEl,
+            { scale: 1.5 },
+            { scale: 1, duration: 0.3, ease: "power2.out" }
+          );
+        }
+        let notificationTimeout;
+        function showNotification() {
+          clearTimeout(notificationTimeout);
+          gsap.to(cartNotification, {
+            y: 0,
+            duration: 0.5,
+            ease: "power3.out",
+          });
+          notificationTimeout = setTimeout(() => {
+            gsap.to(cartNotification, {
+              y: "200%",
+              duration: 0.5,
+              ease: "power3.in",
+            });
+          }, 3000);
+        }
+        // This is a placeholder for add to cart buttons if they exist on the page
+        document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
+          button.addEventListener("click", (e) => {
+            e.preventDefault();
+            cart.push({ id: Math.random(), name: "New Item" });
+            updateCart();
+            showNotification();
+          });
+        });
+
+        // --- GSAP INTRO ANIMATION ---
+        function runIntroAnimations() {
+          const introTl = gsap.timeline();
+          introTl
+            .from(".hero-title", {
+              yPercent: 100,
+              duration: 1.2,
+              ease: "expo.out",
+            })
+            .from(
+              ".hero-subtitle",
+              { opacity: 0, y: 20, duration: 1, ease: "power2.out" },
+              "-=0.8"
+            )
+            .from(
+              ".hero-section a",
+              { opacity: 0, y: 20, duration: 1, ease: "power2.out" },
+              "<"
+            )
+            .to(
+              ".hero-image",
+              { scale: 1, duration: 1.5, ease: "power2.inOut" },
+              "<"
+            );
+        }
+
+        // --- GSAP SCROLL-TRIGGERED ANIMATIONS ---
+        // Section Titles Reveal
+        document.querySelectorAll(".section-title").forEach((title) => {
+          const splitTitle = new SplitType(title, { types: "words" });
+          gsap.from(splitTitle.words, {
+            scrollTrigger: {
+              trigger: title,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+            yPercent: 100,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power3.out",
+            stagger: 0.1,
+          });
+        });
+
+        // Image Reveal
+        document
+          .querySelectorAll(".img-reveal-container")
+          .forEach((container) => {
+            let image = container.querySelector("img");
+            let mask = container.querySelector(".img-reveal-mask");
+            let tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: container,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+              },
+            });
+            tl.to(container, { autoAlpha: 1, duration: 0 })
+              .fromTo(
+                mask,
+                { yPercent: 0 },
+                { yPercent: -100, duration: 1.2, ease: "expo.inOut" }
+              )
+              .fromTo(
+                image,
+                { yPercent: 50, scale: 1.2 },
+                { yPercent: 0, scale: 1, duration: 1.2, ease: "expo.inOut" },
+                "<"
+              );
+          });
+
+        // About Section Text Fade-in
+        const aboutText = new SplitType("#about-text-container p", {
+          types: "lines",
+        });
+        gsap.from(aboutText.lines, {
+          scrollTrigger: {
+            trigger: "#about-text-container",
+            start: "top 85%",
+            toggleActions: "play none none reverse",
+          },
+          y: 20,
+          opacity: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power2.out",
+        });
+
+        // Footer Columns Fade-in
+        gsap.from("#footer-content .footer-col", {
+          scrollTrigger: {
+            trigger: "footer",
+            start: "top 95%",
+            toggleActions: "play none none reverse",
+          },
+          y: 30,
+          opacity: 0,
+          duration: 0.8,
+          stagger: 0.1,
+          ease: "power2.out",
+        });
+
+        // Lookbook Marquee Animation
+        const marqueeTrack = document.querySelector(".lookbook-track");
+        if (marqueeTrack) {
+          gsap.to(marqueeTrack, {
+            xPercent: -50,
+            ease: "none",
+            duration: 40,
+            repeat: -1,
+          });
+        }
+
+        // Header Animation on Scroll
+        const header = document.querySelector("header");
+        ScrollTrigger.create({
+          start: "top top",
+          end: 99999,
+          onUpdate: (self) => {
+            header.classList.toggle(
+              "scrolled",
+              self.direction === 1 && self.scroll > 50
+            );
+          },
+        });
+
+        // --- FAQ LOGIC ---
+        const faqButtons = document.querySelectorAll(".faq-btn");
+        faqButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            const isActive = button.getAttribute("aria-expanded") === "true";
+            const answer = button.nextElementSibling;
+            const iconWrapper = button.querySelector(".faq-icon-wrapper");
+
+            // Close all other open answers
+            faqButtons.forEach((otherButton) => {
+              if (
+                otherButton !== button &&
+                otherButton.getAttribute("aria-expanded") === "true"
+              ) {
+                const otherAnswer = otherButton.nextElementSibling;
+                const otherIconWrapper = otherButton.querySelector(
+                  ".faq-icon-wrapper"
+                );
+                gsap.to(otherAnswer, {
+                  duration: 0.5,
+                  height: 0,
+                  ease: "power2.inOut",
+                });
+                gsap.to(otherIconWrapper, {
+                  duration: 0.3,
+                  rotate: 0,
+                  ease: "power2.inOut",
+                });
+                otherButton.setAttribute("aria-expanded", "false");
+                otherAnswer.setAttribute("aria-hidden", "true");
+              }
+            });
+
+            // Toggle the clicked answer
+            if (!isActive) {
+              button.setAttribute("aria-expanded", "true");
+              answer.setAttribute("aria-hidden", "false");
+              gsap.to(answer, {
+                duration: 0.5,
+                height: answer.scrollHeight,
+                ease: "power2.inOut",
+              });
+              gsap.to(iconWrapper, {
+                duration: 0.3,
+                rotate: 45,
+                ease: "power2.inOut",
+              });
+            } else {
+              button.setAttribute("aria-expanded", "false");
+              answer.setAttribute("aria-hidden", "true");
+              gsap.to(answer, {
+                duration: 0.5,
+                height: 0,
+                ease: "power2.inOut",
+              });
+              gsap.to(iconWrapper, {
+                duration: 0.3,
+                rotate: 0,
+                ease: "power2.inOut",
+              });
+            }
+          });
+        });
+
+        // FAQ link smooth scroll
+        document
+          .getElementById("faq-link")
+          .addEventListener("click", function (e) {
+            e.preventDefault();
+            lenis.scrollTo("#faq-section", { offset: -100 });
+          });
+      });
+    </script>
+  </body>
+</html>
