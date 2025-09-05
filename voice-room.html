@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IELTS Mahir Lan Club</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg-primary: #0a0a1a;
+        --bg-secondary: #1a1a2e;
+        --bg-tertiary: #16213e;
+        --accent-primary: #0f3460;
+        --accent-secondary: #e94560;
+        --text-primary: #e0e0e0;
+        --text-secondary: #a0a0c0;
+        --glow-cyan: rgba(0, 255, 255, 0.7);
+        --glow-magenta: rgba(255, 0, 255, 0.7);
+      }
+
+      body {
+        font-family: "Roboto", sans-serif;
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+      }
+
+      .font-orbitron {
+        font-family: "Orbitron", sans-serif;
+      }
+
+      .glass-effect {
+        background: rgba(26, 26, 46, 0.6);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .neon-glow {
+        box-shadow: 0 0 5px var(--glow-cyan), 0 0 10px var(--glow-cyan),
+          0 0 15px var(--glow-cyan);
+      }
+
+      .neon-text {
+        text-shadow: 0 0 5px var(--glow-cyan), 0 0 10px var(--glow-cyan);
+      }
+
+      .scrollbar-thin::-webkit-scrollbar {
+        width: 6px;
+      }
+      .scrollbar-thin::-webkit-scrollbar-track {
+        background: var(--bg-secondary);
+      }
+      .scrollbar-thin::-webkit-scrollbar-thumb {
+        background: var(--accent-primary);
+        border-radius: 3px;
+      }
+      .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+        background: #1a4a8a;
+      }
+
+      /* Loading animation */
+      .loader {
+        border: 4px solid rgba(255, 255, 255, 0.2);
+        border-left-color: var(--glow-cyan);
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Voice activity indicator */
+      .voice-active {
+        box-shadow: 0 0 12px 3px var(--glow-cyan);
+        transition: box-shadow 0.2s ease-in-out;
+      }
+
+      /* Custom button styles */
+      .btn-futuristic {
+        background: linear-gradient(
+          45deg,
+          var(--accent-primary),
+          var(--accent-secondary)
+        );
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 8px rgba(233, 69, 96, 0.5);
+      }
+      .btn-futuristic:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 15px rgba(233, 69, 96, 0.8);
+      }
+      .btn-futuristic:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      /* Input field styles */
+      .input-futuristic {
+        background-color: var(--bg-secondary);
+        border: 1px solid var(--accent-primary);
+        color: var(--text-primary);
+        border-radius: 8px;
+        padding: 10px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+      }
+      .input-futuristic:focus {
+        outline: none;
+        border-color: var(--glow-cyan);
+        box-shadow: 0 0 8px var(--glow-cyan);
+      }
+    </style>
+  </head>
+  <body class="scrollbar-thin">
+    <div
+      id="app-container"
+      class="h-screen w-screen overflow-hidden flex flex-col"
+    >
+      <!-- Main Application View -->
+      <main id="main-app" class="hidden flex-1 flex h-full">
+        <!-- Left Sidebar: Voice Room List -->
+        <aside
+          class="w-full md:w-1/4 h-full glass-effect flex flex-col p-4 border-r border-gray-700"
+        >
+          <div
+            class="flex items-center justify-between mb-4 pb-4 border-b border-gray-700"
+          >
+            <div id="current-user-profile" class="flex items-center gap-3">
+              <!-- User avatar and name here -->
+            </div>
+            <button
+              id="sign-out-btn"
+              class="text-red-400 hover:text-red-600 transition-colors"
+              title="Sign Out"
+            >
+              <i class="fas fa-sign-out-alt fa-lg"></i>
+            </button>
+          </div>
+          <div
+            class="flex-1 overflow-y-auto scrollbar-thin pr-2"
+            id="room-list-container"
+          >
+            <!-- Voice room list will be rendered here -->
+          </div>
+          <button id="create-room-btn" class="mt-4 w-full btn-futuristic">
+            <i class="fas fa-plus-circle"></i> Create Room
+          </button>
+        </aside>
+
+        <!-- Center Panel: Room View (Participants + Chat) -->
+        <section
+          id="room-view"
+          class="flex-1 h-full flex flex-col bg-cover bg-center"
+          style="
+            background-image: url('https://placehold.co/1200x800/0a0a1a/e0e0e0?text=Select+a+Room');
+          "
+        >
+          <!-- Content changes when a room is selected -->
+        </section>
+      </main>
+
+      <!-- Loading Screen -->
+      <div
+        id="loading-screen"
+        class="w-full h-full flex flex-col items-center justify-center bg-gray-900"
+      >
+        <div class="loader"></div>
+        <p class="mt-4 text-lg font-orbitron neon-text">
+          Connecting to Lan Club...
+        </p>
+      </div>
+
+      <!-- Login Prompt Screen -->
+      <div
+        id="login-prompt-screen"
+        class="hidden w-full h-full flex items-center justify-center bg-gray-900"
+      >
+        <div class="w-full max-w-md p-8 glass-effect rounded-2xl text-center">
+          <h2 class="text-3xl font-orbitron text-center mb-6 neon-text">
+            IELTS Mahir Lan Club
+          </h2>
+          <p class="text-lg text-gray-300">
+            Please sign in via the main IELTS Mahir portal to access the Voice
+            Rooms.
+          </p>
+          <i class="fas fa-satellite-dish fa-3x my-6 text-cyan-400"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modals Container -->
+    <div id="modal-container"></div>
+    <!-- Audio elements will be injected here -->
+    <div id="audio-container"></div>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        onAuthStateChanged,
+        signOut,
+        signInWithCustomToken,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        setDoc,
+        updateDoc,
+        collection,
+        query,
+        where,
+        onSnapshot,
+        addDoc,
+        serverTimestamp,
+        orderBy,
+        deleteDoc,
+        runTransaction,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // --- State Management ---
+      const appState = {
+        db: null,
+        auth: null,
+        user: null,
+        activeRoomId: null,
+        isMuted: false,
+        rooms: [],
+        messages: {}, // { roomId: [message1, message2] }
+        roomParticipants: {}, // { roomId: [participant1, participant2] }
+        localStream: null,
+        peerConnections: {}, // { [partnerId]: RTCPeerConnection }
+        roomUnsubscribes: {},
+        view: "loading", // loading, login-prompt, app
+      };
+
+      // --- Firebase Configuration ---
+      // This configuration must remain unchanged.
+      const firebaseConfig = {
+        apiKey: "AIzaSyAxsd0CnLsh7t7yFy3ZPp6saGD_YpLL1mY",
+        authDomain: "ielts-mahir-community-forum.firebaseapp.com",
+        projectId: "ielts-mahir-community-forum",
+        storageBucket: "ielts-mahir-community-forum.appspot.com",
+        messagingSenderId: "1036043607546",
+        appId: "1:1036043607546:web:bd217e04cc0ec5f296d843",
+        measurementId: "G-YC4CG1WKD3",
+      };
+      const appId = "ielts-mahir-lan-club";
+
+      // --- DOM Elements ---
+      const dom = {
+        mainApp: document.getElementById("main-app"),
+        loadingScreen: document.getElementById("loading-screen"),
+        loginPromptScreen: document.getElementById("login-prompt-screen"),
+        signOutBtn: document.getElementById("sign-out-btn"),
+        currentUserProfile: document.getElementById("current-user-profile"),
+        roomListContainer: document.getElementById("room-list-container"),
+        roomView: document.getElementById("room-view"),
+        createRoomBtn: document.getElementById("create-room-btn"),
+        modalContainer: document.getElementById("modal-container"),
+        audioContainer: document.getElementById("audio-container"),
+      };
+
+      // --- Render Functions ---
+
+      function render() {
+        dom.loadingScreen.classList.add("hidden");
+        dom.loginPromptScreen.classList.add("hidden");
+        dom.mainApp.classList.add("hidden");
+
+        if (appState.view === "loading") {
+          dom.loadingScreen.classList.remove("hidden");
+        } else if (appState.view === "login-prompt") {
+          dom.loginPromptScreen.classList.remove("hidden");
+        } else if (appState.view === "app") {
+          dom.mainApp.classList.remove("hidden");
+          renderUserProfile();
+          renderRoomList();
+          renderRoomView();
+        }
+      }
+
+      function renderUserProfile() {
+        if (!appState.user) return;
+        dom.currentUserProfile.innerHTML = `
+            <img src="${appState.user.photoURL}" alt="Your avatar" class="w-12 h-12 rounded-full border-2 border-cyan-400">
+            <div>
+                <p class="font-bold text-white">${appState.user.displayName}</p>
+                <p class="text-xs text-green-400">Online</p>
+            </div>
+        `;
+      }
+
+      function renderRoomList() {
+        let content = '<div class="space-y-2">';
+        if (appState.rooms.length === 0) {
+          content += `<p class="text-center text-gray-400 mt-8">No active rooms. Create one!</p>`;
+        } else {
+          appState.rooms.forEach((room) => {
+            const isActive = room.id === appState.activeRoomId;
+            content += `
+                    <div onclick="window.handleJoinRoom('${
+                      room.id
+                    }')" class="p-3 rounded-lg cursor-pointer transition-all duration-200 ${
+              isActive ? "bg-accent-primary" : "hover:bg-bg-tertiary"
+            }">
+                        <div class="flex justify-between items-center">
+                            <p class="font-bold truncate">${room.name}</p>
+                            <span class="text-xs px-2 py-1 rounded-full ${
+                              isActive ? "bg-accent-secondary" : "bg-gray-700"
+                            }">${
+              room.participantCount || 0
+            } <i class="fas fa-user"></i></span>
+                        </div>
+                    </div>
+                `;
+          });
+        }
+        content += "</div>";
+        dom.roomListContainer.innerHTML = content;
+        window.handleJoinRoom = joinRoom;
+      }
+
+      function renderRoomView() {
+        if (!appState.activeRoomId) {
+          dom.roomView.style.backgroundImage = `url('https://placehold.co/1200x800/0a0a1a/e0e0e0?text=Select+a+Room')`;
+          dom.roomView.innerHTML = "";
+          return;
+        }
+
+        const room = appState.rooms.find((r) => r.id === appState.activeRoomId);
+        const participants =
+          appState.roomParticipants[appState.activeRoomId] || [];
+
+        dom.roomView.style.backgroundImage = `url('https://placehold.co/1200x800/16213e/e0e0e0?text=${encodeURIComponent(
+          room.name
+        )}')`;
+
+        let participantsHTML = participants
+          .map(
+            (p) => `
+            <div class="flex flex-col items-center text-center">
+                <img id="avatar-${p.uid}" src="${p.photoURL}" alt="${p.displayName}" class="w-20 h-20 rounded-full border-4 border-gray-600 transition-all duration-200">
+                <p class="mt-2 text-sm font-semibold truncate">${p.displayName}</p>
+            </div>
+        `
+          )
+          .join("");
+
+        dom.roomView.innerHTML = `
+            <div class="flex-1 flex flex-col p-4 md:p-6 glass-effect h-full">
+                <!-- Participants Grid -->
+                <div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-4 p-4 bg-black bg-opacity-20 rounded-lg">
+                    ${participantsHTML}
+                </div>
+
+                <!-- Chat Area -->
+                <div class="flex-1 flex flex-col mt-4 bg-black bg-opacity-30 rounded-lg overflow-hidden">
+                    <div id="chat-messages" class="flex-1 p-4 overflow-y-auto scrollbar-thin">
+                        <!-- Messages will be rendered here -->
+                    </div>
+                    <div class="p-4 border-t border-gray-700">
+                        <form id="chat-form" class="flex gap-3">
+                            <input id="chat-input" class="input-futuristic flex-1" type="text" placeholder="Say something..." autocomplete="off">
+                            <button type="submit" class="btn-futuristic"><i class="fas fa-paper-plane"></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Room Controls -->
+            <div class="glass-effect p-3 flex justify-center items-center gap-6">
+                <button id="mute-btn" class="w-12 h-12 rounded-full ${
+                  appState.isMuted ? "bg-red-500" : "bg-gray-600"
+                } text-white text-xl"><i class="fas fa-microphone-slash"></i></button>
+                <button id="leave-room-btn" class="btn-futuristic bg-red-600 hover:bg-red-800">Leave Room</button>
+            </div>
+        `;
+        renderMessages();
+
+        // Add event listeners for new elements
+        document
+          .getElementById("chat-form")
+          .addEventListener("submit", handleSendMessage);
+        document
+          .getElementById("mute-btn")
+          .addEventListener("click", toggleMute);
+        document
+          .getElementById("leave-room-btn")
+          .addEventListener("click", leaveRoom);
+      }
+
+      function renderMessages() {
+        if (!appState.activeRoomId) return;
+        const messagesContainer = document.getElementById("chat-messages");
+        if (!messagesContainer) return;
+
+        const messages = appState.messages[appState.activeRoomId] || [];
+        messagesContainer.innerHTML = messages
+          .map(
+            (msg) => `
+            <div class="mb-3">
+                <p class="text-sm">
+                    <span class="font-bold" style="color: ${getUserColor(
+                      msg.author.uid
+                    )};">${msg.author.displayName}:</span>
+                    <span class="text-gray-200">${msg.text}</span>
+                </p>
+                <p class="text-xs text-gray-500">${new Date(
+                  msg.createdAt?.toDate()
+                ).toLocaleTimeString()}</p>
+            </div>
+        `
+          )
+          .join("");
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      function renderCreateRoomModal() {
+        const modalHTML = `
+            <div id="create-room-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center">
+                <div class="glass-effect p-8 rounded-lg w-full max-w-md text-center relative">
+                    <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white">&times;</button>
+                    <h3 class="text-2xl font-orbitron mb-6">Create a New Room</h3>
+                    <form id="create-room-form">
+                        <input id="room-name-input" class="input-futuristic w-full mb-4" type="text" placeholder="Enter room name" required>
+                        <button type="submit" class="btn-futuristic w-full">Launch Room</button>
+                    </form>
+                </div>
+            </div>
+        `;
+        dom.modalContainer.innerHTML = modalHTML;
+        document
+          .getElementById("create-room-form")
+          .addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const roomName = document.getElementById("room-name-input").value;
+            if (roomName.trim()) {
+              await createVoiceRoom(roomName.trim());
+              closeModal();
+            }
+          });
+        window.closeModal = () => (dom.modalContainer.innerHTML = "");
+      }
+
+      // --- Firebase & WebRTC Logic ---
+
+      async function handleUserAuth(firebaseUser) {
+        if (firebaseUser) {
+          const userRef = doc(
+            appState.db,
+            `artifacts/${appId}/users/${firebaseUser.uid}/profile/main`
+          );
+          const userDoc = await getDoc(userRef);
+
+          if (userDoc.exists()) {
+            appState.user = userDoc.data();
+            await updateDoc(userRef, {
+              onlineStatus: "online",
+              lastSeen: serverTimestamp(),
+            });
+          } else {
+            const profile = {
+              uid: firebaseUser.uid,
+              displayName: firebaseUser.displayName || "Anonymous User",
+              email: firebaseUser.email,
+              photoURL:
+                firebaseUser.photoURL ||
+                `https://placehold.co/100x100/1a1a2e/e0e0e0?text=${(
+                  firebaseUser.displayName || "A"
+                ).charAt(0)}`,
+              onlineStatus: "online",
+              lastSeen: serverTimestamp(),
+            };
+            await setDoc(userRef, profile);
+            appState.user = profile;
+          }
+
+          appState.view = "app";
+          listenToVoiceRooms();
+        } else {
+          appState.user = null;
+          if (appState.localStream) {
+            appState.localStream.getTracks().forEach((track) => track.stop());
+            appState.localStream = null;
+          }
+          appState.view = "login-prompt";
+        }
+        render();
+      }
+
+      function listenToVoiceRooms() {
+        const q = query(
+          collection(appState.db, `artifacts/${appId}/public/data/voiceRooms`),
+          orderBy("createdAt", "desc")
+        );
+        onSnapshot(q, (snapshot) => {
+          appState.rooms = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          renderRoomList();
+        });
+      }
+
+      async function createVoiceRoom(roomName) {
+        if (!appState.user) return;
+        const newRoom = {
+          name: roomName,
+          hostId: appState.user.uid,
+          createdAt: serverTimestamp(),
+          participantCount: 0,
+        };
+        const roomRef = await addDoc(
+          collection(appState.db, `artifacts/${appId}/public/data/voiceRooms`),
+          newRoom
+        );
+        await joinRoom(roomRef.id);
+      }
+
+      async function joinRoom(roomId) {
+        if (appState.activeRoomId === roomId) return;
+        if (appState.activeRoomId) await leaveRoom();
+
+        appState.activeRoomId = roomId;
+
+        try {
+          appState.localStream = await navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: false,
+          });
+          toggleMute(appState.isMuted, true); // apply initial mute state
+        } catch (error) {
+          console.error("Could not get user media", error);
+          alert("Could not access microphone. Please check permissions.");
+          appState.activeRoomId = null;
+          return;
+        }
+
+        const participantRef = doc(
+          appState.db,
+          `artifacts/${appId}/public/data/voiceRooms/${roomId}/participants/${appState.user.uid}`
+        );
+        await setDoc(participantRef, {
+          ...appState.user,
+          joinedAt: serverTimestamp(),
+        });
+
+        await runTransaction(appState.db, async (transaction) => {
+          const roomRef = doc(
+            appState.db,
+            `artifacts/${appId}/public/data/voiceRooms/${roomId}`
+          );
+          const roomDoc = await transaction.get(roomRef);
+          if (!roomDoc.exists()) return;
+          const newCount = (roomDoc.data().participantCount || 0) + 1;
+          transaction.update(roomRef, { participantCount: newCount });
+        });
+
+        setupWebRTCListeners(roomId);
+        listenToMessages(roomId);
+        render(); // Re-render to show new room
+      }
+
+      async function leaveRoom() {
+        const roomId = appState.activeRoomId;
+        if (!roomId) return;
+
+        Object.values(appState.peerConnections).forEach((pc) => pc.close());
+        appState.peerConnections = {};
+
+        if (appState.localStream) {
+          appState.localStream.getTracks().forEach((track) => track.stop());
+          appState.localStream = null;
+        }
+
+        await deleteDoc(
+          doc(
+            appState.db,
+            `artifacts/${appId}/public/data/voiceRooms/${roomId}/participants/${appState.user.uid}`
+          )
+        );
+
+        await runTransaction(appState.db, async (transaction) => {
+          const roomRef = doc(
+            appState.db,
+            `artifacts/${appId}/public/data/voiceRooms/${roomId}`
+          );
+          const roomDoc = await transaction.get(roomRef);
+          if (roomDoc.exists()) {
+            const newCount = Math.max(
+              0,
+              (roomDoc.data().participantCount || 1) - 1
+            );
+            transaction.update(roomRef, { participantCount: newCount });
+          }
+        });
+
+        if (appState.roomUnsubscribes[roomId]) {
+          Object.values(appState.roomUnsubscribes[roomId]).forEach((unsub) =>
+            unsub()
+          );
+        }
+
+        dom.audioContainer.innerHTML = "";
+        appState.activeRoomId = null;
+        appState.messages[roomId] = [];
+        appState.roomParticipants[roomId] = [];
+        render();
+      }
+
+      function setupWebRTCListeners(roomId) {
+        appState.roomUnsubscribes[roomId] = {};
+
+        const participantsQuery = collection(
+          appState.db,
+          `artifacts/${appId}/public/data/voiceRooms/${roomId}/participants`
+        );
+        appState.roomUnsubscribes[roomId].participants = onSnapshot(
+          participantsQuery,
+          (snapshot) => {
+            const participants = snapshot.docs.map((doc) => doc.data());
+            appState.roomParticipants[roomId] = participants;
+
+            participants.forEach((p) => {
+              if (
+                p.uid !== appState.user.uid &&
+                !appState.peerConnections[p.uid]
+              ) {
+                initiatePeerConnection(p.uid, roomId, true); // This user is the initiator
+              }
+            });
+
+            const participantIds = participants.map((p) => p.uid);
+            Object.keys(appState.peerConnections).forEach((peerId) => {
+              if (!participantIds.includes(peerId)) {
+                appState.peerConnections[peerId].close();
+                delete appState.peerConnections[peerId];
+                const audioEl = document.getElementById(`audio-${peerId}`);
+                if (audioEl) audioEl.remove();
+              }
+            });
+
+            renderRoomView();
+          }
+        );
+
+        // Listen for signals meant FOR ME
+        const mySignalsQuery = collection(
+          appState.db,
+          `artifacts/${appId}/public/data/voiceRooms/${roomId}/participants/${appState.user.uid}/signals`
+        );
+        appState.roomUnsubscribes[roomId].signals = onSnapshot(
+          mySignalsQuery,
+          (snapshot) => {
+            snapshot.docChanges().forEach(async (change) => {
+              if (change.type === "added") {
+                handleSignal(change.doc.data(), roomId);
+                await deleteDoc(change.doc.ref); // Clean up signal
+              }
+            });
+          }
+        );
+      }
+
+      async function handleSignal(data, roomId) {
+        const partnerId = data.from;
+        let pc = appState.peerConnections[partnerId];
+
+        if (!pc) {
+          pc = initiatePeerConnection(partnerId, roomId, false); // Not the initiator
+        }
+
+        if (data.sdp) {
+          await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
+          if (data.sdp.type === "offer") {
+            const answer = await pc.createAnswer();
+            await pc.setLocalDescription(answer);
+            const signalCollection = collection(
+              appState.db,
+              `artifacts/${appId}/public/data/voiceRooms/${roomId}/participants/${partnerId}/signals`
+            );
+            await addDoc(signalCollection, {
+              from: appState.user.uid,
+              sdp: pc.localDescription.toJSON(),
+            });
+          }
+        } else if (data.candidate) {
+          try {
+            await pc.addIceCandidate(new RTCIceCandidate(data.candidate));
+          } catch (e) {
+            console.error("Error adding received ice candidate", e);
+          }
+        }
+      }
+
+      function initiatePeerConnection(partnerId, roomId, isInitiator) {
+        const pc = new RTCPeerConnection({
+          iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
+        });
+        appState.peerConnections[partnerId] = pc;
+
+        appState.localStream
+          .getTracks()
+          .forEach((track) => pc.addTrack(track, appState.localStream));
+
+        const signalCollection = collection(
+          appState.db,
+          `artifacts/${appId}/public/data/voiceRooms/${roomId}/participants/${partnerId}/signals`
+        );
+
+        pc.onicecandidate = (event) => {
+          if (event.candidate) {
+            addDoc(signalCollection, {
+              from: appState.user.uid,
+              candidate: event.candidate.toJSON(),
+            });
+          }
+        };
+
+        pc.ontrack = (event) => {
+          let audioEl = document.getElementById(`audio-${partnerId}`);
+          if (!audioEl) {
+            audioEl = document.createElement("audio");
+            audioEl.id = `audio-${partnerId}`;
+            audioEl.autoplay = true;
+            dom.audioContainer.appendChild(audioEl);
+          }
+          audioEl.srcObject = event.streams[0];
+          setupVoiceActivityIndicator(event.streams[0], `avatar-${partnerId}`);
+        };
+
+        if (isInitiator) {
+          pc.createOffer()
+            .then((offer) => pc.setLocalDescription(offer))
+            .then(() => {
+              addDoc(signalCollection, {
+                from: appState.user.uid,
+                sdp: pc.localDescription.toJSON(),
+              });
+            });
+        }
+
+        return pc;
+      }
+
+      function listenToMessages(roomId) {
+        appState.messages[roomId] = [];
+        const q = query(
+          collection(
+            appState.db,
+            `artifacts/${appId}/public/data/voiceRooms/${roomId}/messages`
+          ),
+          orderBy("createdAt", "asc")
+        );
+        appState.roomUnsubscribes[roomId].messages = onSnapshot(
+          q,
+          (snapshot) => {
+            appState.messages[roomId] = snapshot.docs.map((doc) => doc.data());
+            renderMessages();
+          }
+        );
+      }
+
+      async function handleSendMessage(e) {
+        e.preventDefault();
+        const input = document.getElementById("chat-input");
+        const text = input.value.trim();
+        if (text && appState.activeRoomId && appState.user) {
+          await addDoc(
+            collection(
+              appState.db,
+              `artifacts/${appId}/public/data/voiceRooms/${appState.activeRoomId}/messages`
+            ),
+            {
+              text: text,
+              createdAt: serverTimestamp(),
+              author: {
+                uid: appState.user.uid,
+                displayName: appState.user.displayName,
+              },
+            }
+          );
+          input.value = "";
+        }
+      }
+
+      function toggleMute(forceState, isInitial = false) {
+        const shouldBeMuted =
+          typeof forceState === "boolean" ? forceState : !appState.isMuted;
+        appState.isMuted = shouldBeMuted;
+        if (appState.localStream) {
+          appState.localStream.getAudioTracks().forEach((track) => {
+            track.enabled = !appState.isMuted;
+          });
+        }
+        if (!isInitial) {
+          const muteBtn = document.getElementById("mute-btn");
+          if (muteBtn) {
+            muteBtn.classList.toggle("bg-red-500", appState.isMuted);
+            muteBtn.classList.toggle("bg-gray-600", !appState.isMuted);
+            muteBtn.innerHTML = `<i class="fas ${
+              appState.isMuted ? "fa-microphone-slash" : "fa-microphone"
+            }"></i>`;
+          }
+        }
+      }
+
+      // --- Utility Functions ---
+      const userColors = {};
+      const colorPalette = [
+        "#FF6B6B",
+        "#4ECDC4",
+        "#45B7D1",
+        "#FED766",
+        "#2AB7CA",
+      ];
+      function getUserColor(uid) {
+        if (!userColors[uid]) {
+          userColors[uid] =
+            colorPalette[Object.keys(userColors).length % colorPalette.length];
+        }
+        return userColors[uid];
+      }
+
+      function setupVoiceActivityIndicator(stream, elementId) {
+        const audioContext = new AudioContext();
+        const source = audioContext.createMediaStreamSource(stream);
+        const analyser = audioContext.createAnalyser();
+        analyser.fftSize = 512;
+        source.connect(analyser);
+        const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+        function checkVolume() {
+          analyser.getByteFrequencyData(dataArray);
+          let sum = 0;
+          dataArray.forEach((value) => (sum += value));
+          let avg = sum / dataArray.length;
+
+          const element = document.getElementById(elementId);
+          if (element) {
+            if (avg > 20) {
+              // Threshold for speaking
+              element.classList.add("voice-active");
+            } else {
+              element.classList.remove("voice-active");
+            }
+          }
+          requestAnimationFrame(checkVolume);
+        }
+        checkVolume();
+      }
+
+      // --- Event Listeners & Initialization ---
+
+      dom.signOutBtn.addEventListener("click", async () => {
+        if (appState.activeRoomId) await leaveRoom();
+        await updateDoc(
+          doc(
+            appState.db,
+            `artifacts/${appId}/users/${appState.user.uid}/profile/main`
+          ),
+          { onlineStatus: "offline" }
+        );
+        await signOut(appState.auth);
+      });
+
+      dom.createRoomBtn.onclick = renderCreateRoomModal;
+
+      function initialize() {
+        const app = initializeApp(firebaseConfig);
+        appState.db = getFirestore(app);
+        appState.auth = getAuth(app);
+
+        onAuthStateChanged(appState.auth, handleUserAuth);
+
+        // Check for the global token provided by the environment
+        if (
+          typeof __initial_auth_token !== "undefined" &&
+          __initial_auth_token
+        ) {
+          signInWithCustomToken(appState.auth, __initial_auth_token).catch(
+            (err) => {
+              console.error("Custom token sign-in failed", err);
+              handleUserAuth(null);
+            }
+          );
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", initialize);
+    </script>
+  </body>
+</html>
