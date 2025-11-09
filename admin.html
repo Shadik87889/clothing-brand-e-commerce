@@ -483,11 +483,6 @@
               <i
                 class="ph ph-magnifying-glass text-[var(--secondary-text)] absolute left-4 top-1/2 -translate-y-1/2"
               ></i>
-              <input
-                type="text"
-                placeholder="Search anything..."
-                class="form-input w-full pl-10 text-sm"
-              />
             </div>
             <div class="relative">
               <button
@@ -620,6 +615,7 @@
       let productUnsubscribe = null;
       let invoicesUnsubscribe = null;
       let globalOrdersUnsubscribe = null; // For the persistent order/notification listener
+      let categoriesUnsubscribe = null; // MODIFIED: Added for categories
 
       // --- State for Filters and Search ---
       let currentProductStatusFilter = "All";
@@ -650,13 +646,17 @@
       let allProductsInView = [];
       let allOrdersInView = []; // This will be kept up-to-date by the global listener
       let allInvoicesInView = [];
+      let allCategories = []; // MODIFIED: Added for categories
 
       // --- UI Elements ---
-      const loginSection = document.getElementById("login-section");
-      const adminPanel = document.getElementById("admin-panel");
-      const loginForm = document.getElementById("login-form");
-      const loginError = document.getElementById("login-error");
-      const logoutBtn = document.getElementById("logout-btn");
+      // MODIFIED: Changed const to let, assignment will happen on DOMContentLoaded
+      let loginSection,
+        adminPanel,
+        loginForm,
+        loginError,
+        logoutBtn,
+        contentArea,
+        navLinks;
 
       // --- Notification LocalStorage Helpers ---
       // MODIFIED: Functions now accept a userId to make storage user-specific
@@ -749,6 +749,7 @@
         // Unsubscribe from all listeners on logout
         if (productUnsubscribe) productUnsubscribe();
         if (invoicesUnsubscribe) invoicesUnsubscribe();
+        if (categoriesUnsubscribe) categoriesUnsubscribe(); // MODIFIED: Unsubscribe categories
         if (globalOrdersUnsubscribe) {
           globalOrdersUnsubscribe();
           globalOrdersUnsubscribe = null;
@@ -820,8 +821,8 @@
       }
 
       // --- State and UI Management ---
-      const contentArea = document.getElementById("content-area");
-      const navLinks = document.querySelectorAll(".admin-link");
+      // MOVED: const contentArea = document.getElementById("content-area");
+      // MOVED: const navLinks = document.querySelectorAll(".admin-link");
       let currentView = "dashboard";
 
       function renderUI(view, data = null) {
@@ -832,6 +833,7 @@
         if (productUnsubscribe) productUnsubscribe();
         if (invoicesUnsubscribe) invoicesUnsubscribe();
         // NOTE: The globalOrdersUnsubscribe is NOT detached here, as it should persist.
+        // NOTE: The categoriesUnsubscribe is also persistent.
 
         navLinks.forEach((link) => {
           link.classList.remove("active");
@@ -911,10 +913,10 @@
               </div>
               <div class="card p-8 rounded-xl">
                 <div class="flex items-center justify-between mb-4">
-                  <h3 class="font-heading text-xl font-semibold">Total Orders</h3>
-                  <i class="ph ph-bag text-3xl text-[var(--accent)]"></i>
+                  <h3 class="font-heading text-xl font-semibold">Pending Orders</h3>
+                  <i class="ph ph-clock text-3xl text-[var(--accent)]"></i>
                 </div>
-                <p id="total-orders-count" class="text-5xl font-bold font-heading">0</p>
+                <p id="pending-orders-count" class="text-5xl font-bold font-heading">0</p>
               </div>
               <div class="card p-8 rounded-xl">
                 <div class="flex items-center justify-between mb-4">
@@ -938,6 +940,14 @@
                     <div class="h-96 flex items-center justify-center">
                          <canvas id="category-chart"></canvas>
                     </div>
+                </div>
+            </div>
+            
+            <!-- Recent Orders Section -->
+            <div class="card p-8 rounded-xl mt-8">
+                <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] mb-6">Recent Orders</h3>
+                <div class="space-y-4" id="recent-orders-list">
+                    <p class="text-[var(--secondary-text)]">Loading recent orders...</p>
                 </div>
             </div>
           `;
@@ -1151,12 +1161,17 @@
                         }>Others</option>
                     </select>
                   </div>
+                   <!-- MODIFIED: Category Input -->
                    <div>
-                    <label for="product-category" class="block text-sm font-light mb-2">Category (e.g., T-Shirt)</label>
-                    <input type="text" id="product-category" name="category" class="form-input w-full" value="${
-                      isEdit ? product.category : ""
-                    }" placeholder="e.g., T-Shirt, Jacket" required>
-                  </div>
+                        <label for="product-category-select" class="block text-sm font-light mb-2">Category</label>
+                        <select id="product-category-select" name="category" class="form-select w-full" required>
+                            <!-- Options will be populated by JS -->
+                        </select>
+                        <div id="add-category-container" class="hidden mt-2 flex gap-2">
+                            <input type="text" id="new-category-name" placeholder="New category name" class="form-input flex-1">
+                            <button type="button" id="add-new-category-btn" class="px-4 py-2 rounded-full btn-secondary text-sm font-semibold">Add</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Pricing Section with Discount -->
@@ -1257,7 +1272,7 @@
                               (img) => `
                       <div class="relative group">
                         <img src="${img}" class="w-24 h-24 object-cover rounded-md border border-[var(--border)]" onerror="this.src='https://placehold.co/96x96/2a2a2a/a8a8a8?text=N/A';">
-                        <button type="button" class="remove-item absolute top-0 right-0 -mt-2 -mr-2 bg-red-600 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs opacity-0 hover:opacity-100">
+                        <button type="button" class="remove-item absolute top-0 right-0 -mt-2 -mr-2 bg-red-600 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs">
                           <i class="ph ph-x"></i>
                         </button>
                         <input type="hidden" value="${img}">
@@ -1288,7 +1303,7 @@
                         <div class="relative group flex items-center p-2 rounded-md bg-[var(--card-bg)]">
                           <span class="color-preview" style="background-color: ${color};"></span>
                           <input type="text" value="${color}" class="p-0 border-none bg-transparent w-24">
-                          <button type="button" class="remove-item text-red-400 opacity-0 hover:opacity-100">
+                          <button type="button" class="remove-item text-red-400">
                             <i class="ph ph-x-circle text-lg"></i>
                           </button>
                         </div>
@@ -1328,12 +1343,15 @@
                   <div class="flex items-center gap-2">
                     <select id="size-dropdown" class="form-select flex-1">
                       <option value="">Select a size</option>
-                      <option value="XS">XS</option>
-                      <option value="S">S</option>
-                      <option value="M">M</option>
-                      <option value="L">L</option>
-                      <option value="XL">XL</option>
-                      <option value="XXL">XXL</option>
+                      <option value="30">30</option>
+                      <option value="32">32</option>
+                      <option value="34">34</option>
+                      <option value="36">36</option>
+                      <option value="38">38</option>
+                      <option value="40">40</option>
+                      <option value="42">42</option>
+                      <option value="44">44</option>
+                      <option value="46">46</option>
                     </select>
                     <button type="button" id="add-size-dropdown-btn" class="px-4 py-2 rounded-full btn-secondary text-sm font-semibold">Add</button>
                   </div>
@@ -1484,13 +1502,23 @@
                 <div class="relative group flex items-center p-2 rounded-md bg-[var(--card-bg)]">
                   <span class="color-preview" style="background-color: ${colorValue};"></span>
                   <input type="text" value="${colorValue}" class="p-0 border-none bg-transparent w-24">
-                  <button type="button" class="remove-item text-red-400 opacity-0 hover:opacity-100">
+                  <button type="button" class="remove-item text-red-400">
                     <i class="ph ph-x-circle text-lg"></i>
                   </button>
                 </div>
               `;
               colorsList.insertAdjacentHTML("beforeend", colorPill);
               newColorInput.value = "";
+            }
+          });
+        }
+
+        // MODIFIED: Add event listener for removing color pills
+        if (colorsList) {
+          colorsList.addEventListener("click", (e) => {
+            const removeBtn = e.target.closest(".remove-item");
+            if (removeBtn) {
+              removeBtn.closest(".relative")?.remove();
             }
           });
         }
@@ -1576,7 +1604,7 @@
               const itemHtml = `
                     <div class="relative group">
                       <img src="${imageUrl}" class="w-24 h-24 object-cover rounded-md border border-[var(--border)]" onerror="this.src='https://placehold.co/96x96/2a2a2a/a8a8a8?text=N/A';">
-                      <button type="button" class="remove-item absolute top-0 right-0 -mt-2 -mr-2 bg-red-600 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs opacity-0 hover:opacity-100">
+                      <button type="button" class="remove-item absolute top-0 right-0 -mt-2 -mr-2 bg-red-600 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs">
                         <i class="ph ph-x"></i>
                       </button>
                       <input type="hidden" value="${imageUrl}">
@@ -1604,12 +1632,78 @@
           });
         }
 
+        // --- MODIFIED: Category Listeners ---
+        populateCategorySelect(isEdit ? product.category : null);
+
+        document
+          .getElementById("product-category-select")
+          ?.addEventListener("change", (e) => {
+            const container = document.getElementById("add-category-container");
+            if (e.target.value === "--add-new--") {
+              container?.classList.remove("hidden");
+              document.getElementById("new-category-name")?.focus();
+            } else {
+              container?.classList.add("hidden");
+            }
+          });
+
+        document
+          .getElementById("add-new-category-btn")
+          ?.addEventListener("click", async (e) => {
+            const btn = e.currentTarget;
+            const input = document.getElementById("new-category-name");
+            const newCatName = input.value.trim();
+
+            if (newCatName) {
+              btn.disabled = true;
+              btn.textContent = "Adding...";
+              const savedName = await saveNewCategory(newCatName); // saveNewCategory handles duplicate check
+              btn.disabled = false;
+              btn.textContent = "Add";
+
+              if (savedName) {
+                // Manually update global state for immediate UI response & duplicate checks
+                if (
+                  !allCategories.some(
+                    (c) => c.name.toLowerCase() === savedName.toLowerCase()
+                  )
+                ) {
+                  allCategories.push({ id: "", name: savedName });
+                  allCategories.sort((a, b) => a.name.localeCompare(b.name));
+                }
+
+                // Repopulate the select and set the new value
+                populateCategorySelect(savedName);
+
+                // Hide the add container
+                document
+                  .getElementById("add-category-container")
+                  ?.classList.add("hidden");
+                input.value = "";
+              }
+            }
+          });
+        // --- End of Category Listeners ---
+
         document
           .getElementById("back-to-products")
           ?.addEventListener("click", () => renderUI("products"));
         document
           .getElementById("product-form")
           ?.addEventListener("submit", handleFormSubmit);
+
+        // Prevent "Enter" key from submitting the form from an input field
+        document
+          .getElementById("product-form")
+          ?.addEventListener("keydown", (e) => {
+            if (
+              e.key === "Enter" &&
+              e.target.tagName.toLowerCase() === "input"
+            ) {
+              e.preventDefault();
+            }
+          });
+
         document
           .getElementById("cancel-form-btn")
           ?.addEventListener("click", () => renderUI("products"));
@@ -2211,7 +2305,7 @@
                 <header class="flex justify-between items-start pb-8 border-b border-[var(--border)]">
                     <div>
                         <h1 class="text-4xl font-bold tracking-widest uppercase font-heading text-[var(--accent)]">NOVOFITBD</h1>
-                        <p class="text-sm text-[var(--secondary-text)]">123 Luxury Lane, Fashion City, 10001</p>
+                        <p class="text-sm text-[var(--secondary-text)]">788, Dighila Para, Rajendrapur Cantonment, Gazipur, Bangladesh</p>
                     </div>
                     <div>
                         <h2 class="text-3xl font-heading text-right">Invoice</h2>
@@ -2447,6 +2541,9 @@
             updateDashboardCharts(); // Update again once products are loaded
           }
         });
+
+        // MODIFIED: Start the categories listener
+        listenForCategories();
       }
 
       async function handleChangePassword(e) {
@@ -2518,7 +2615,12 @@
       }
 
       function updateDashboardCharts() {
-        if (!allOrdersInView.length && !allProductsForCharts.length) return;
+        if (!allOrdersInView.length && !allProductsForCharts.length) {
+          // Still render the charts, but as empty
+          renderRevenueChart([], [], []);
+          renderCategoryChart([], []);
+          return;
+        }
 
         const now = dayjs();
         let startDate;
@@ -2540,10 +2642,24 @@
             startDate = now.subtract(30, "day");
         }
 
-        const filteredOrders = allOrdersInView.filter((order) => {
+        // --- Dashboard Data Logic ---
+
+        // ALL orders within the date filter, regardless of status (for products count)
+        const allFilteredOrders = allOrdersInView.filter((order) => {
+          const orderDate = dayjs(order.timestamp?.toDate());
+          return orderDate.isAfter(startDate);
+        });
+
+        // ONLY DELIVERED orders within the date filter (for revenue, profit, and charts)
+        const deliveredOrders = allOrdersInView.filter((order) => {
           const orderDate = dayjs(order.timestamp?.toDate());
           return order.status === "Delivered" && orderDate.isAfter(startDate);
         });
+
+        // ALL pending orders (not date-filtered)
+        const pendingOrders = allOrdersInView.filter(
+          (order) => (order.status || "Pending") === "Pending"
+        );
 
         const filteredProducts = allProductsForCharts.filter((product) => {
           const productDate = dayjs(product.dateAdded);
@@ -2553,8 +2669,8 @@
         // Update stat cards
         const totalRevenueEl = document.getElementById("total-revenue");
         const totalProfitEl = document.getElementById("total-profit");
-        const totalOrdersCountEl = document.getElementById(
-          "total-orders-count"
+        const pendingOrdersCountEl = document.getElementById(
+          "pending-orders-count"
         );
         const totalProductsCountEl = document.getElementById(
           "total-products-count"
@@ -2562,7 +2678,8 @@
 
         let totalRevenue = 0;
         let totalCost = 0;
-        filteredOrders.forEach((order) => {
+        // Calculate revenue and profit ONLY from delivered orders
+        deliveredOrders.forEach((order) => {
           totalRevenue += order.totals?.total || 0;
           order.cart?.forEach((item) => {
             const product = allProductsForCharts.find(
@@ -2579,14 +2696,15 @@
           totalRevenueEl.textContent = totalRevenue.toFixed(2);
         if (totalProfitEl)
           totalProfitEl.textContent = (totalRevenue - totalCost).toFixed(2);
-        if (totalOrdersCountEl)
-          totalOrdersCountEl.textContent = filteredOrders.length;
+        if (pendingOrdersCountEl)
+          pendingOrdersCountEl.textContent = pendingOrders.length;
         if (totalProductsCountEl)
-          totalProductsCountEl.textContent = filteredProducts.length;
+          totalProductsCountEl.textContent = filteredProducts.length; // This remains products, not orders
 
         // --- Process data for charts ---
+        // Use ONLY deliveredOrders for the charts
         const dailyData = {};
-        filteredOrders.forEach((order) => {
+        deliveredOrders.forEach((order) => {
           const date = dayjs(order.timestamp.toDate()).format("YYYY-MM-DD");
           if (!dailyData[date]) {
             dailyData[date] = { revenue: 0, profit: 0 };
@@ -2618,8 +2736,9 @@
         renderRevenueChart(chartLabels, revenueData, profitData);
 
         // Category Sales Chart
+        // Use ONLY deliveredOrders for category sales
         const categorySales = {};
-        filteredOrders.forEach((order) => {
+        deliveredOrders.forEach((order) => {
           order.cart?.forEach((item) => {
             const productSnapshot = item.product;
             if (productSnapshot && productSnapshot.category) {
@@ -2636,6 +2755,46 @@
         const categoryLabels = Object.keys(categorySales);
         const categoryData = Object.values(categorySales);
         renderCategoryChart(categoryLabels, categoryData);
+
+        // --- Populate Recent Orders ---
+        const recentOrdersList = document.getElementById("recent-orders-list");
+        if (recentOrdersList) {
+          // Get 5 most recent orders from the global state (which is already sorted)
+          const recentOrders = allOrdersInView.slice(0, 5);
+          if (recentOrders.length === 0) {
+            recentOrdersList.innerHTML =
+              '<p class="text-[var(--secondary-text)]">No orders found.</p>';
+          } else {
+            recentOrdersList.innerHTML = recentOrders
+              .map((order) => {
+                const status = order.status || "Pending";
+                const total = (order.totals?.total || 0).toFixed(2);
+                const customerName = `${
+                  order.shippingAddress?.firstName || ""
+                } ${order.shippingAddress?.lastName || "N/A"}`;
+                const timeAgo = dayjs(order.timestamp?.toDate()).fromNow();
+
+                return `
+                        <div class="flex items-center justify-between p-4 rounded-lg bg-[var(--card-bg)]">
+                            <div class="flex-1">
+                                <p class="font-semibold text-sm">${customerName}</p>
+                                <p class="font-mono text-xs text-[var(--secondary-text)]">#${
+                                  order.id
+                                }</p>
+                            </div>
+                            <div class="flex-1 text-center">
+                                <span class="order-status-pill status-${status.toLowerCase()}">${status}</span>
+                            </div>
+                            <div class="flex-1 text-right">
+                                <p class="font-semibold text-[var(--accent)]">&#2547;${total}</p>
+                                <p class="text-xs text-[var(--secondary-text)]">${timeAgo}</p>
+                            </div>
+                        </div>
+                    `;
+              })
+              .join("");
+          }
+        }
       }
 
       function renderRevenueChart(labels, revenueData, profitData) {
@@ -2816,6 +2975,125 @@
           }
         );
       }
+
+      // --- MODIFIED: Added Category Functions ---
+
+      function listenForCategories() {
+        if (!db) return;
+        if (categoriesUnsubscribe) categoriesUnsubscribe();
+        const categoriesRef = collection(
+          db,
+          "artifacts",
+          "aurora-data",
+          "public",
+          "data",
+          "productCategories"
+        );
+        const categoriesQuery = query(categoriesRef, orderBy("name"));
+
+        categoriesUnsubscribe = onSnapshot(
+          categoriesQuery,
+          (snapshot) => {
+            allCategories = snapshot.docs.map((doc) => ({
+              id: doc.id,
+              name: doc.data().name,
+            }));
+            // If the product form is open, update its select box
+            if (
+              currentView === "add_product" ||
+              currentView === "edit_product"
+            ) {
+              updateCategorySelect();
+            }
+          },
+          (error) => {
+            console.error("Error listening for categories:", error);
+          }
+        );
+      }
+
+      function updateCategorySelect() {
+        const select = document.getElementById("product-category-select");
+        if (!select) return;
+        // Don't update if the user is in the middle of adding a new one
+        if (
+          document
+            .getElementById("add-category-container")
+            ?.classList.contains("hidden") === false
+        ) {
+          return;
+        }
+        const currentVal = select.value;
+        populateCategorySelect(currentVal);
+      }
+
+      function populateCategorySelect(selectedCategoryName) {
+        const select = document.getElementById("product-category-select");
+        if (!select) return;
+
+        select.innerHTML = ""; // Clear options
+
+        const defaultOption = new Option("Select Category", "");
+        select.add(defaultOption);
+
+        allCategories.forEach((cat) => {
+          const option = new Option(cat.name, cat.name);
+          if (cat.name === selectedCategoryName) {
+            option.selected = true;
+          }
+          select.add(option);
+        });
+
+        const addNewOption = new Option("Add New Category...", "--add-new--");
+        select.add(addNewOption);
+
+        // Ensure the "Add New" option is selected if it was the one passed
+        if (selectedCategoryName === "--add-new--") {
+          select.value = "--add-new--";
+        }
+      }
+
+      async function saveNewCategory(categoryName) {
+        if (!db) return;
+        // Check for duplicates (case-insensitive) again just before saving
+        const normalizedName = categoryName.trim();
+        const exists = allCategories.some(
+          (cat) => cat.name.toLowerCase() === normalizedName.toLowerCase()
+        );
+        if (exists) {
+          openMessageModal({
+            title: "Error",
+            message: "This category already exists.",
+            isError: true,
+          });
+          return null;
+        }
+
+        try {
+          const categoriesRef = collection(
+            db,
+            "artifacts",
+            "aurora-data",
+            "public",
+            "data",
+            "productCategories"
+          );
+          await addDoc(categoriesRef, {
+            name: normalizedName,
+            createdAt: Date.now(),
+          });
+          return normalizedName; // Return the saved name
+        } catch (error) {
+          console.error("Error saving new category:", error);
+          openMessageModal({
+            title: "Error",
+            message: "Could not save new category.",
+            isError: true,
+          });
+          return null;
+        }
+      }
+      // --- End of Category Functions ---
 
       function displayProducts(products) {
         const tableBody = document.getElementById("products-table-body");
@@ -3514,7 +3792,7 @@
           basePrice,
           discountPercentage,
           department: document.getElementById("product-department")?.value,
-          category: document.getElementById("product-category")?.value,
+          category: document.getElementById("product-category-select")?.value, // MODIFIED
           status: "Draft",
           description: document.getElementById("product-description")?.value,
           details: document.getElementById("product-details")?.value,
@@ -3906,72 +4184,85 @@
       }
 
       // --- Event Listeners and Initial Call ---
-      navLinks.forEach((link) => {
-        link.addEventListener("click", (e) => {
-          e.preventDefault();
-          const view = e.currentTarget.getAttribute("data-view");
-          renderUI(view);
-        });
-      });
+      // MODIFIED: Wrapped all initializers in DOMContentLoaded
+      document.addEventListener("DOMContentLoaded", () => {
+        // --- Assign Elements ---
+        loginSection = document.getElementById("login-section");
+        adminPanel = document.getElementById("admin-panel");
+        loginForm = document.getElementById("login-form");
+        loginError = document.getElementById("login-error");
+        logoutBtn = document.getElementById("logout-btn");
+        contentArea = document.getElementById("content-area");
+        navLinks = document.querySelectorAll(".admin-link");
 
-      const notificationBell = document.getElementById("notification-bell");
-      const notificationDropdown = document.getElementById(
-        "notification-dropdown"
-      );
-      const notificationBadge = document.getElementById("notification-badge");
-
-      if (notificationBell && notificationDropdown && notificationBadge) {
-        notificationBell.addEventListener("click", () => {
-          notificationDropdown.classList.toggle("open");
-        });
-      }
-
-      // --- Mobile Sidebar Logic ---
-      const hamburgerBtn = document.getElementById("hamburger-btn");
-      const sidebarCloseBtn = document.getElementById("sidebar-close-btn");
-      const sidebar = document.getElementById("admin-sidebar");
-      const overlay = document.getElementById("sidebar-overlay");
-
-      hamburgerBtn?.addEventListener("click", () => {
-        sidebar?.classList.remove("-translate-x-full");
-        sidebar?.classList.add("translate-x-0");
-        overlay?.classList.remove("hidden");
-      });
-
-      sidebarCloseBtn?.addEventListener("click", () => {
-        sidebar?.classList.add("-translate-x-full");
-        sidebar?.classList.remove("translate-x-0");
-        overlay?.classList.add("hidden");
-      });
-
-      overlay?.addEventListener("click", () => {
-        sidebar?.classList.add("-translate-x-full");
-        sidebar?.classList.remove("translate-x-0");
-        overlay?.classList.add("hidden");
-      });
-
-      // Close dropdown if clicked outside
-      window.addEventListener("click", (e) => {
-        if (
-          notificationDropdown &&
-          !notificationBell.contains(e.target) &&
-          !notificationDropdown.contains(e.target)
-        ) {
-          notificationDropdown.classList.remove("open");
+        // --- Add Event Listeners for Login/Logout ---
+        if (loginForm) {
+          loginForm.addEventListener("submit", handleLogin);
         }
+        if (logoutBtn) {
+          logoutBtn.addEventListener("click", handleLogout);
+        }
+
+        navLinks.forEach((link) => {
+          link.addEventListener("click", (e) => {
+            e.preventDefault();
+            const view = e.currentTarget.getAttribute("data-view");
+            renderUI(view);
+          });
+        });
+
+        const notificationBell = document.getElementById("notification-bell");
+        const notificationDropdown = document.getElementById(
+          "notification-dropdown"
+        );
+        const notificationBadge = document.getElementById("notification-badge");
+
+        if (notificationBell && notificationDropdown && notificationBadge) {
+          notificationBell.addEventListener("click", () => {
+            notificationDropdown.classList.toggle("open");
+          });
+        }
+
+        // --- Mobile Sidebar Logic ---
+        const hamburgerBtn = document.getElementById("hamburger-btn");
+        const sidebarCloseBtn = document.getElementById("sidebar-close-btn");
+        const sidebar = document.getElementById("admin-sidebar");
+        const overlay = document.getElementById("sidebar-overlay");
+
+        hamburgerBtn?.addEventListener("click", () => {
+          sidebar?.classList.remove("-translate-x-full");
+          sidebar?.classList.add("translate-x-0");
+          overlay?.classList.remove("hidden");
+        });
+
+        sidebarCloseBtn?.addEventListener("click", () => {
+          sidebar?.classList.add("-translate-x-full");
+          sidebar?.classList.remove("translate-x-0");
+          overlay?.classList.add("hidden");
+        });
+
+        overlay?.addEventListener("click", () => {
+          sidebar?.classList.add("-translate-x-full");
+          sidebar?.classList.remove("translate-x-0");
+          overlay?.classList.add("hidden");
+        });
+
+        // Close dropdown if clicked outside
+        window.addEventListener("click", (e) => {
+          if (
+            notificationDropdown &&
+            notificationBell && // Added check
+            !notificationBell.contains(e.target) &&
+            !notificationDropdown.contains(e.target)
+          ) {
+            notificationDropdown.classList.remove("open");
+          }
+        });
+
+        // --- Initialize App ---
+        setupFirebase();
+        setupNotificationClickListener(); // Set up the new listener
       });
-
-      // --- Add Event Listeners for Login/Logout ---
-      if (loginForm) {
-        loginForm.addEventListener("submit", handleLogin);
-      }
-      if (logoutBtn) {
-        logoutBtn.addEventListener("click", handleLogout);
-      }
-
-      // --- Initialize App ---
-      setupFirebase();
-      setupNotificationClickListener(); // Set up the new listener
     </script>
   </body>
 </html>
