@@ -3,36 +3,39 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NovofitBD - Sustainable & Timeless Fashion</title>
-    <!-- SEO Optimization: Meta Tags -->
+
+    <!-- ========================= SEO Meta Tags ========================= -->
+    <title>NovofitBD - Elevate Your Essence</title>
     <meta
       name="description"
-      content="Discover NovofitBD, a brand for sustainable and timeless fashion. Shop our latest collections of modern apparel and accessories for men, women, and Girls, crafted with conscious intent."
+      content="NovofitBD - Redefining fashion with timeless elegance and modern craftsmanship. Shop our exclusive collections."
     />
     <meta
       name="keywords"
-      content="NovofitBD, fashion, clothing, apparel, sustainable fashion, timeless design, conscious craft, men's clothing, women's clothing, accessories, online store, shop"
+      content="fashion, luxury, streetwear, bangladesh, novofit"
     />
-    <!-- The meta robots tag instructs search engines to index and follow links on the page. -->
-    <meta name="robots" content="index, follow" />
+    <meta name="author" content="NovofitBD" />
+
+    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Poppins:wght@200;300;400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="shortcut icon" href="logo.png" type="image/x-icon" />
+    <script src="https://unpkg.com/@phosphor-icons/web@2.0.3"></script>
 
     <style>
       :root {
-        --background: #050505;
-        --text: #e0e0e0;
+        --background: #0d0d0d;
+        --text: #e8e8e8;
         --accent: #ffffff;
         --border: #2a2a2a;
+        --secondary-text: #a8a8a8;
       }
 
-      /* Lenis Smooth Scroll Styles */
+      /* Smooth Scroll Setup */
       html.lenis {
         height: auto;
       }
@@ -48,15 +51,9 @@
         background-color: var(--background);
         color: var(--text);
         overflow-x: hidden;
-        font-weight: 400;
+        margin: 0;
       }
 
-      /* Add this class to body when mobile menu is open to disable scrolling */
-      body.no-scroll {
-        overflow: hidden;
-      }
-
-      /* Typography Helpers */
       .font-heading {
         font-family: "Cormorant Garamond", serif;
       }
@@ -64,103 +61,7 @@
         font-family: "Poppins", sans-serif;
       }
 
-      /* --- PRELOADER --- */
-      #preloader {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: var(--background);
-        z-index: 10000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--accent);
-      }
-      #preloader-content {
-        text-align: center;
-      }
-      #preloader-brand {
-        font-size: 5vw;
-        font-weight: 600;
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      #preloader-counter {
-        font-size: 10vw;
-        font-weight: 600;
-      }
-
-      /* --- HERO --- */
-      .hero-section {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .hero-video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        z-index: -1;
-        filter: brightness(0.6);
-        transform: scale(1.1);
-      }
-
-      .hero-title-line {
-        overflow: hidden;
-      }
-
-      .hero-title {
-        font-size: 15vw;
-        font-weight: 100;
-        line-height: 0.9;
-        color: var(--accent);
-        transform: translateY(100%);
-      }
-
-      .scroll-down {
-        position: absolute;
-        bottom: 5vh;
-        opacity: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      .scroll-down-icon {
-        width: 24px;
-        height: 24px;
-        animation: bounce 2s infinite;
-      }
-
-      @keyframes bounce {
-        0%,
-        20%,
-        50%,
-        80%,
-        100% {
-          transform: translateY(0);
-        }
-        40% {
-          transform: translateY(-10px);
-        }
-        60% {
-          transform: translateY(-5px);
-        }
-      }
-
-      /* --- CUSTOM CURSOR --- */
+      /* Custom Cursor */
       .cursor {
         position: fixed;
         width: 12px;
@@ -169,11 +70,9 @@
         background: var(--accent);
         pointer-events: none;
         mix-blend-mode: difference;
-        transition: transform 0.2s ease-out, width 0.3s ease, height 0.3s ease;
         z-index: 9999;
-        transform-origin: center center;
+        transform: translate(-50%, -50%);
       }
-
       .cursor-follower {
         position: fixed;
         width: 40px;
@@ -182,1009 +81,617 @@
         border-radius: 50%;
         pointer-events: none;
         mix-blend-mode: difference;
-        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
         z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: transform 0.1s;
       }
-
       .cursor-grow {
-        transform: scale(3);
+        transform: translate(-50%, -50%) scale(2.5);
         background: var(--accent);
+        mix-blend-mode: difference;
       }
 
-      /* --- MOBILE MENU FIX --- */
-      #mobile-menu {
+      /* Navigation & Overlays (Copied from Shop) */
+      #mobile-menu,
+      #search-overlay {
         position: fixed;
         top: 0;
         right: 0;
         width: 100%;
         height: 100vh;
         background-color: var(--background);
-        z-index: 5000; /* Increased z-index to ensure it's on top */
+        z-index: 5000;
         transform: translateX(100%);
-        transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+        transition: transform 0.6s cubic-bezier(0.7, 0, 0.3, 1);
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        text-align: center;
       }
-
+      #search-overlay {
+        transform: translateY(-100%);
+      }
       #mobile-menu.open {
         transform: translateX(0);
       }
-
-      .mobile-nav-link {
-        font-size: 2.5rem;
-        font-family: "Cormorant Garamond", serif;
-        font-weight: 600;
-        text-transform: uppercase;
-        line-height: 1.5;
-        color: var(--text); /* Explicitly set text color */
-        opacity: 0; /* Initial state for animation */
-        transform: translateY(20px); /* Initial state for animation */
-        transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Add transition for animation */
-      }
-
-      /* Animation for the links when the menu is open */
-      #mobile-menu.open .mobile-nav-link {
-        opacity: 1;
+      #search-overlay.open {
         transform: translateY(0);
       }
 
-      /* Stagger the animation for each link */
-      #mobile-menu.open .mobile-nav-link:nth-child(1) {
-        transition-delay: 0.1s;
-      }
-      #mobile-menu.open .mobile-nav-link:nth-child(2) {
-        transition-delay: 0.2s;
-      }
-      #mobile-menu.open .mobile-nav-link:nth-child(3) {
-        transition-delay: 0.3s;
-      }
-      #mobile-menu.open .mobile-nav-link:nth-child(4) {
-        transition-delay: 0.4s;
-      }
-
-      .close-menu-btn {
-        position: absolute;
-        top: 2rem;
-        right: 2rem;
-        cursor: pointer;
-        z-index: 5001; /* Must be higher than the menu itself */
-      }
-      .hamburger-btn {
-        cursor: pointer;
-      }
-
-      /* --- PRODUCT CARD --- */
-      .product-card {
+      /* Hero Section Styles */
+      .hero-section {
+        height: 100vh;
         position: relative;
         overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
-      .product-card .add-to-cart-btn {
-        transform: translateX(-50%) translateY(100%);
-        transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      .hero-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 120%; /* Taller for parallax */
+        object-fit: cover;
+        opacity: 0.6;
+        z-index: -1;
       }
-      .product-card:hover .add-to-cart-btn {
-        transform: translateX(-50%) translateY(0);
+      .hero-content h1 {
+        line-height: 0.9;
+        letter-spacing: -0.02em;
+        opacity: 0;
+        transform: translateY(30px);
       }
+      .hero-line {
+        width: 1px;
+        height: 0;
+        background: rgba(255, 255, 255, 0.3);
+        margin: 2rem auto;
+      }
+
+      /* Marquee */
+      .marquee-container {
+        overflow: hidden;
+        white-space: nowrap;
+        padding: 2rem 0;
+        background: var(--accent);
+        color: var(--background);
+      }
+      .marquee-content {
+        display: inline-block;
+        animation: scroll 20s linear infinite;
+      }
+      @keyframes scroll {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* Categories Grid */
+      .category-card {
+        position: relative;
+        overflow: hidden;
+        height: 600px;
+        transition: all 0.5s ease;
+      }
+      .category-card img {
+        transition: transform 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .category-card:hover img {
+        transform: scale(1.1);
+      }
+      .category-overlay {
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+      }
+
+      /* Magnetic Effect Class */
+      .magnetic-item {
+        display: inline-block;
+      }
+
+      /* Product Card (Matches Shop) */
       .product-card img {
-        transition: transform 0.5s ease;
+        transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
       }
       .product-card:hover img {
         transform: scale(1.05);
       }
 
-      /* --- ADD TO CART NOTIFICATION --- */
+      .reveal-text {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+      }
+      .char {
+        display: inline-block;
+        transform: translateY(100%);
+        opacity: 0;
+      }
+
+      /* Cart Notification */
       #cart-notification {
         position: fixed;
         bottom: 2rem;
         left: 50%;
         transform: translate(-50%, 200%);
-        background-color: #1a1a1a;
-        color: var(--text);
+        background-color: white;
+        color: black;
         padding: 1rem 2rem;
         border-radius: 9999px;
         z-index: 5000;
         display: flex;
         align-items: center;
         gap: 0.75rem;
-        border: 1px solid var(--border);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-      }
-
-      /* --- ANIMATION & INTERACTION HELPERS --- */
-      .img-reveal-container {
-        position: relative;
-        overflow: hidden;
-        visibility: hidden;
-        border-radius: 0.75rem;
-      }
-      .img-reveal-mask {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: #c0c0c0;
-        z-index: 2;
-      }
-      .magnetic-item {
-        display: inline-block;
-        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-
-      /* --- LOOKBOOK --- */
-      .lookbook-horizontal-container {
-        height: 300vh; /* This controls the scroll duration */
-        position: relative;
-      }
-      .lookbook-sticky-container {
-        position: sticky;
-        top: 0;
-        height: 100vh;
-        width: 100%;
-        overflow: hidden;
-      }
-      .lookbook-horizontal {
-        height: 100%;
-        width: max-content;
-        display: flex;
-        flex-wrap: nowrap;
-        align-items: center;
-      }
-      .lookbook-panel {
-        min-width: 35vw;
-        height: 75vh;
-        margin: 0 4vw;
-        position: relative;
-        overflow: hidden;
-        border-radius: 1rem;
-      }
-      .lookbook-panel img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transform: scale(1.15);
-      }
-
-      /* New styling for the "Shop By Category" section */
-      .category-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-
-      @media (min-width: 768px) {
-        .category-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-
-      @media (min-width: 1024px) {
-        .category-grid {
-          grid-template-columns: repeat(4, 1fr);
-        }
-      }
-
-      .category-card {
-        position: relative;
-        overflow: hidden;
-        border-radius: 1rem;
-        cursor: pointer;
-        transition: transform 0.3s ease;
-      }
-
-      .category-card:hover {
-        transform: scale(1.02);
-      }
-
-      .category-card img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-      }
-
-      .category-card:hover img {
-        transform: scale(1.05);
-      }
-
-      .category-overlay {
-        position: absolute;
-        inset: 0;
-        background-color: rgba(0, 0, 0, 0.183);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background-color 0.3s ease;
-      }
-
-      .category-card:hover .category-overlay {
-        background-color: rgba(0, 0, 0, 0.6);
-      }
-
-      .category-text {
-        color: #fff;
-        font-family: "Cormorant Garamond", serif;
-        font-size: 2.5rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        transform: translateY(100%);
-        opacity: 0;
-        transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-          opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      }
-
-      .category-card:hover .category-text {
-        transform: translateY(0);
-        opacity: 1;
-      }
-
-      .category-card:nth-child(1) {
-        grid-row: span 2;
-        grid-column: span 2;
-        aspect-ratio: 1/1;
-      }
-      .category-card:nth-child(2) {
-        aspect-ratio: 1/1;
-      }
-      .category-card:nth-child(3) {
-        aspect-ratio: 1/1;
-      }
-      .category-card:nth-child(4) {
-        grid-column: span 2;
-        aspect-ratio: 2/1;
-      }
-
-      @media (min-width: 768px) and (max-width: 1023px) {
-        .category-card:nth-child(1) {
-          grid-column: span 1;
-          grid-row: span 1;
-        }
-        .category-card:nth-child(4) {
-          grid-column: span 1;
-          grid-row: span 1;
-        }
-      }
-      @media (max-width: 767px) {
-        .category-grid {
-          grid-template-columns: repeat(2, 1fr);
-        }
-        .category-card:nth-child(1) {
-          grid-column: span 2;
-          aspect-ratio: 1.5/1;
-        }
-        .category-card:nth-child(2) {
-          grid-column: span 1;
-          aspect-ratio: 1/1;
-        }
-        .category-card:nth-child(3) {
-          grid-column: span 1;
-          aspect-ratio: 1/1;
-        }
-        .category-card:nth-child(4) {
-          grid-column: span 2;
-          aspect-ratio: 1.5/1;
-        }
-        /* New mobile-specific styles to always show text */
-        .category-text {
-          transform: translateY(0);
-          opacity: 1;
-          font-size: 2rem; /* Adjusted for better mobile fit */
-          font-weight: 100;
-        }
-        .category-overlay {
-          background-color: rgba(0, 0, 0, 0.39);
-        }
-      }
-
-      /* --- FAQ SECTION --- */
-      .faq-item {
-        border-bottom: 1px solid var(--border);
-      }
-
-      .faq-btn {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        padding: 2rem 0;
-        text-align: left;
-        color: var(--text);
-        font-size: 1.5rem;
-        font-family: "Cormorant Garamond", serif;
-        font-weight: 600;
-        cursor: pointer;
-        transition: color 0.3s ease;
-      }
-
-      .faq-btn:hover {
-        color: var(--accent);
-      }
-
-      .faq-icon-wrapper {
-        position: relative;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-
-      /* Create the plus sign with pseudo-elements */
-      .faq-icon-wrapper::before,
-      .faq-icon-wrapper::after {
-        content: "";
-        position: absolute;
-        background-color: var(--text);
-      }
-      .faq-icon-wrapper::before {
-        width: 2px;
-        height: 100%;
-      }
-      .faq-icon-wrapper::after {
-        width: 100%;
-        height: 2px;
-      }
-
-      .faq-answer {
-        overflow: hidden;
-        height: 0;
-        transition: height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        will-change: height;
-      }
-
-      .faq-answer-content {
-        padding-bottom: 2rem;
-        color: #b3b3b3;
-        max-width: 80%;
-        font-weight: 300;
-        line-height: 1.75;
+        font-family: "Poppins", sans-serif;
+        font-size: 0.875rem;
+        font-weight: 500;
       }
     </style>
-    <!-- SEO Optimization: JSON-LD Schema for rich results -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "NovofitBD",
-        "url": "https://www.novofitbd.com",
-        "logo": "https://www.novofitbd.com/logo.png",
-        "contactPoint": {
-          "@type": "ContactPoint",
-          "telephone": "+1-123-456-7890",
-          "contactType": "customer service"
-        },
-        "sameAs": [
-          "https://www.instagram.com/NovofitBD_fashion",
-          "https://twitter.com/NovofitBD_fashion",
-          "https://www.facebook.com/NovofitBD_fashion"
-        ]
-      }
-    </script>
   </head>
-  <body class="antialiased">
-    <!-- Preloader -->
-    <div id="preloader">
-      <div id="preloader-content" class="font-heading">
-        <div id="preloader-counter">0</div>
-        <div id="preloader-brand">NovofitBD</div>
-      </div>
-    </div>
-
+  <body class="antialiased selection:bg-white selection:text-black">
     <!-- Custom Cursor -->
     <div class="cursor"></div>
     <div class="cursor-follower"></div>
 
+    <!-- Loading Screen -->
+    <div
+      id="loader"
+      class="fixed inset-0 bg-black z-[9999] flex items-center justify-center transition-opacity duration-1000"
+    >
+      <div class="text-center">
+        <h1
+          class="font-heading text-4xl md:text-6xl text-white tracking-widest uppercase animate-pulse"
+        >
+          Novofit
+        </h1>
+      </div>
+    </div>
+
     <!-- Add to Cart Notification -->
     <div id="cart-notification">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="text-green-400"
-      >
-        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-        <polyline points="22 4 12 14.01 9 11.01"></polyline>
-      </svg>
+      <i class="ph-fill ph-check-circle text-green-600 text-xl"></i>
       <span>Item added to cart</span>
     </div>
 
-    <!-- Mobile Navigation Menu -->
-    <div id="mobile-menu" class="fixed inset-0 bg-black z-5000 p-8 md:hidden">
-      <button id="close-menu" class="absolute top-8 right-8 text-white">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="32"
-          height="32"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.5"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="magnetic-item"
-        >
-          <path d="M18 6L6 18M6 6l12 12" />
-        </svg>
+    <!-- Search Overlay -->
+    <div id="search-overlay" class="p-8">
+      <button
+        id="close-search-btn"
+        class="absolute top-8 right-8 text-white z-50"
+      >
+        <i class="ph ph-x text-3xl magnetic-item"></i>
       </button>
-      <nav class="flex flex-col items-center justify-center h-full">
-        <ul class="space-y-6">
-          <li>
-            <a href="home" class="mobile-nav-link hover-link magnetic-item"
-              >Home</a
-            >
-          </li>
-          <li>
-            <a href="shop" class="mobile-nav-link hover-link magnetic-item"
-              >Shop</a
-            >
-          </li>
-          <li>
-            <a href="gallery" class="mobile-nav-link hover-link magnetic-item"
-              >Gallery</a
-            >
-          </li>
-          <li>
-            <a href="contact" class="mobile-nav-link hover-link magnetic-item"
-              >Contact</a
-            >
-          </li>
-          <li>
-            <a
-              href="our-studio"
-              class="mobile-nav-link hover-link magnetic-item"
-              >Studio</a
-            >
-          </li>
-        </ul>
+      <div class="w-full max-w-3xl text-center">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Search..."
+          class="w-full bg-transparent border-b border-gray-700 text-4xl md:text-6xl text-center text-white focus:outline-none font-heading py-4"
+        />
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="p-8">
+      <button id="close-menu" class="absolute top-8 right-8 text-white z-50">
+        <i class="ph ph-x text-3xl magnetic-item"></i>
+      </button>
+      <nav class="flex flex-col space-y-8 text-center">
+        <a
+          href="home"
+          class="font-heading text-4xl uppercase hover:text-gray-400 transition-colors"
+          >Home</a
+        >
+        <a
+          href="shop"
+          class="font-heading text-4xl uppercase hover:text-gray-400 transition-colors"
+          >Shop</a
+        >
+        <a
+          href="gallery"
+          class="font-heading text-4xl uppercase hover:text-gray-400 transition-colors"
+          >Gallery</a
+        >
+        <a
+          href="contact"
+          class="font-heading text-4xl uppercase hover:text-gray-400 transition-colors"
+          >Contact</a
+        >
       </nav>
     </div>
 
     <!-- Header -->
     <header
-      class="fixed top-0 left-0 w-full z-50 p-6 md:p-8 transition-all duration-500"
+      class="fixed top-0 left-0 w-full z-40 p-6 md:p-8 transition-all duration-500 bg-transparent"
     >
       <div class="container mx-auto flex justify-between items-center">
-        <a href="home">
+        <a href="home" class="z-50 mix-blend-difference text-white">
           <div
             class="text-xl font-bold tracking-widest uppercase magnetic-item font-heading"
           >
             NovofitBD
           </div>
         </a>
-        <!-- Desktop Navigation -->
+
+        <!-- Desktop Nav -->
         <nav
-          class="hidden md:flex items-center space-x-10 text-sm uppercase tracking-wider font-light"
+          class="hidden md:flex items-center space-x-12 mix-blend-difference text-white"
         >
-          <a href="home" class="hover-link magnetic-item">Home</a>
-          <a href="shop" class="hover-link magnetic-item">Shop</a>
-          <a href="gallery" class="hover-link magnetic-item">Gallery</a>
-          <a href="contact" class="hover-link magnetic-item">Contact</a>
-          <a href="our-studio" class="hover-link magnetic-item">Studio</a>
-        </nav>
-        <div class="flex items-center space-x-6">
           <a
-            href="cart"
-            class="hover-link magnetic-item relative hover:text-gray-400 transition-colors"
+            href="home"
+            class="text-sm uppercase tracking-widest hover-link magnetic-item"
+            >Home</a
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.5"
-                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-              />
-            </svg>
+          <a
+            href="shop"
+            class="text-sm uppercase tracking-widest hover-link magnetic-item"
+            >Shop</a
+          >
+          <a
+            href="gallery"
+            class="text-sm uppercase tracking-widest hover-link magnetic-item"
+            >Gallery</a
+          >
+          <a
+            href="contact"
+            class="text-sm uppercase tracking-widest hover-link magnetic-item"
+            >Contact</a
+          >
+        </nav>
+
+        <!-- Icons -->
+        <div
+          class="flex items-center space-x-6 mix-blend-difference text-white"
+        >
+          <button id="open-search-btn" class="hover-link magnetic-item">
+            <i class="ph ph-magnifying-glass text-xl"></i>
+          </button>
+          <a href="cart" class="hover-link magnetic-item relative">
+            <i class="ph ph-shopping-bag text-xl"></i>
             <span
               id="cart-count"
-              class="absolute -top-2 -right-2 bg-white text-black text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold"
+              class="absolute -top-2 -right-2 bg-white text-black text-[10px] h-4 w-4 rounded-full flex items-center justify-center font-bold"
               >0</span
             >
           </a>
-          <!-- Hamburger Button for Mobile -->
-          <button
-            id="hamburger-btn"
-            class="magnetic-item md:hidden z-5001"
-            aria-label="Open mobile menu"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="1.5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M3 12h18M3 6h18M3 18h18" />
-            </svg>
+          <button id="hamburger-btn" class="md:hidden magnetic-item">
+            <i class="ph ph-list text-2xl"></i>
           </button>
         </div>
       </div>
     </header>
 
-    <main id="main-content" class="opacity-0">
+    <main id="smooth-wrapper">
       <!-- Hero Section -->
       <section class="hero-section">
-        <video class="hero-video" autoplay loop muted playsinline>
-          <source
-            src="https://videos.pexels.com/video-files/3753687/3753687-uhd_2560_1440_25fps.mp4"
-            type="video/mp4"
-          />
-        </video>
-        <!-- SEO Optimization: Use a hidden h1 with a relevant keyword phrase -->
-        <h1 class="sr-only">
-          NovofitBD - Sustainable & Timeless Fashion, The Future of Apparel
-        </h1>
-        <div class="relative z-10 font-heading">
-          <span class="hero-title-line"
-            ><span class="hero-title">Ethereal</span></span
-          >
-        </div>
-        <!-- New Shop Now Button for Mobile Only -->
-        <a
-          href="shop"
-          class="mt-8 z-10 hover-link magnetic-item inline-block bg-white text-black px-8 py-4 rounded-full font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors text-sm"
-          >Shop Now</a
-        >
-        <div class="scroll-down">
-          <span class="text-sm font-light uppercase tracking-wider"
-            >Scroll</span
-          >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="scroll-down-icon text-white"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="1.5"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M19 14l-7 7m0 0l-7-7m7 7V3"
-            />
-          </svg>
-        </div>
-      </section>
+        <img
+          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?q=80&w=2070&auto=format&fit=crop"
+          alt="Novofit Hero"
+          class="hero-bg"
+          data-speed="0.5"
+        />
+        <div class="absolute inset-0 bg-black/30"></div>
 
-      <!-- Shop By Category Section (New Design) -->
-      <section class="py-24 md:py-40 container mx-auto px-6 text-center">
-        <!-- SEO Optimization: Updated h2 title for better keyword targeting -->
-        <h2 class="text-5xl md:text-7xl font-heading section-title mb-16">
-          Shop Our Latest Collections
-        </h2>
-        <div class="category-grid">
-          <!-- Men's Category -->
-          <a href="shop?category=Men" class="category-card">
-            <img
-              src="https://images.unsplash.com/photo-1622519407650-3df9883f76a5?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="Discover NovofitBD's men's apparel and sustainable fashion collection"
-            />
-            <div class="category-overlay">
-              <span class="category-text">Men</span>
-            </div>
-          </a>
-          <!-- Women's Category -->
-          <a href="shop?category=Women" class="category-card">
-            <img
-              src="https://images.unsplash.com/photo-1733310925482-2a06ed00d0d3?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="Shop NovofitBD's women's sustainable clothing collection"
-            />
-            <div class="category-overlay">
-              <span class="category-text">Women</span>
-            </div>
-          </a>
-          <!-- Girls' Category -->
-          <a href="shop?category=Girls" class="category-card">
-            <img
-              src="https://images.unsplash.com/photo-1554342321-0776d282ceac?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="Explore NovofitBD's collection of clothing for Girls"
-            />
-            <div class="category-overlay">
-              <span class="category-text">Girls</span>
-            </div>
-          </a>
-          <!-- Accessories Category -->
-          <a href="shop?category=Others" class="category-card">
-            <img
-              src="https://images.unsplash.com/photo-1511556820780-d912e42b4980?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="Browse timeless accessories for men and women"
-            />
-            <div class="category-overlay">
-              <span class="category-text">Other</span>
-            </div>
-          </a>
-        </div>
-      </section>
-
-      <!-- Collections Section -->
-      <section class="py-24 md:py-40">
-        <div class="container mx-auto px-6 text-center">
-          <!-- SEO Optimization: Updated h2 title -->
-          <h2 class="text-5xl md:text-7xl font-heading section-title mb-16">
-            The NovofitBD Collections
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <a
-              class="hover-link collection-card group relative overflow-hidden rounded-lg block aspect-w-1 aspect-h-1"
-            >
-              <div class="img-reveal-container w-full h-full">
-                <div class="img-reveal-mask"></div>
-                <img
-                  src="https://images.unsplash.com/photo-1509319117193-57bab727e09d?q=80&w=2787&auto=format&fit=crop"
-                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  alt="A person in stylish, urban apparel from the Urban Canvas collection"
-                  onerror="this.onerror=null;this.src='https://placehold.co/1000x1000/050505/e0e0e0?text=Image+Not+Found';"
-                />
-              </div>
-              <div
-                class="absolute inset-0 bg-black/40 flex items-center justify-center"
-              >
-                <h3 class="text-4xl text-white font-semibold font-heading">
-                  Urban Canvas
-                </h3>
-              </div>
-            </a>
-            <a
-              class="hover-link collection-card group relative overflow-hidden rounded-lg block aspect-w-1 aspect-h-1"
-            >
-              <div class="img-reveal-container w-full h-full">
-                <div class="img-reveal-mask"></div>
-                <img
-                  src="https://images.unsplash.com/photo-1545291730-faff8ca1d4b0?q=80&w=2787&auto=format&fit=crop"
-                  class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  alt="Fashion model showcasing pieces from the Desert Bloom collection"
-                  onerror="this.onerror=null;this.src='https://placehold.co/1000x1000/050505/e0e0e0?text=Image+Not+Found';"
-                />
-              </div>
-              <div
-                class="absolute inset-0 bg-black/40 flex items-center justify-center"
-              >
-                <h3 class="text-4xl text-white font-semibold font-heading">
-                  Desert Bloom
-                </h3>
-              </div>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Lookbook Horizontal Scroll Section -->
-      <section id="lookbook" class="py-24 md:py-32">
-        <div class="container mx-auto px-6 mb-16 text-center">
-          <!-- SEO Optimization: Updated h2 title -->
-          <h2 class="text-5xl md:text-7xl font-heading section-title">
-            The NovofitBD Gallery & Lookbook
-          </h2>
-          <p class="text-lg text-gray-400 max-w-2xl mx-auto mt-4 font-body">
-            A curated collection of our finest visuals and creative works. Step
-            inside and explore the artistry of NovofitBD.
+        <div class="hero-content relative z-10 text-center px-4">
+          <p
+            class="text-sm md:text-base uppercase tracking-[0.3em] mb-4 text-gray-300 hero-anim"
+          >
+            Est. 2025
           </p>
-        </div>
-        <div class="lookbook-horizontal-container">
-          <div class="lookbook-sticky-container">
-            <div class="lookbook-horizontal">
-              <div class="lookbook-panel">
-                <img
-                  src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?q=80&w=2787&auto=format&fit=crop"
-                  alt="A stylish woman posing in a light-colored dress"
-                  onerror="this.onerror=null;this.src='https://placehold.co/800x600/050505/e0e0e0?text=Image+Not+Found';"
-                />
-              </div>
-              <div class="lookbook-panel">
-                <img
-                  src="https://plus.unsplash.com/premium_photo-1708110770188-3e4216b93119?q=80&w=693&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  alt="A model in a chic, dark outfit"
-                  onerror="this.onerror=null;this.src='https://placehold.co/800x600/050505/e0e0e0?text=Image+Not+Found';"
-                />
-              </div>
-              <div class="lookbook-panel">
-                <img
-                  src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=2787&auto=format&fit=crop"
-                  alt="Elegant shot of a woman in a formal evening dress"
-                  onerror="this.onerror=null;this.src='https://placehold.co/800x600/050505/e0e0e0?text=Image+Not+Found';"
-                />
-              </div>
-              <div class="lookbook-panel">
-                <img
-                  src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=2820&auto=format&fit=crop"
-                  alt="A model walking down a runway in a patterned skirt"
-                  onerror="this.onerror=null;this.src='https://placehold.co/800x600/050505/e0e0e0?text=Image+Not+Found';"
-                />
-              </div>
-              <div class="lookbook-panel">
-                <img
-                  src="https://images.unsplash.com/photo-1625072651838-2a69ff8ed257?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                  alt="Fashionable woman with a coat and handbag"
-                  onerror="this.onerror=null;this.src='https://placehold.co/800x600/050505/e0e0e0?text=Image+Not+Found';"
-                />
-              </div>
-            </div>
+          <h1
+            class="text-6xl md:text-8xl lg:text-[10rem] font-heading font-light text-white mb-6 hero-anim"
+          >
+            Elevate Your <br />
+            <span class="italic">Essence</span>
+          </h1>
+          <div class="hero-line hero-anim"></div>
+          <div class="hero-anim">
+            <a
+              href="shop"
+              class="inline-block border border-white/30 bg-white/5 backdrop-blur-sm px-8 py-3 rounded-full uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all duration-500 magnetic-item"
+            >
+              Explore Collection
+            </a>
           </div>
         </div>
       </section>
 
-      <!-- About Section -->
-      <section class="py-24 md:py-40 container mx-auto px-6">
-        <div class="max-w-4xl mx-auto text-center space-y-8">
-          <!-- SEO Optimization: Updated h2 title -->
-          <h2 class="text-5xl md:text-7xl font-heading section-title">
-            Conscious Craft
-          </h2>
-          <div
-            class="text-xl md:text-2xl text-gray-300 leading-relaxed space-y-6 font-body"
-            id="about-text-container"
-          >
-            <p>
-              NovofitBD was born from a desire for refined simplicity. We create
-              foundational pieces with a focus on quality materials, ethical
-              production, and timeless design. Each garment is a testament to
-              thoughtful craftsmanship, made to be cherished for years to come.
+      <!-- Marquee Section -->
+      <div class="marquee-container font-heading text-4xl md:text-6xl italic">
+        <div class="marquee-content">
+          New Arrivals — Timeless Elegance — Modern Craftsmanship — Free
+          Shipping Worldwide — The New Standard — New Arrivals — Timeless
+          Elegance — Modern Craftsmanship — Free Shipping Worldwide — The New
+          Standard —
+        </div>
+      </div>
+
+      <!-- Introduction Section -->
+      <section class="py-24 md:py-32 container mx-auto px-6">
+        <div class="flex flex-col md:flex-row gap-16 items-center">
+          <div class="w-full md:w-1/2" data-speed="0.9">
+            <h2 class="font-heading text-5xl md:text-7xl mb-8 leading-tight">
+              Weaving stories <br />
+              into every <span class="italic text-gray-500">stitch.</span>
+            </h2>
+          </div>
+          <div class="w-full md:w-1/2 flex flex-col gap-8">
+            <p class="text-gray-400 text-lg leading-relaxed max-w-md">
+              At NovofitBD, we believe fashion is more than just clothing—it is
+              an expression of identity. Our collections are curated for those
+              who seek perfection in simplicity and boldness in detail.
             </p>
+            <a
+              href="our-studio"
+              class="text-white border-b border-white pb-1 w-max uppercase text-xs tracking-widest hover:text-gray-400 transition-colors"
+              >Our Story</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- Categories Grid (Bento Style) -->
+      <section class="py-10 container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Men -->
+          <a href="shop?category=Men" class="category-card group block w-full">
+            <img
+              src="https://images.unsplash.com/photo-1617137984095-74e4e5e3613f?q=80&w=2187&auto=format&fit=crop"
+              alt="Men's Collection"
+            />
+            <div
+              class="category-overlay absolute inset-0 flex flex-col justify-end p-8 md:p-12 opacity-90 transition-opacity duration-300"
+            >
+              <span
+                class="text-xs font-bold uppercase tracking-widest mb-2 text-gray-300"
+                >Collection 01</span
+              >
+              <h3
+                class="font-heading text-5xl text-white group-hover:translate-x-2 transition-transform duration-300"
+              >
+                Men
+              </h3>
+            </div>
+          </a>
+
+          <!-- Women -->
+          <a
+            href="shop?category=Women"
+            class="category-card group block w-full mt-0 md:mt-24"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop"
+              alt="Women's Collection"
+            />
+            <div
+              class="category-overlay absolute inset-0 flex flex-col justify-end p-8 md:p-12 opacity-90 transition-opacity duration-300"
+            >
+              <span
+                class="text-xs font-bold uppercase tracking-widest mb-2 text-gray-300"
+                >Collection 02</span
+              >
+              <h3
+                class="font-heading text-5xl text-white group-hover:translate-x-2 transition-transform duration-300"
+              >
+                Women
+              </h3>
+            </div>
+          </a>
+
+          <!-- Girls / Accessories -->
+          <div
+            class="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 mt-4"
+          >
+            <a
+              href="shop?category=Girls"
+              class="category-card group block w-full h-[400px]"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1645561305577-4cb5be67a40a?q=80&w=765&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                alt="Girls Collection"
+              />
+              <div
+                class="category-overlay absolute inset-0 flex flex-col justify-end p-8"
+              >
+                <h3 class="font-heading text-4xl text-white">Girls</h3>
+              </div>
+            </a>
+            <a
+              href="shop?category=Others"
+              class="category-card group block w-full h-[400px]"
+            >
+              <img
+                src="https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?q=80&w=2193&auto=format&fit=crop"
+                alt="Accessories"
+              />
+              <div
+                class="category-overlay absolute inset-0 flex flex-col justify-end p-8"
+              >
+                <h3 class="font-heading text-4xl text-white">Accessories</h3>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Featured Products -->
+      <section class="py-32 bg-[#111]">
+        <div
+          class="container mx-auto px-6 mb-16 flex justify-between items-end"
+        >
+          <div>
+            <span
+              class="text-xs uppercase tracking-[0.2em] text-gray-400 block mb-2"
+              >Curated For You</span
+            >
+            <h2 class="font-heading text-4xl md:text-5xl">Latest Arrivals</h2>
           </div>
           <a
-            href="our-studio"
-            class="hover-link magnetic-item inline-block bg-white text-black px-10 py-5 rounded-full font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors text-sm"
-            >Our Studio</a
+            href="shop"
+            class="hidden md:inline-block border border-white/20 px-6 py-2 rounded-full uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all"
           >
+            View All
+          </a>
+        </div>
+
+        <div class="container mx-auto px-6">
+          <!-- Product Slider / Grid -->
+          <div
+            id="featured-products"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+          >
+            <!-- Products will be injected via JS -->
+            <div class="col-span-full text-center py-20 text-gray-500">
+              <div
+                class="inline-block w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin mb-4"
+              ></div>
+              <p>Loading collection...</p>
+            </div>
+          </div>
+
+          <div class="mt-12 text-center md:hidden">
+            <a
+              href="shop"
+              class="inline-block border border-white/20 px-8 py-3 rounded-full uppercase text-xs tracking-widest hover:bg-white hover:text-black transition-all"
+            >
+              View All Products
+            </a>
+          </div>
         </div>
       </section>
 
-      <!-- FAQ Section -->
-      <section id="faq-section" class="py-24 md:py-40 container mx-auto px-6">
-        <div class="max-w-4xl mx-auto">
-          <!-- SEO Optimization: Updated h2 title -->
-          <h2
-            class="text-5xl md:text-7xl font-heading section-title mb-16 text-center"
-          >
-            Frequently Asked Questions
+      <!-- CTA / Video Section -->
+      <section
+        class="relative h-[80vh] flex items-center justify-center overflow-hidden"
+      >
+        <img
+          src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=2274&auto=format&fit=crop"
+          class="absolute inset-0 w-full h-full object-cover grayscale opacity-40"
+          alt="Studio"
+          data-speed="0.3"
+        />
+        <div class="relative z-10 text-center max-w-4xl px-6">
+          <h2 class="font-heading text-5xl md:text-7xl lg:text-8xl mb-8">
+            Join the Movement
           </h2>
-          <div class="space-y-4">
-            <!-- FAQ Item 1 -->
-            <div class="faq-item">
-              <button
-                class="faq-btn"
-                aria-expanded="false"
-                aria-controls="faq-answer-1"
-              >
-                <span>What is your return policy?</span>
-                <span class="faq-icon-wrapper"></span>
-              </button>
-              <div
-                class="faq-answer"
-                id="faq-answer-1"
-                role="region"
-                aria-hidden="true"
-              >
-                <p class="faq-answer-content">
-                  We offer free returns within 30 days of purchase for all
-                  unworn and unwashed items. The product must be in its original
-                  packaging with all tags attached. Refunds will be processed
-                  within 5-7 business days of us receiving the return.
-                </p>
-              </div>
-            </div>
-
-            <!-- FAQ Item 2 -->
-            <div class="faq-item">
-              <button
-                class="faq-btn"
-                aria-expanded="false"
-                aria-controls="faq-answer-2"
-              >
-                <span>Do you ship internationally?</span>
-                <span class="faq-icon-wrapper"></span>
-              </button>
-              <div
-                class="faq-answer"
-                id="faq-answer-2"
-                role="region"
-                aria-hidden="true"
-              >
-                <p class="faq-answer-content">
-                  We currently do not offer international shipping, and orders
-                  can only be delivered within Bangladesh, but we are working to
-                  expand our shipping services in the future.
-                </p>
-              </div>
-            </div>
-
-            <!-- FAQ Item 3 -->
-            <div class="faq-item">
-              <button
-                class="faq-btn"
-                aria-expanded="false"
-                aria-controls="faq-answer-3"
-              >
-                <span>How do I choose the right size?</span>
-                <span class="faq-icon-wrapper"></span>
-              </button>
-              <div
-                class="faq-answer"
-                id="faq-answer-3"
-                role="region"
-                aria-hidden="true"
-              >
-                <p class="faq-answer-content">
-                  Please refer to our detailed sizing guide available on each
-                  product page. Our garments generally follow a modern, relaxed
-                  fit. If you're between sizes, we recommend sizing up for a
-                  more comfortable fit.
-                </p>
-              </div>
-            </div>
-
-            <!-- FAQ Item 4 -->
-            <div class="faq-item">
-              <button
-                class="faq-btn"
-                aria-expanded="false"
-                aria-controls="faq-answer-4"
-              >
-                <span>Are your products sustainable?</span>
-                <span class="faq-icon-wrapper"></span>
-              </button>
-              <div
-                class="faq-answer"
-                id="faq-answer-4"
-                role="region"
-                aria-hidden="true"
-              >
-                <p class="faq-answer-content">
-                  We are committed to ethical and sustainable practices. We use
-                  a variety of eco-friendly materials such as organic cotton and
-                  recycled polyester, and partner with factories that adhere to
-                  fair labor standards.
-                </p>
-              </div>
-            </div>
-          </div>
+          <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+            Sign up for our newsletter to receive exclusive offers, early access
+            to new drops, and stories from our studio.
+          </p>
+          <form
+            class="flex flex-col md:flex-row gap-4 max-w-md mx-auto"
+            onsubmit="event.preventDefault(); alert('Thank you for subscribing!');"
+          >
+            <input
+              type="email"
+              placeholder="Email Address"
+              class="bg-transparent border-b border-white/50 py-3 px-2 text-white focus:outline-none focus:border-white flex-grow font-light"
+              required
+            />
+            <button
+              type="submit"
+              class="uppercase text-xs tracking-widest font-bold py-3 px-6 hover:bg-white hover:text-black transition-all border border-transparent hover:border-white rounded-sm mt-4 md:mt-0"
+            >
+              Subscribe
+            </button>
+          </form>
         </div>
       </section>
     </main>
 
-    <!-- Footer -->
-    <footer class="relative bg-black py-16 border-t border-[var(--border)]">
+    <!-- Footer (Matching Shop) -->
+    <footer
+      class="bg-black py-16 border-t border-[var(--border)] relative z-10"
+    >
       <div class="container mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-12" id="footer-content">
-          <div class="col-span-1 md:col-span-2 footer-col">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+          <div class="col-span-1 md:col-span-2">
             <h3
               class="text-xl font-bold mb-4 uppercase tracking-wider font-heading"
             >
-              Connect
+              NovofitBD
             </h3>
             <p class="text-gray-400 mb-6 max-w-sm font-body">
               Follow us on our social media channels to see our latest designs
               and updates.
             </p>
             <div class="flex space-x-4 mt-8">
+              <!-- Social Icons -->
               <a
                 href="#"
-                class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M12 2.163c3.204 0 3.584.012 4.85.07c3.252.148 4.653 1.636 4.807 4.845.056 1.268.067 1.649.067 4.853 0 3.204-.011 3.585-.067 4.849-.155 3.208-1.556 4.646-4.808 4.811-1.267.056-1.648.066-4.85.066s-3.583-.01-4.85-.066c-3.252-.165-4.652-1.603-4.807-4.811-.056-1.267-.067-1.648-.067-4.849s.011-3.585.067-4.85c.155-3.208 1.555-4.646 4.807-4.811 1.267-.056 1.648-.066 4.85-.066zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.211-6.671 2.457-6.882 6.812-.058 1.281-.07 1.689-.07 4.946s.012 3.666.07 4.947c.211 4.357 2.455 6.671 6.811 6.882 1.28.058 1.689.07 4.946.07s3.666-.012 4.946-.07c4.356-.211 6.67-2.456 6.882-6.812.058-1.28.07-1.689.07-4.946s-.012-3.666-.07-4.947c-.212-4.357-2.456-6.671-6.812-6.882-1.28-.058-1.689-.07-4.946-.07zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.442.646-1.442 1.442s.646 1.442 1.442 1.442 1.442-.646 1.442-1.442-.646-1.442-1.442-1.442z"
-                  />
-                </svg>
-              </a>
-
+                class="text-gray-400 hover:text-white transition-colors"
+                ><i class="ph ph-facebook-logo text-2xl"></i
+              ></a>
               <a
                 href="#"
-                class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M19.615 3.184c-3.604-.246-11.455-.246-15.059 0-3.794.256-4.701 4.701-4.701 7.632 0 2.93 2.057 7.375 4.701 7.632 3.604.246 11.455.246 15.059 0 3.794-.256 4.701-4.701 4.701-7.632 0-2.93-2.057-7.375-4.701-7.632zm-10.515 10.612v-6.648l6.096 3.324-6.096 3.324z"
-                  />
-                </svg>
-              </a>
-
+                class="text-gray-400 hover:text-white transition-colors"
+                ><i class="ph ph-instagram-logo text-2xl"></i
+              ></a>
               <a
-                href="https://www.facebook.com/profile.php?id=61579875061969"
-                class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M24 12c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.753 4.022 10.573 9.385 11.666v-8.252h-3.084v-3.414h3.084v-2.617c0-3.059 1.85-4.73 4.595-4.73 1.312 0 2.433.102 2.753.148v3.189h-1.892c-1.517 0-1.815.72-1.815 1.777v2.333h3.585l-.466 3.414h-3.119v8.252c5.362-1.093 9.385-5.913 9.385-11.666z"
-                  />
-                </svg>
-              </a>
-
-              <a
-                href="https://vt.tiktok.com/ZSAXPFp5s/"
-                class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M16.5 3c0 .2 0 .4.1.7.3 1.4 1.4 2.4 2.8 2.5.2 0 .4 0 .6-.1v3.1c-1.6 0-3-.5-4.2-1.4v7.4c0 3-2.4 5.4-5.4 5.4S4.9 18.2 4.9 15.2c0-2.9 2.3-5.3 5.2-5.4.5 0 1 .1 1.5.2v3.2c-.2-.1-.5-.2-.8-.2-1.2 0-2.1 1-2.1 2.1 0 1.2 1 2.1 2.1 2.1 1.2 0 2.2-1 2.2-2.1V3h3.5z"
-                  />
-                </svg>
-              </a>
+                href="#"
+                class="text-gray-400 hover:text-white transition-colors"
+                ><i class="ph ph-tiktok-logo text-2xl"></i
+              ></a>
             </div>
           </div>
-          <div class="col-span-1 footer-col">
+          <div class="col-span-1">
             <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
               Shop
             </h4>
-            <ul class="space-y-3 text-gray-400 font-body">
+            <ul class="space-y-3 text-gray-400 font-body text-sm">
               <li>
-                <a href="shop" class="hover-link magnetic-item">Shop All</a>
+                <a href="shop" class="hover:text-white transition-colors"
+                  >All Products</a
+                >
               </li>
               <li>
-                <a href="shop?category=Men" class="hover-link magnetic-item"
+                <a
+                  href="shop?category=Men"
+                  class="hover:text-white transition-colors"
                   >Men</a
                 >
               </li>
               <li>
-                <a href="shop?category=Women" class="hover-link magnetic-item"
+                <a
+                  href="shop?category=Women"
+                  class="hover:text-white transition-colors"
                   >Women</a
                 >
               </li>
               <li>
-                <a href="shop?category=Others" class="hover-link magnetic-item"
-                  >Accessories</a
+                <a
+                  href="shop?category=Girls"
+                  class="hover:text-white transition-colors"
+                  >Girls</a
                 >
               </li>
             </ul>
           </div>
-          <div class="col-span-1 footer-col">
+          <div class="col-span-1">
             <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
               About
             </h4>
-            <ul class="space-y-3 text-gray-400 font-body">
+            <ul class="space-y-3 text-gray-400 font-body text-sm">
               <li>
-                <a href="our-studio" class="hover-link magnetic-item"
+                <a href="our-studio" class="hover:text-white transition-colors"
                   >Our Studio</a
                 >
               </li>
               <li>
-                <a href="gallery" class="hover-link magnetic-item">Gallery</a>
+                <a href="gallery" class="hover:text-white transition-colors"
+                  >Gallery</a
+                >
               </li>
               <li>
-                <a href="contact" class="hover-link magnetic-item">Contact</a>
-              </li>
-              <li>
-                <a href="#" id="faq-link" class="hover-link magnetic-item"
-                  >FAQs</a
+                <a href="contact" class="hover:text-white transition-colors"
+                  >Contact</a
                 >
               </li>
             </ul>
@@ -1193,113 +700,349 @@
         <div
           class="mt-16 pt-8 border-t border-[var(--border)] text-center text-gray-500 text-xs font-body"
         >
-          <p>
-            &copy; 2025 NovofitBD. All Rights Reserved. A demonstration of
-            world-class web design.
-          </p>
+          <p>&copy; 2025 NovofitBD. All Rights Reserved.</p>
         </div>
       </div>
     </footer>
 
+    <!-- GSAP & Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.27/bundled/lenis.min.js"></script>
-    <script src="https://unpkg.com/split-type"></script>
 
+    <!-- Firebase SDKs -->
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        signInAnonymously,
+        signInWithCustomToken,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        collection,
+        query,
+        where,
+        limit,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+      // Firebase Configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyCPWe_VrV_Rq9HcKruC5uoC9jNFkwpzNcU",
+        authDomain: "aurora-e-commerce.firebaseapp.com",
+        projectId: "aurora-e-commerce",
+        storageBucket: "aurora-e-commerce.firebasestorage.app",
+        messagingSenderId: "177216689386",
+        appId: "1:177216689386:web:04f567db96218da3323393",
+        measurementId: "G-0Q9ZFHSFS1",
+      };
+
+      // App Logic
+      let db;
+      let auth;
+      let products = [];
+
+      // Update Cart Count
+      function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem("aurora-cart")) || [];
+        const count = cart.reduce((acc, item) => acc + item.quantity, 0);
+        const el = document.getElementById("cart-count");
+        if (el) el.textContent = count;
+      }
+
+      // Cart Logic (Added for Home Page)
+      function getCart() {
+        return JSON.parse(localStorage.getItem("aurora-cart")) || [];
+      }
+
+      function saveCart(cart) {
+        localStorage.setItem("aurora-cart", JSON.stringify(cart));
+      }
+
+      function showNotification() {
+        const notification = document.getElementById("cart-notification");
+        notification.style.transform = "translate(-50%, 0)";
+        setTimeout(() => {
+          notification.style.transform = "translate(-50%, 200%)";
+        }, 3000);
+      }
+
+      window.addToCart = function (productId) {
+        const product = products.find((p) => p.id === productId);
+        if (!product) return;
+
+        let cart = getCart();
+        // Default size/color if not specified (since this is quick add from home)
+        const size =
+          product.sizes && product.sizes.length > 0 ? product.sizes[0] : null;
+        const color =
+          product.colors && product.colors.length > 0
+            ? product.colors[0]
+            : null;
+
+        const existingItem = cart.find(
+          (item) =>
+            item.product.id === product.id &&
+            item.size === size &&
+            item.color === color
+        );
+
+        if (existingItem) {
+          existingItem.quantity += 1;
+        } else {
+          cart.push({ product, quantity: 1, size, color });
+        }
+
+        saveCart(cart);
+        updateCartCount();
+        showNotification();
+      };
+
+      // Render Featured Products
+      function renderFeaturedProducts(fetchedProducts) {
+        const container = document.getElementById("featured-products");
+        container.innerHTML = "";
+        products = fetchedProducts; // Store globally for cart logic
+
+        products.forEach((product, index) => {
+          const imageUrl =
+            product.images && product.images.length > 0
+              ? product.images[0]
+              : "https://placehold.co/600x800/222/fff?text=No+Image";
+          const price = product.basePrice
+            ? `৳${product.basePrice.toFixed(2)}`
+            : "N/A";
+
+          const delay = index * 0.1;
+
+          const html = `
+                <div class="product-card group relative opacity-0 translate-y-8" style="animation: fadeInUp 0.6s forwards ${delay}s">
+                    <div class="relative overflow-hidden rounded-sm mb-4">
+                        <a href="shop?id=${product.id}" class="block">
+                            <img src="${imageUrl}" alt="${
+            product.name
+          }" class="w-full aspect-[3/4] object-cover transition-transform duration-700 group-hover:scale-105" />
+                        </a>
+                        
+                        <!-- Desktop: Add to Cart Overlay (Hidden on Mobile) -->
+                        <div class="hidden md:flex absolute inset-0 bg-black/40 flex-col items-center justify-end p-4 transition-opacity duration-300 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto">
+                            <button
+                                class="bg-white text-black py-3 px-6 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-gray-200 transition-colors w-full mb-2"
+                                onclick="window.addToCart('${product.id}')"
+                            >
+                                Add to Cart
+                            </button>
+                            <a href="product-details?id=${
+                              product.id
+                            }" class="bg-transparent border border-white text-white py-3 px-6 rounded-full text-xs font-bold uppercase tracking-widest hover:bg-white/10 transition-colors w-full text-center">
+                                View Details
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col gap-2">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <a href="shop?id=${
+                                  product.id
+                                }" class="font-heading text-xl text-white hover:text-gray-300 transition-colors block">${
+            product.name
+          }</a>
+                                <p class="text-gray-500 text-sm mt-1">${
+                                  product.category || "Collection"
+                                }</p>
+                            </div>
+                            <p class="font-body text-white font-medium">${price}</p>
+                        </div>
+
+                        <!-- Mobile: Always Visible Add to Cart & Details -->
+                        <div class="flex gap-2 md:hidden mt-2">
+                            <button 
+                                class="flex-1 bg-white text-black py-2 rounded text-xs font-bold uppercase tracking-widest"
+                                onclick="window.addToCart('${product.id}')"
+                            >
+                                Add
+                            </button>
+                            <a 
+                                href="shop?id=${product.id}"
+                                class="flex-1 border border-white/30 text-white py-2 rounded text-xs font-bold uppercase tracking-widest text-center"
+                            >
+                                Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+              `;
+          container.innerHTML += html;
+        });
+      }
+
+      // Initialize Firebase
+      async function initApp() {
+        try {
+          const app = initializeApp(firebaseConfig);
+          db = getFirestore(app);
+          auth = getAuth(app);
+
+          // Auth
+          const initialAuthToken =
+            typeof __initial_auth_token !== "undefined"
+              ? __initial_auth_token
+              : null;
+          if (initialAuthToken) {
+            await signInWithCustomToken(auth, initialAuthToken);
+          } else {
+            await signInAnonymously(auth);
+          }
+
+          // Fetch Data
+          const productsRef = collection(
+            db,
+            `/artifacts/aurora-data/public/data/products`
+          );
+          // Fetch published products, limit to 4 for the home page
+          const q = query(
+            productsRef,
+            where("status", "==", "Published"),
+            limit(4)
+          );
+          const snapshot = await getDocs(q);
+
+          const fetchedProducts = [];
+          snapshot.forEach((doc) => {
+            fetchedProducts.push({ id: doc.id, ...doc.data() });
+          });
+
+          renderFeaturedProducts(fetchedProducts);
+        } catch (e) {
+          console.error("Firebase Error:", e);
+          document.getElementById(
+            "featured-products"
+          ).innerHTML = `<p class="text-center text-red-500 col-span-full">Unable to load products. Please try again later.</p>`;
+        }
+      }
+
+      // Global style for fade in animation
+      const style = document.createElement("style");
+      style.innerHTML = `
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Start App
+      document.addEventListener("DOMContentLoaded", () => {
+        updateCartCount();
+        initApp();
+      });
+    </script>
+
+    <!-- UI Interactions Script -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        gsap.registerPlugin(ScrollTrigger);
+        // 1. Loader
+        setTimeout(() => {
+          const loader = document.getElementById("loader");
+          loader.style.opacity = "0";
+          setTimeout(() => loader.remove(), 1000);
 
-        // --- PRELOADER ---
-        const preloader = document.getElementById("preloader");
-        const counter = document.getElementById("preloader-counter");
-        const brand = document.getElementById("preloader-brand");
-        const mainContent = document.getElementById("main-content");
-
-        const counterValue = { value: 0 };
-
-        // This timeline will handle the entire preloader sequence
-        const preloaderTl = gsap.timeline({
-          onComplete: () => {
-            preloader.style.display = "none";
-            document.body.classList.remove("no-scroll");
-            runIntroAnimations();
-          },
-        });
-
-        preloaderTl
-          .to(counterValue, {
-            duration: 2.5,
-            value: 100,
-            ease: "power2.out",
-            onUpdate: () => {
-              counter.textContent = Math.floor(counterValue.value);
-            },
-          })
-          .to(
-            counter,
-            { duration: 0.5, opacity: 0, y: -20, ease: "power2.inOut" },
-            "-=0.5"
-          )
-          .to(
-            brand,
-            { duration: 0.8, opacity: 1, y: 0, ease: "power2.inOut" },
-            "-=0.3"
-          )
-          .to(preloader, {
-            duration: 1,
-            opacity: 0,
-            ease: "power3.inOut",
+          // Trigger Hero Animations
+          gsap.to(".hero-anim", {
+            y: 0,
+            opacity: 1,
+            duration: 1.5,
+            stagger: 0.2,
+            ease: "power3.out",
             delay: 0.5,
-          })
-          .to(mainContent, { opacity: 1, duration: 0.1 }, "-=0.8");
+          });
+        }, 1500);
 
-        // --- SMOOTH SCROLL (LENIS) ---
-        const lenis = new Lenis();
+        // 2. Smooth Scroll (Lenis)
+        const lenis = new Lenis({
+          duration: 1.2,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          direction: "vertical",
+          gestureDirection: "vertical",
+          smooth: true,
+          mouseMultiplier: 1,
+          smoothTouch: false,
+          touchMultiplier: 2,
+        });
         function raf(time) {
           lenis.raf(time);
           requestAnimationFrame(raf);
         }
         requestAnimationFrame(raf);
 
-        // --- CUSTOM CURSOR ---
-        const cursor = document.querySelector(".cursor");
-        const follower = document.querySelector(".cursor-follower");
-        gsap.set(cursor, { xPercent: -50, yPercent: -50 });
-        gsap.set(follower, { xPercent: -50, yPercent: -50 });
+        // 3. GSAP ScrollTrigger Integration
+        gsap.registerPlugin(ScrollTrigger);
 
-        window.addEventListener("mousemove", (e) => {
-          gsap.to(cursor, { duration: 0.2, x: e.clientX, y: e.clientY });
-          gsap.to(follower, {
-            duration: 0.6,
-            x: e.clientX,
-            y: e.clientY,
-            ease: "power2.out",
+        // Parallax Effects for Images
+        document.querySelectorAll("[data-speed]").forEach((el) => {
+          gsap.to(el, {
+            y: (i, target) => -100 * target.dataset.speed,
+            ease: "none",
+            scrollTrigger: {
+              trigger: el,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0,
+            },
           });
         });
 
-        document
-          .querySelectorAll(
-            ".hover-link, .add-to-cart-btn, .category-card, .faq-btn"
-          )
-          .forEach((el) => {
-            el.addEventListener("mouseenter", () =>
-              follower.classList.add("cursor-grow")
-            );
-            el.addEventListener("mouseleave", () =>
-              follower.classList.remove("cursor-grow")
-            );
-          });
+        // 4. Custom Cursor
+        const cursor = document.querySelector(".cursor");
+        const follower = document.querySelector(".cursor-follower");
 
-        // --- MAGNETIC ELEMENTS ---
+        let mouseX = 0,
+          mouseY = 0;
+        let followerX = 0,
+          followerY = 0;
+
+        window.addEventListener("mousemove", (e) => {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+
+          gsap.to(cursor, {
+            x: mouseX,
+            y: mouseY,
+            duration: 0.1,
+          });
+        });
+
+        // Smooth follower movement loop
+        function animateFollower() {
+          followerX += (mouseX - followerX) * 0.1;
+          followerY += (mouseY - followerY) * 0.1;
+
+          gsap.set(follower, { x: followerX, y: followerY });
+          requestAnimationFrame(animateFollower);
+        }
+        animateFollower();
+
+        // Cursor Hover States
+        document.querySelectorAll("a, button").forEach((el) => {
+          el.addEventListener("mouseenter", () =>
+            follower.classList.add("cursor-grow")
+          );
+          el.addEventListener("mouseleave", () =>
+            follower.classList.remove("cursor-grow")
+          );
+        });
+
+        // 5. Magnetic Button Effect
         document.querySelectorAll(".magnetic-item").forEach((el) => {
           el.addEventListener("mousemove", function (e) {
-            const position = this.getBoundingClientRect();
-            const x = e.clientX - position.left - position.width / 2;
-            const y = e.clientY - position.top - position.height / 2;
+            const pos = this.getBoundingClientRect();
+            const x = e.clientX - pos.left - pos.width / 2;
+            const y = e.clientY - pos.top - pos.height / 2;
+
             gsap.to(this, {
-              x: x * 0.3,
-              y: y * 0.3,
+              x: x * 0.4,
+              y: y * 0.4,
               duration: 0.3,
               ease: "power2.out",
             });
@@ -1308,310 +1051,41 @@
             gsap.to(this, {
               x: 0,
               y: 0,
-              duration: 0.3,
+              duration: 0.5,
               ease: "elastic.out(1, 0.3)",
             });
           });
         });
 
-        // --- MOBILE MENU LOGIC FIX ---
-        const hamburgerBtn = document.getElementById("hamburger-btn");
-        const closeMenuBtn = document.getElementById("close-menu");
+        // 6. Mobile Menu & Search
         const mobileMenu = document.getElementById("mobile-menu");
-        const mobileLinks = document.querySelectorAll(".mobile-nav-link");
-
-        // Toggle menu open
-        hamburgerBtn.addEventListener("click", () => {
-          mobileMenu.classList.add("open");
-          document.body.classList.add("no-scroll");
-        });
-
-        // Toggle menu closed
-        closeMenuBtn.addEventListener("click", () => {
-          mobileMenu.classList.remove("open");
-          document.body.classList.remove("no-scroll");
-        });
-
-        // Close menu if a link is clicked
-        mobileLinks.forEach((link) => {
-          link.addEventListener("click", () => {
-            mobileMenu.classList.remove("open");
-            document.body.classList.remove("no-scroll");
-          });
-        });
-
-        // --- CART LOGIC ---
-        const cartCountEl = document.getElementById("cart-count");
-        const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
-        const cartNotification = document.getElementById("cart-notification");
-        let cart = [];
-
-        addToCartButtons.forEach((button) => {
-          button.addEventListener("click", (e) => {
-            e.preventDefault();
-            cart.push({ id: Math.random(), name: "New Item" });
-            updateCart();
-            showNotification();
-          });
-        });
-
-        function updateCart() {
-          cartCountEl.textContent = cart.length;
-          gsap.fromTo(
-            cartCountEl,
-            { scale: 1.5 },
-            { scale: 1, duration: 0.3, ease: "power2.out" }
-          );
-        }
-
-        let notificationTimeout;
-        function showNotification() {
-          clearTimeout(notificationTimeout);
-          gsap.to(cartNotification, {
-            y: 0,
-            duration: 0.5,
-            ease: "power3.out",
-          });
-          notificationTimeout = setTimeout(() => {
-            gsap.to(cartNotification, {
-              y: "200%",
-              duration: 0.5,
-              ease: "power3.in",
-            });
-          }, 3000);
-        }
-
-        // --- GSAP INTRO ANIMATION ---
-        function runIntroAnimations() {
-          const introTl = gsap.timeline();
-          introTl
-            .to(".hero-title", {
-              y: 0,
-              duration: 1.5,
-              ease: "expo.out",
-            })
-            .to(
-              ".hero-video",
-              {
-                scale: 1,
-                duration: 2,
-                ease: "power2.inOut",
-              },
-              "<"
-            )
-            .fromTo(
-              ".scroll-down",
-              { opacity: 0, y: 20 },
-              { opacity: 1, y: 0, duration: 1, ease: "power2.out" },
-              "-=1.5"
-            );
-        }
-
-        // --- GSAP SCROLL-TRIGGERED ANIMATIONS ---
-        // Section Titles Reveal
-        document.querySelectorAll(".section-title").forEach((title) => {
-          const splitTitle = new SplitType(title, { types: "words" });
-          gsap.from(splitTitle.words, {
-            scrollTrigger: {
-              trigger: title,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
-            },
-            yPercent: 100,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power3.out",
-            stagger: 0.1,
-          });
-        });
-
-        // Image Reveal
         document
-          .querySelectorAll(".img-reveal-container")
-          .forEach((container) => {
-            let image = container.querySelector("img");
-            let mask = container.querySelector(".img-reveal-mask");
-            let tl = gsap.timeline({
-              scrollTrigger: {
-                trigger: container,
-                start: "top 85%",
-                toggleActions: "play none none reverse",
-              },
-            });
-            tl.to(container, { autoAlpha: 1, duration: 0 })
-              .fromTo(
-                mask,
-                { yPercent: 0 },
-                { yPercent: -100, duration: 1.2, ease: "expo.inOut" }
-              )
-              .fromTo(
-                image,
-                { yPercent: 50, scale: 1.2 },
-                { yPercent: 0, scale: 1, duration: 1.2, ease: "expo.inOut" },
-                "<"
-              );
-          });
+          .getElementById("hamburger-btn")
+          .addEventListener("click", () => mobileMenu.classList.add("open"));
+        document
+          .getElementById("close-menu")
+          .addEventListener("click", () => mobileMenu.classList.remove("open"));
 
-        // About Section Text Fade-in
-        const aboutText = new SplitType("#about-text-container p", {
-          types: "lines",
-        });
-        gsap.from(aboutText.lines, {
-          scrollTrigger: {
-            trigger: "#about-text-container",
-            start: "top 85%",
-            toggleActions: "play none none reverse",
-          },
-          y: 20,
-          opacity: 0,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "power2.out",
-        });
+        const searchOverlay = document.getElementById("search-overlay");
+        document
+          .getElementById("open-search-btn")
+          .addEventListener("click", () => searchOverlay.classList.add("open"));
+        document
+          .getElementById("close-search-btn")
+          .addEventListener("click", () =>
+            searchOverlay.classList.remove("open")
+          );
 
-        // Footer Columns Fade-in
-        gsap.from("#footer-content .footer-col", {
-          scrollTrigger: {
-            trigger: "footer",
-            start: "top 95%",
-            toggleActions: "play none none reverse",
-          },
-          y: 30,
-          opacity: 0,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "power2.out",
-        });
-
-        // Horizontal Scroll Lookbook
-        const horizontalContainer = document.querySelector(
-          ".lookbook-horizontal-container"
-        );
-        const horizontalSection = document.querySelector(
-          ".lookbook-horizontal"
-        );
-        const lookbookPanels = gsap.utils.toArray(".lookbook-panel");
-
-        if (horizontalContainer && horizontalSection) {
-          gsap.to(horizontalSection, {
-            x: () => -(horizontalSection.scrollWidth - window.innerWidth),
-            ease: "none",
-            scrollTrigger: {
-              trigger: horizontalContainer,
-              start: "top top",
-              end: () =>
-                "+=" + (horizontalSection.scrollWidth - window.innerWidth),
-              scrub: 1,
-              pin: ".lookbook-sticky-container",
-              invalidateOnRefresh: true,
-              anticipatePin: 1,
-            },
-          });
-
-          lookbookPanels.forEach((panel) => {
-            const image = panel.querySelector("img");
-            gsap.to(image, {
-              yPercent: -15,
-              ease: "none",
-              scrollTrigger: {
-                trigger: horizontalContainer,
-                containerAnimation: gsap.getTweensOf(horizontalSection)[0],
-                start: "left right",
-                end: "right left",
-                scrub: true,
-              },
-            });
-          });
-        }
-
-        // Header Animation on Scroll
+        // 7. Navbar Scroll Effect
         const header = document.querySelector("header");
-        let lastScroll = 0;
         window.addEventListener("scroll", () => {
-          const currentScroll = window.pageYOffset;
-          if (currentScroll > lastScroll && currentScroll > 100) {
-            header.style.transform = "translateY(-100%)";
+          if (window.scrollY > 50) {
+            header.classList.add("bg-black/80", "backdrop-blur-md");
           } else {
-            header.style.transform = "translateY(0)";
+            header.classList.remove("bg-black/80", "backdrop-blur-md");
           }
-          if (currentScroll > 50) {
-            header.classList.add("bg-black/70", "backdrop-blur-lg");
-          } else {
-            header.classList.remove("bg-black/70", "backdrop-blur-lg");
-          }
-          lastScroll = currentScroll <= 0 ? 0 : currentScroll;
-        });
-
-        // --- FAQ LOGIC ---
-        const faqButtons = document.querySelectorAll(".faq-btn");
-
-        faqButtons.forEach((button) => {
-          button.addEventListener("click", () => {
-            const isActive = button.getAttribute("aria-expanded") === "true";
-            const answer = button.nextElementSibling;
-            const iconWrapper = button.querySelector(".faq-icon-wrapper");
-
-            // Close all other open answers
-            faqButtons.forEach((otherButton) => {
-              if (
-                otherButton !== button &&
-                otherButton.getAttribute("aria-expanded") === "true"
-              ) {
-                const otherAnswer = otherButton.nextElementSibling;
-                const otherIconWrapper = otherButton.querySelector(
-                  ".faq-icon-wrapper"
-                );
-
-                gsap.to(otherAnswer, {
-                  duration: 0.5,
-                  height: 0,
-                  ease: "power2.inOut",
-                });
-                gsap.to(otherIconWrapper, {
-                  duration: 0.3,
-                  rotate: 0,
-                  ease: "power2.inOut",
-                });
-                otherButton.setAttribute("aria-expanded", "false");
-                otherAnswer.setAttribute("aria-hidden", "true");
-              }
-            });
-
-            // Toggle the clicked answer
-            if (!isActive) {
-              // Open the answer
-              button.setAttribute("aria-expanded", "true");
-              answer.setAttribute("aria-hidden", "false");
-              gsap.to(answer, {
-                duration: 0.5,
-                height: answer.scrollHeight,
-                ease: "power2.inOut",
-              });
-              gsap.to(iconWrapper, {
-                duration: 0.3,
-                rotate: 45,
-                ease: "power2.inOut",
-              });
-            } else {
-              // Close the answer
-              button.setAttribute("aria-expanded", "false");
-              answer.setAttribute("aria-hidden", "true");
-              gsap.to(answer, {
-                duration: 0.5,
-                height: 0,
-                ease: "power2.inOut",
-              });
-              gsap.to(iconWrapper, {
-                duration: 0.3,
-                rotate: 0,
-                ease: "power2.inOut",
-              });
-            }
-          });
         });
       });
     </script>
-    <script src="footer.js"></script>
-    <script src="cart-count.js"></script>
   </body>
 </html>
