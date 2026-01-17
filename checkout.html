@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&family=Hind+Siliguri:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="shortcut icon" href="logo.png" type="image/x-icon" />
@@ -38,6 +38,9 @@
       }
       .font-body {
         font-family: "Poppins", sans-serif;
+      }
+      .font-bangla {
+        font-family: "Hind Siliguri", sans-serif;
       }
       .cursor {
         position: fixed;
@@ -156,6 +159,12 @@
         border-bottom: 1px solid var(--border);
         color: var(--text);
         transition: all 0.3s ease;
+        font-family: "Hind Siliguri", sans-serif;
+      }
+      .form-input::placeholder {
+        color: #555;
+        font-family: "Hind Siliguri", sans-serif;
+        font-weight: 300;
       }
       .form-input:focus {
         outline: none;
@@ -244,13 +253,9 @@
         display: none;
       }
       .payment-modal-content {
-        height: 100vh;
+        height: auto;
+        max-height: 90vh;
         overflow-y: auto;
-      }
-      @media (max-width: 768px) {
-        .payment-modal-content {
-          height: 98vh;
-        }
       }
     </style>
   </head>
@@ -426,21 +431,21 @@
           <div class="w-full lg:w-3/5 order-last lg:order-first">
             <form id="checkout-form" class="space-y-12" novalidate>
               <!-- Contact Information -->
-              <div>
+              <div class="font-bangla">
                 <h2 class="font-heading text-2xl font-semibold mb-6">
-                  Contact Information
+                  যোগাযোগের তথ্য
                 </h2>
                 <div class="space-y-6">
                   <div>
                     <label
                       for="email"
                       class="text-sm text-[var(--secondary-text)]"
-                      >Email Address</label
+                      >ইমেইল ঠিকানা (ঐচ্ছিক)</label
                     >
                     <input
                       type="email"
                       id="email"
-                      placeholder="Enter your email"
+                      placeholder="আপনার ইমেইল দিন"
                       class="form-input w-full mt-2 py-2 px-0"
                     />
                   </div>
@@ -448,13 +453,13 @@
                     <label
                       for="mobile-number"
                       class="text-sm text-[var(--secondary-text)]"
-                      >Mobile Number</label
+                      >মোবাইল নম্বর <span class="text-red-500">*</span></label
                     >
                     <input
                       type="tel"
                       id="mobile-number"
                       required
-                      placeholder="01XXXXXXXXX"
+                      placeholder="০১৭১......."
                       class="form-input w-full mt-2 py-2 px-0"
                     />
                   </div>
@@ -462,22 +467,23 @@
               </div>
 
               <!-- Shipping Address -->
-              <div>
+              <div class="font-bangla">
                 <h2 class="font-heading text-2xl font-semibold mb-6">
-                  Shipping Address
+                  শিপিং ঠিকানা
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label
                       for="first-name"
                       class="text-sm text-[var(--secondary-text)]"
-                      >First Name</label
+                      >নামের প্রথম অংশ
+                      <span class="text-red-500">*</span></label
                     >
                     <input
                       type="text"
                       id="first-name"
                       required
-                      placeholder="Jane"
+                      placeholder="নামের প্রথম অংশ লিখুন"
                       class="form-input w-full mt-2 py-2 px-0"
                     />
                   </div>
@@ -485,12 +491,12 @@
                     <label
                       for="last-name"
                       class="text-sm text-[var(--secondary-text)]"
-                      >Last Name</label
+                      >নামের শেষ অংশ (ঐচ্ছিক)</label
                     >
                     <input
                       type="text"
                       id="last-name"
-                      placeholder="Doe"
+                      placeholder="নামের শেষ অংশ লিখুন"
                       class="form-input w-full mt-2 py-2 px-0"
                     />
                   </div>
@@ -499,13 +505,13 @@
                   <label
                     for="address"
                     class="text-sm text-[var(--secondary-text)]"
-                    >Address</label
+                    >ঠিকানা <span class="text-red-500">*</span></label
                   >
                   <input
                     type="text"
                     id="address"
                     required
-                    placeholder="House 5, Road 10"
+                    placeholder="বাসা নং, রোড নং, এলাকা"
                     class="form-input w-full mt-2 py-2 px-0"
                   />
                 </div>
@@ -514,7 +520,7 @@
                     <label
                       for="country"
                       class="text-sm text-[var(--secondary-text)]"
-                      >Country/Region</label
+                      >দেশ</label
                     >
                     <input
                       type="hidden"
@@ -527,13 +533,13 @@
                     <label
                       for="city"
                       class="text-sm text-[var(--secondary-text)]"
-                      >City</label
+                      >শহর <span class="text-red-500">*</span></label
                     >
                     <input
                       type="text"
                       id="city"
                       required
-                      placeholder="Dhaka"
+                      placeholder="আপনার শহর"
                       class="form-input w-full mt-2 py-2 px-0"
                     />
                   </div>
@@ -541,13 +547,13 @@
                     <label
                       for="state"
                       class="text-sm text-[var(--secondary-text)]"
-                      >District</label
+                      >জেলা <span class="text-red-500">*</span></label
                     >
                     <input
                       type="text"
                       id="state"
                       required
-                      placeholder="Dhaka"
+                      placeholder="আপনার জেলা"
                       class="form-input w-full mt-2 py-2 px-0"
                     />
                   </div>
@@ -555,12 +561,12 @@
                     <label
                       for="postal-code"
                       class="text-sm text-[var(--secondary-text)]"
-                      >Postal Code</label
+                      >পোস্টাল কোড (ঐচ্ছিক)</label
                     >
                     <input
                       type="text"
                       id="postal-code"
-                      placeholder="1205"
+                      placeholder="পোস্টাল কোড"
                       class="form-input w-full mt-2 py-2 px-0"
                     />
                   </div>
@@ -568,9 +574,9 @@
               </div>
 
               <!-- Payment Information -->
-              <div>
+              <div class="font-bangla">
                 <h2 class="font-heading text-2xl font-semibold mb-6">
-                  Payment
+                  পেমেন্ট মেথড
                 </h2>
                 <div class="space-y-4">
                   <label
@@ -587,8 +593,8 @@
                       checked
                     />
                     <i class="ph ph-handshake text-xl"></i>
-                    <span class="flex-grow font-body text-sm font-medium"
-                      >Cash on Delivery</span
+                    <span class="flex-grow font-bangla text-sm font-medium"
+                      >ক্যাশ অন ডেলিভারি</span
                     >
                   </label>
                 </div>
@@ -598,9 +604,9 @@
                 <button
                   type="submit"
                   id="main-checkout-btn"
-                  class="checkout-btn w-full bg-white text-black py-4 rounded-full text-lg font-semibold uppercase tracking-wider magnetic-item"
+                  class="checkout-btn w-full bg-white text-black py-4 rounded-full text-lg font-semibold uppercase tracking-wider magnetic-item font-bangla"
                 >
-                  Review & Confirm
+                  যাচাই করুন এবং নিশ্চিত করুন
                 </button>
               </div>
             </form>
@@ -635,7 +641,7 @@
                   viewBox="0 0 24 24"
                 >
                   <path
-                    d="M12 2.163c3.204 0 3.584.012 4.85.07c3.252.148 4.653 1.636 4.807 4.845.056 1.268.067 1.649.067 4.853 0 3.204-.011 3.585-.067 4.849-.155 3.208-1.556 4.646-4.808 4.811-1.267.056-1.648.066-4.85.066s-3.583-.01-4.85-.066c-3.252-.165-4.652-1.603-4.807-4.811-.056-1.267-.067-1.648-.067-4.849s.011-3.585.067-4.85c.155-3.208 1.555-4.646 4.807-4.811 1.267-.056 1.648-.066 4.85-.066zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.211-6.671 2.457-6.882 6.812-.058 1.281-.07 1.689-.07 4.946s.012 3.666.07 4.947c.211 4.357 2.455 6.671 6.811 6.882 1.28.058 1.689.07 4.946.07s3.666-.012 4.946-.07c4.356-.211 6.67-2.456 6.882-6.812.058-1.28.07-1.689.07-4.946s-.012-3.666-.07-4.947c-.212-4.357-2.456-6.671-6.812-6.882-1.28-.058-1.689-.07-4.946-.07zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.442.646-1.442 1.442s.646 1.442 1.442 1.442 1.442-.646 1.442-1.442-.646-1.442-1.442-1.442z"
+                    d="M12 2.163c3.204 0 3.584.012 4.85.07c3.252.148 4.653 1.636 4.807 4.845.056 1.628.067 1.649.067 4.853 0 3.204-.011 3.585-.067 4.849-.155 3.208-1.556 4.646-4.808 4.811-1.267.056-1.648.066-4.85.066s-3.583-.01-4.85-.066c-3.252-.165-4.652-1.603-4.807-4.811-.056-1.267-.067-1.648-.067-4.849s.011-3.585.067-4.85c.155-3.208 1.555-4.646 4.807-4.811 1.267-.056 1.648-.066 4.85-.066zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.211-6.671 2.457-6.882 6.812-.058 1.281-.07 1.689-.07 4.946s.012 3.666.07 4.947c.211 4.357 2.455 6.671 6.811 6.882 1.28.058 1.689.07 4.946.07s3.666-.012 4.946-.07c4.356-.211 6.67-2.456 6.882-6.812.058-1.28.07-1.689.07-4.946s-.012-3.666-.07-4.947c-.212-4.357-2.456-6.671-6.812-6.882-1.28-.058-1.689-.07-4.946-.07zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.442.646-1.442 1.442s.646 1.442 1.442 1.442 1.442-.646 1.442-1.442-.646-1.442-1.442-1.442z"
                   />
                 </svg>
               </a>
@@ -760,73 +766,35 @@
       </div>
     </div>
 
-    <!-- Payment Verification Modal -->
+    <!-- Final Order Summary Confirmation Modal (Previously Payment Verification) -->
     <div id="payment-verification-modal" class="payment-modal">
-      <div class="payment-modal-content">
-        <h3 class="font-heading text-2xl">আপনার ডেলিভারি নিশ্চিত করুন</h3>
-        <p class="text-base pb-2 text-white">
-          আপনার অর্ডার সুরক্ষিত করতে হলে, অনুগ্রহ করে
-          <strong id="delivery-charge-amount" class="text-white">$0.00</strong>
-          ডেলিভারি চার্জ পরিশোধ করুন।
+      <div class="payment-modal-content font-bangla w-full max-w-2xl">
+        <h3 class="font-heading text-2xl mb-4">অর্ডার সারাংশ</h3>
+        <p class="text-base text-[var(--secondary-text)] mb-6">
+          অনুগ্রহ করে আপনার অর্ডারের তথ্য যাচাই করুন এবং নিশ্চিত করুন।
         </p>
 
-        <p class="text-sm text-[var(--secondary-text)]">
-          আপনি চাইলে QR কোড স্ক্যান করতে পারেন অথবা নিচের নাম্বারে টাকা পাঠাতে
-          পারেন।
-        </p>
-
-        <div class="my-6">
-          <img
-            id="qr-code-image"
-            src="https://placehold.co/200x200/1a1a1a/e8e8e8?text=QR+Code"
-            alt="bKash অথবা Nagad এ পেমেন্ট করার জন্য স্ক্যান করুন"
-            class="mx-auto rounded-lg border border-[var(--border)] w-40 h-40"
-          />
+        <!-- Dynamic Summary Content -->
+        <div
+          id="modal-summary-content"
+          class="bg-black/30 p-4 rounded-lg mb-6 text-left space-y-2"
+        >
+          <!-- Content filled by JS -->
         </div>
 
-        <div class="my-6 text-left bg-black/30 p-4 rounded-lg">
-          <p class="text-sm mb-2 text-[var(--secondary-text)]">
-            আপনার অ্যাপ থেকে 'Send Money' অপশন ব্যবহার করুন:
-          </p>
-          <div class="flex items-center justify-between gap-4">
-            <p
-              class="text-lg font-mono tracking-widest text-white"
-              id="merchant-number"
-            >
-              01700000000
-            </p>
-            <button
-              id="copy-number-btn"
-              class="bg-[var(--border)] text-white px-4 py-2 rounded-md text-xs font-semibold transition-all duration-200"
-            >
-              কপি করুন
-            </button>
-          </div>
-        </div>
-
-        <div class="text-left w-full mt-4">
-          <label for="trx-id" class="text-sm text-[var(--secondary-text)]"
-            >ট্রান্সঅ্যাকশন আইডি (TrxID)</label
-          >
-          <input
-            type="text"
-            id="trx-id"
-            required
-            placeholder="পেমেন্ট কনফার্মেশন থেকে প্রাপ্ত TrxID লিখুন"
-            class="form-input w-full mt-2 py-2 px-0 mb-6"
-          />
-        </div>
-
-        <div class="flex flex-col sm:flex-row gap-4 mt-4">
+        <div class="flex flex-col sm:flex-row gap-4 mt-6">
           <button
             id="go-back-btn"
             type="button"
-            class="w-full checkout-btn bg-transparent border border-[var(--border)] text-white hover:bg-gray-800"
+            class="w-full checkout-btn bg-transparent border border-[var(--border)] text-white hover:bg-gray-800 font-bangla"
           >
-            Edit Details
+            ফিরে যান
           </button>
-          <button id="confirm-payment-btn" class="w-full checkout-btn">
-            অর্ডার সম্পন্ন করুন
+          <button
+            id="confirm-payment-btn"
+            class="w-full checkout-btn font-bangla"
+          >
+            অর্ডার নিশ্চিত করুন
           </button>
         </div>
       </div>
@@ -1040,19 +1008,16 @@
         const messageContent = document.getElementById("message-content");
         const closeMessageBoxBtn = document.getElementById("close-message-btn");
 
-        // --- Payment Modal Elements ---
+        // --- Payment/Summary Modal Elements ---
         const paymentModal = document.getElementById(
           "payment-verification-modal"
         );
-        const deliveryChargeAmountEl = document.getElementById(
-          "delivery-charge-amount"
+        const modalSummaryContent = document.getElementById(
+          "modal-summary-content"
         );
-        const trxIdInput = document.getElementById("trx-id");
         const confirmPaymentBtn = document.getElementById(
           "confirm-payment-btn"
         );
-        const copyNumberBtn = document.getElementById("copy-number-btn");
-        const merchantNumberEl = document.getElementById("merchant-number");
         const goBackBtn = document.getElementById("go-back-btn");
 
         // --- State Persistence Logic ---
@@ -1137,7 +1102,7 @@
           } else {
             mainCheckoutBtn.disabled = false;
             mainCheckoutBtn.style.opacity = "1";
-            mainCheckoutBtn.textContent = "Review & Confirm";
+            mainCheckoutBtn.textContent = "যাচাই করুন এবং নিশ্চিত করুন";
           }
 
           cart.forEach((item) => {
@@ -1204,9 +1169,6 @@
               : `৳${totals.shippingCost.toFixed(2)}`;
           taxAmountEl.textContent = `৳${totals.tax.toFixed(2)}`;
           totalAmountEl.textContent = `৳${totals.total.toFixed(2)}`;
-          deliveryChargeAmountEl.textContent = `৳${totals.shippingCost.toFixed(
-            2
-          )}`;
         }
 
         function showMessageBox(title, content, type = "success") {
@@ -1218,6 +1180,55 @@
         }
 
         function showPaymentModal() {
+          // Generate Summary HTML
+          const cart = getCart();
+          const totals = calculateTotals();
+          const contactInfo = {
+            name:
+              document.getElementById("first-name").value +
+              " " +
+              document.getElementById("last-name").value,
+            phone: document.getElementById("mobile-number").value,
+            address: document.getElementById("address").value,
+            city: document.getElementById("city").value,
+          };
+
+          let itemsHtml = '<ul class="divide-y divide-[var(--border)] mb-4">';
+          cart.forEach((item) => {
+            const price = calculateFinalPrice(item.product);
+            itemsHtml += `
+                    <li class="flex justify-between py-2 text-sm">
+                        <span>${item.product.name} (x${item.quantity})</span>
+                        <span>৳${(price * item.quantity).toFixed(2)}</span>
+                    </li>
+                 `;
+          });
+          itemsHtml += "</ul>";
+
+          const summaryHtml = `
+                <div class="mb-4 pb-4 border-b border-[var(--border)]">
+                    <h4 class="font-semibold text-white mb-2">শিপিং তথ্য:</h4>
+                    <p class="text-sm text-[var(--secondary-text)]">${
+                      contactInfo.name
+                    }</p>
+                    <p class="text-sm text-[var(--secondary-text)]">${
+                      contactInfo.phone
+                    }</p>
+                    <p class="text-sm text-[var(--secondary-text)]">${
+                      contactInfo.address
+                    }, ${contactInfo.city}</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-white mb-2">পণ্য তালিকা:</h4>
+                    ${itemsHtml}
+                    <div class="flex justify-between pt-2 text-white font-bold border-t border-[var(--border)]">
+                        <span>সর্বমোট বিল:</span>
+                        <span>৳${totals.total.toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+
+          modalSummaryContent.innerHTML = summaryHtml;
           paymentModal.classList.add("show");
           document.body.classList.add("no-scroll");
         }
@@ -1237,7 +1248,7 @@
             option.querySelector('input[type="radio"]').checked = true;
             const method = option.dataset.method;
             if (method === "cod") {
-              mainCheckoutBtn.textContent = "Review & Confirm";
+              mainCheckoutBtn.textContent = "যাচাই করুন এবং নিশ্চিত করুন";
             } else {
               mainCheckoutBtn.textContent = "Proceed to bKash";
             }
@@ -1267,7 +1278,7 @@
           if (!validateForm()) {
             showMessageBox(
               "Error!",
-              "Please fill out all required fields.",
+              "অনুগ্রহ করে প্রয়োজনীয় সমস্ত তথ্য পূরণ করুন।",
               "error"
             );
             return;
@@ -1323,12 +1334,7 @@
         }
 
         confirmPaymentBtn.addEventListener("click", async () => {
-          const trxId = trxIdInput.value.trim();
-          if (!trxId) {
-            trxIdInput.style.borderColor = "red";
-            return;
-          }
-          trxIdInput.style.borderColor = "";
+          // Removed TrxID validation as requested for the simplified flow
 
           const orderData = {
             contactInfo: {
@@ -1349,18 +1355,15 @@
             ).value,
             cart: getCart(),
             totals: calculateTotals(),
-            trxId: trxId,
-            status: "pending-payment-verification",
+            status: "pending-confirmation",
           };
 
           const success = await saveOrderToFirestore(orderData);
           if (success) {
             hidePaymentModal();
             showMessageBox(
-              "Order Received!",
-              "Thank you! We are verifying your payment. Your order has been saved and you will receive a final confirmation via email or SMS shortly. <br><br> Your TrxID: <strong>" +
-                trxId +
-                "</strong>",
+              "অর্ডার সফল হয়েছে!",
+              "ধন্যবাদ! আপনার অর্ডারটি আমরা গ্রহণ করেছি। শীঘ্রই আমরা আপনার সাথে যোগাযোগ করব।",
               "success"
             );
           }
@@ -1369,46 +1372,6 @@
         goBackBtn.addEventListener("click", () => {
           hidePaymentModal();
           localStorage.removeItem(MODAL_STATE_KEY); // Remove state so it doesn't pop up on refresh
-        });
-
-        copyNumberBtn.addEventListener("click", () => {
-          const numberToCopy = merchantNumberEl.textContent;
-          navigator.clipboard
-            .writeText(numberToCopy)
-            .then(() => {
-              copyNumberBtn.textContent = "COPIED!";
-              copyNumberBtn.style.backgroundColor = "#4CAF50";
-              setTimeout(() => {
-                copyNumberBtn.textContent = "COPY";
-                copyNumberBtn.style.backgroundColor = "var(--border)";
-              }, 2000);
-            })
-            .catch((err) => {
-              try {
-                const textArea = document.createElement("textarea");
-                textArea.value = numberToCopy;
-                textArea.style.position = "fixed";
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                document.execCommand("copy");
-                document.body.removeChild(textArea);
-                copyNumberBtn.textContent = "COPIED!";
-                copyNumberBtn.style.backgroundColor = "#4CAF50";
-                setTimeout(() => {
-                  copyNumberBtn.textContent = "COPY";
-                  copyNumberBtn.style.backgroundColor = "var(--border)";
-                }, 2000);
-              } catch (e) {
-                console.error("Failed to copy number: ", e);
-                copyNumberBtn.textContent = "FAILED";
-                copyNumberBtn.style.backgroundColor = "#F44336";
-                setTimeout(() => {
-                  copyNumberBtn.textContent = "COPY";
-                  copyNumberBtn.style.backgroundColor = "var(--border)";
-                }, 2000);
-              }
-            });
         });
 
         closeMessageBoxBtn.addEventListener("click", () => {
