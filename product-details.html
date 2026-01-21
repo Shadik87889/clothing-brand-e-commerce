@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title id="dynamic-title">NovofitBD - Product Details</title>
+    <title id="dynamic-title">NovofitBD - পণ্যের বিবরণ</title>
     <!-- Dynamic SEO Meta Tags -->
     <meta
       name="description"
@@ -21,13 +21,15 @@
 
     <!-- Tailwind CSS for utility-first styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts for typography: Cormorant Garamond and Poppins -->
+
+    <!-- Google Fonts: Hind Siliguri added for Bangla support -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
+
     <!-- Phosphor Icons for elegant icons -->
     <script src="https://unpkg.com/@phosphor-icons/web@2.0.3"></script>
 
@@ -42,8 +44,9 @@
         --star-filled: #ffc107;
       }
 
+      /* UPDATED: Font Family to Hind Siliguri */
       body {
-        font-family: "Poppins", sans-serif;
+        font-family: "Hind Siliguri", sans-serif;
         background-color: var(--background);
         color: var(--text);
         overflow-x: hidden;
@@ -64,12 +67,12 @@
         overflow: hidden;
       }
 
-      /* Font classes */
+      /* Font classes updated to use Hind Siliguri primarily */
       .font-heading {
-        font-family: "Cormorant Garamond", serif;
+        font-family: "Hind Siliguri", sans-serif;
       }
       .font-body {
-        font-family: "Poppins", sans-serif;
+        font-family: "Hind Siliguri", sans-serif;
       }
 
       /* Custom cursor styles */
@@ -123,7 +126,7 @@
       }
       .mobile-nav-link {
         font-size: 2.5rem;
-        font-family: "Cormorant Garamond", serif;
+        font-family: "Hind Siliguri", sans-serif;
         font-weight: 600;
         text-transform: uppercase;
         line-height: 1.5;
@@ -200,6 +203,20 @@
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
       }
+
+      /* Animation for Order Now Button */
+      @keyframes pulse-glow {
+        0%,
+        100% {
+          box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+        50% {
+          box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+        }
+      }
+      .animate-pulse-glow {
+        animation: pulse-glow 2s infinite;
+      }
     </style>
   </head>
   <body class="antialiased">
@@ -210,7 +227,7 @@
     <!-- Add to Cart Notification -->
     <div id="cart-notification">
       <i class="ph-fill ph-check-circle text-green-400"></i>
-      <span>Item added to cart</span>
+      <span>কার্টে যুক্ত করা হয়েছে</span>
     </div>
 
     <!-- Mobile Navigation Menu -->
@@ -225,33 +242,33 @@
         <ul class="space-y-6">
           <li>
             <a href="home.html" class="mobile-nav-link hover-link magnetic-item"
-              >Home</a
+              >হোম</a
             >
           </li>
           <li>
             <a href="shop.html" class="mobile-nav-link hover-link magnetic-item"
-              >Shop</a
+              >শপ</a
             >
           </li>
           <li>
             <a
               href="gallery.html"
               class="mobile-nav-link hover-link magnetic-item"
-              >Gallery</a
+              >গ্যালারি</a
             >
           </li>
           <li>
             <a
               href="contact.html"
               class="mobile-nav-link hover-link magnetic-item"
-              >Contact</a
+              >যোগাযোগ</a
             >
           </li>
           <li>
             <a
               href="our-studio.html"
               class="mobile-nav-link hover-link magnetic-item"
-              >Studio</a
+              >স্টুডিও</a
             >
           </li>
         </ul>
@@ -270,15 +287,15 @@
             NovofitBD
           </div>
         </a>
-        <!-- Desktop Navigation -->
+        <!-- Desktop Navigation - UPDATED TO BANGLA -->
         <nav
           class="hidden md:flex items-center space-x-10 text-sm uppercase tracking-wider font-light"
         >
-          <a href="home.html" class="hover-link magnetic-item">Home</a>
-          <a href="shop.html" class="hover-link magnetic-item">Shop</a>
-          <a href="gallery.html" class="hover-link magnetic-item">Gallery</a>
-          <a href="contact.html" class="hover-link magnetic-item">Contact</a>
-          <a href="our-studio.html" class="hover-link magnetic-item">Studio</a>
+          <a href="home.html" class="hover-link magnetic-item">হোম</a>
+          <a href="shop.html" class="hover-link magnetic-item">শপ</a>
+          <a href="gallery.html" class="hover-link magnetic-item">গ্যালারি</a>
+          <a href="contact.html" class="hover-link magnetic-item">যোগাযোগ</a>
+          <a href="our-studio.html" class="hover-link magnetic-item">স্টুডিও</a>
         </nav>
         <div class="flex items-center space-x-6">
           <a
@@ -333,7 +350,7 @@
         <!-- Dedicated Product Details Page Section -->
         <section id="product-details-page">
           <a href="shop.html" class="back-to-products magnetic-item">
-            <i class="ph ph-arrow-left text-xl"></i> Back to Products
+            <i class="ph ph-arrow-left text-xl"></i> সব পণ্যে ফিরে যান
           </a>
           <div
             id="product-content-wrapper"
@@ -380,9 +397,17 @@
                 </div>
               </div>
 
+              <!-- Order Buttons Container (To be filled by JS) -->
+              <div
+                id="action-buttons-container"
+                class="flex flex-col gap-4 mt-4"
+              >
+                <!-- Order Now and Add to Cart buttons will appear here -->
+              </div>
+
               <!-- Description -->
               <div class="mt-4">
-                <h3 class="font-semibold mb-2">Description</h3>
+                <h3 class="font-semibold mb-2">বিবরণ</h3>
                 <p
                   id="page-product-description"
                   class="font-body text-sm text-[var(--secondary-text)] leading-relaxed"
@@ -391,7 +416,7 @@
 
               <!-- Specifications -->
               <div id="page-product-specs" class="mt-4">
-                <h3 class="font-semibold mb-2">Specifications</h3>
+                <h3 class="font-semibold mb-2">স্পেসিফিকেশন</h3>
                 <ul
                   class="font-body text-sm text-[var(--secondary-text)] space-y-2"
                 >
@@ -401,7 +426,7 @@
 
               <!-- Size Options -->
               <div id="page-size-options-container" class="mt-4">
-                <p class="text-sm font-semibold mb-2">Size</p>
+                <p class="text-sm font-semibold mb-2">সাইজ</p>
                 <div id="page-sizes" class="flex gap-2 flex-wrap">
                   <!-- Size buttons will be dynamically added here -->
                 </div>
@@ -409,7 +434,7 @@
 
               <!-- Color Options -->
               <div id="page-color-options-container" class="mt-4">
-                <p class="text-sm font-semibold mb-2">Color</p>
+                <p class="text-sm font-semibold mb-2">কালার</p>
                 <div id="page-colors" class="flex gap-2 flex-wrap">
                   <!-- Color buttons will be dynamically added here -->
                 </div>
@@ -417,7 +442,7 @@
 
               <!-- Quantity Selector -->
               <div class="flex items-center gap-4 mt-6">
-                <p class="text-sm font-semibold">Quantity</p>
+                <p class="text-sm font-semibold">পরিমান</p>
                 <div
                   class="flex items-center rounded-full border border-[var(--border)]"
                 >
@@ -442,21 +467,13 @@
                   </button>
                 </div>
               </div>
-
-              <!-- Add to Cart Button -->
-              <button
-                id="page-add-to-cart-btn"
-                class="add-to-cart-btn bg-white text-black py-4 rounded-full text-lg font-semibold uppercase tracking-wider hover:bg-gray-200 transition-all duration-300 magnetic-item mt-8"
-              >
-                Add to Cart
-              </button>
             </div>
           </div>
         </section>
       </div>
     </main>
 
-    <!-- Footer -->
+    <!-- Footer - UPDATED TO BANGLA -->
     <footer class="relative bg-black py-16 border-t border-[var(--border)]">
       <div class="container mx-auto px-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-12" id="footer-content">
@@ -464,11 +481,10 @@
             <h3
               class="text-xl font-bold mb-4 uppercase tracking-wider font-heading"
             >
-              Connect
+              যোগাযোগ
             </h3>
             <p class="text-gray-400 mb-6 max-w-sm font-body">
-              Follow us on our social media channels to see our latest designs
-              and updates.
+              আমাদের লেটেস্ট ডিজাইন এবং আপডেটের জন্য সোশ্যাল মিডিয়াতে ফলো করুন।
             </p>
             <div class="flex space-x-4 mt-8">
               <a
@@ -538,60 +554,60 @@
           </div>
           <div class="col-span-1 footer-col">
             <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
-              Shop
+              শপ
             </h4>
             <ul class="space-y-3 text-gray-400 font-body">
               <li>
                 <a href="shop.html" class="hover-link magnetic-item"
-                  >Shop All</a
+                  >সব দেখুন</a
                 >
               </li>
               <li>
                 <a
                   href="shop.html?category=Men"
                   class="hover-link magnetic-item"
-                  >Men</a
+                  >পুরুষ</a
                 >
               </li>
               <li>
                 <a
                   href="shop.html?category=Women"
                   class="hover-link magnetic-item"
-                  >Women</a
+                  >নারী</a
                 >
               </li>
               <li>
                 <a
                   href="shop.html?category=Others"
                   class="hover-link magnetic-item"
-                  >Accessories</a
+                  >এক্সেসরিজ</a
                 >
               </li>
             </ul>
           </div>
           <div class="col-span-1 footer-col">
             <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
-              About
+              অন্যান্য
             </h4>
             <ul class="space-y-3 text-gray-400 font-body">
               <li>
                 <a href="our-studio.html" class="hover-link magnetic-item"
-                  >Our Studio</a
+                  >আমাদের স্টুডিও</a
                 >
               </li>
               <li>
                 <a href="gallery.html" class="hover-link magnetic-item"
-                  >Gallery</a
+                  >গ্যালারি</a
                 >
               </li>
               <li>
                 <a href="contact.html" class="hover-link magnetic-item"
-                  >Contact</a
+                  >যোগাযোগ</a
                 >
               </li>
               <li>
                 <a href="#" id="faq-link" class="hover-link magnetic-item"
-                  >FAQs</a
+                  >প্রশ্নাবলী</a
                 >
               </li>
             </ul>
@@ -601,8 +617,7 @@
           class="mt-16 pt-8 border-t border-[var(--border)] text-center text-gray-500 text-xs font-body"
         >
           <p>
-            &copy; 2025 NovofitBD. All Rights Reserved. A demonstration of
-            world-class web design.
+            &copy; ২০২৫ NovofitBD. সর্বস্বত্ব সংরক্ষিত।
           </p>
         </div>
       </div>
@@ -719,7 +734,7 @@
           (item) =>
             item.product.id === product.id &&
             item.size === size &&
-            item.color === color
+            item.color === color,
         );
 
         if (existingItem) {
@@ -772,10 +787,10 @@
           .querySelectorAll(".hover-link, .add-to-cart-btn")
           .forEach((el) => {
             el.addEventListener("mouseenter", () =>
-              follower.classList.add("cursor-grow")
+              follower.classList.add("cursor-grow"),
             );
             el.addEventListener("mouseleave", () =>
-              follower.classList.remove("cursor-grow")
+              follower.classList.remove("cursor-grow"),
             );
           });
 
@@ -847,17 +862,17 @@
       // Main function to render product details and attach all event listeners
       async function renderProductDetails() {
         const productContentWrapper = document.getElementById(
-          "product-content-wrapper"
+          "product-content-wrapper",
         );
         productContentWrapper.innerHTML =
-          '<p class="text-center text-xl font-heading">Loading product details...</p>';
+          '<p class="text-center text-xl font-heading">পণ্যের বিবরণ লোড হচ্ছে...</p>';
 
         const product = await fetchProductFromFirestore(db);
         currentProduct = product; // Save product to a global variable
 
         if (!product) {
           productContentWrapper.innerHTML =
-            '<p class="text-center text-xl font-heading text-red-500">Product not found. Please provide a valid product ID in the URL, e.g., `?id=123`.</p>';
+            '<p class="text-center text-xl font-heading text-red-500">পণ্য পাওয়া যায়নি। দয়া করে সঠিক আইডি ব্যবহার করুন।</p>';
           return;
         }
 
@@ -868,7 +883,7 @@
           .querySelector('meta[name="description"]')
           .setAttribute(
             "content",
-            product.seo?.metaDescription || product.details.substring(0, 160)
+            product.seo?.metaDescription || product.details.substring(0, 160),
           );
         document
           .querySelector('meta[property="og:title"]')
@@ -877,14 +892,14 @@
           .querySelector('meta[property="og:description"]')
           .setAttribute(
             "content",
-            product.seo?.metaDescription || product.details.substring(0, 160)
+            product.seo?.metaDescription || product.details.substring(0, 160),
           );
         document
           .querySelector('meta[property="og:image"]')
           .setAttribute(
             "content",
             product.images?.[0] ||
-              "https://placehold.co/600x800/0d0d0d/e8e8e8?text=Product+Image"
+              "https://placehold.co/600x800/0d0d0d/e8e8e8?text=Product+Image",
           );
         document
           .querySelector('meta[property="og:url"]')
@@ -913,57 +928,65 @@
                     <p id="page-product-price" class="font-body text-2xl text-[var(--secondary-text)] flex items-center gap-2"></p>
                   </div>
               </div>
+
               <div class="mt-4">
-                  <h3 class="font-semibold mb-2">Description</h3>
+                  <h3 class="font-semibold mb-2">বিবরণ</h3>
                   <p id="page-product-description" class="font-body text-sm text-[var(--secondary-text)] leading-relaxed"></p>
               </div>
               <div id="page-product-specs" class="mt-4">
-                  <h3 class="font-semibold mb-2">Specifications</h3>
+                  <h3 class="font-semibold mb-2">স্পেসিফিকেশন</h3>
                   <ul class="font-body text-sm text-[var(--secondary-text)] space-y-2"></ul>
               </div>
               <div id="page-size-options-container" class="mt-4">
-                  <p class="text-sm font-semibold mb-2">Size</p>
+                  <p class="text-sm font-semibold mb-2">সাইজ</p>
                   <div id="page-sizes" class="flex gap-2 flex-wrap"></div>
               </div>
               <div id="page-color-options-container" class="mt-4">
-                  <p class="text-sm font-semibold mb-2">Color</p>
+                  <p class="text-sm font-semibold mb-2">কালার</p>
                   <div id="page-colors" class="flex gap-2 flex-wrap"></div>
               </div>
               <div class="flex items-center gap-4 mt-6">
-                  <p class="text-sm font-semibold">Quantity</p>
+                  <p class="text-sm font-semibold">পরিমান</p>
                   <div class="flex items-center rounded-full border border-[var(--border)]">
                       <button id="page-decrement-qty" class="p-2 h-8 w-8 flex items-center justify-center text-sm rounded-l-full hover:bg-white/10 transition-colors">-</button>
                       <input id="page-quantity-input" type="text" value="1" min="1" class="w-8 h-8 text-center bg-transparent border-x border-[var(--border)] focus:outline-none"/>
                       <button id="page-increment-qty" class="p-2 h-8 w-8 flex items-center justify-center text-sm rounded-r-full hover:bg-white/10 transition-colors">+</button>
                   </div>
               </div>
-              <button id="page-add-to-cart-btn" class="add-to-cart-btn bg-white text-black py-4 rounded-full text-lg font-semibold uppercase tracking-wider hover:bg-gray-200 transition-all duration-300 magnetic-item mt-8">
-                  Add to Cart
+              
+              <!-- ORDER NOW BUTTON (Moved Here) -->
+              <button id="page-order-now-btn" class="bg-[var(--accent)] text-black py-4 rounded-full text-lg font-bold uppercase tracking-wider hover:bg-gray-200 transition-all duration-300 magnetic-item mt-6 shadow-[0_0_20px_rgba(255,255,255,0.3)] animate-pulse-glow">
+                  অর্ডার করুন
+              </button>
+
+              <button id="page-add-to-cart-btn" class="add-to-cart-btn bg-transparent border border-[var(--border)] text-white py-4 rounded-full text-lg font-semibold uppercase tracking-wider hover:bg-white/10 transition-all duration-300 magnetic-item mt-4">
+                  কার্টে যোগ করুন
               </button>
           </div>
         `;
 
         const pageImage = document.getElementById("page-product-image");
         const pageImageThumbnails = document.getElementById(
-          "page-image-thumbnails"
+          "page-image-thumbnails",
         );
         const pageName = document.getElementById("page-product-name");
         const pageRating = document.getElementById("page-product-rating");
         const pagePrice = document.getElementById("page-product-price");
         const pageDescription = document.getElementById(
-          "page-product-description"
+          "page-product-description",
         );
         const pageSpecs = document.getElementById("page-product-specs");
         const pageSize = document.getElementById("page-sizes");
         const pageColors = document.getElementById("page-colors");
         const pageQuantityInput = document.getElementById(
-          "page-quantity-input"
+          "page-quantity-input",
         );
         const pageDecrementBtn = document.getElementById("page-decrement-qty");
         const pageIncrementBtn = document.getElementById("page-increment-qty");
         const pageAddToCartBtn = document.getElementById(
-          "page-add-to-cart-btn"
+          "page-add-to-cart-btn",
         );
+        const pageOrderNowBtn = document.getElementById("page-order-now-btn");
 
         // --- UPDATED PRICE LOGIC ---
         const basePrice = product.basePrice; // Corrected to use basePrice from your data
@@ -1147,6 +1170,35 @@
             console.error("Cannot add to cart. Product data is missing.");
           }
         });
+
+        // --- ORDER NOW BUTTON FUNCTIONALITY ---
+        pageOrderNowBtn.addEventListener("click", () => {
+          const quantity = parseInt(pageQuantityInput.value);
+          const sizeElement = pageSize.querySelector(".selected");
+          const colorElement = pageColors.querySelector(".selected");
+
+          if (!sizeElement || !colorElement) {
+            // Basic validation
+            console.log("Please select a size and color.");
+            // Ideally show a toast or highlight the missing selection
+            return;
+          }
+
+          const size = sizeElement ? sizeElement.textContent : null;
+          const color = colorElement ? colorElement.dataset.color : null;
+
+          if (currentProduct && quantity > 0) {
+            // 1. Add to cart
+            addToCart(currentProduct, quantity, size, color);
+
+            // 2. Redirect to checkout immediately
+            // Note: In a real app, you might want to wait for local storage write to confirm,
+            // but synchronous local storage is usually fast enough.
+            window.location.href = "checkout.html";
+          } else {
+            console.error("Cannot order now. Product data is missing.");
+          }
+        });
       }
 
       document.addEventListener("DOMContentLoaded", () => {
@@ -1169,7 +1221,7 @@
           }
           console.log(
             "Firebase Auth is ready. User ID:",
-            auth.currentUser?.uid
+            auth.currentUser?.uid,
           );
           // Once authenticated, render the product details and update cart count
           renderProductDetails();
