@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NovofitBD - Our Studio</title>
+    <title>NovofitBD - আমাদের স্টুডিও</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <script src="https://unpkg.com/@phosphor-icons/web@2.0.3"></script>
@@ -23,7 +23,7 @@
         --secondary-text: #a8a8a8;
       }
       body {
-        font-family: "Poppins", sans-serif;
+        font-family: "Hind Siliguri", sans-serif;
         background-color: var(--background);
         color: var(--text);
         overflow-x: hidden;
@@ -33,44 +33,12 @@
         overflow: hidden;
       }
       .font-heading {
-        font-family: "Cormorant Garamond", serif;
+        font-family: "Hind Siliguri", sans-serif;
       }
       .font-body {
-        font-family: "Poppins", sans-serif;
+        font-family: "Hind Siliguri", sans-serif;
       }
-      .cursor {
-        position: fixed;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: var(--accent);
-        pointer-events: none;
-        mix-blend-mode: difference;
-        transition: transform 0.2s ease-out, width 0.3s ease, height 0.3s ease;
-        z-index: 9999;
-        transform-origin: center center;
-      }
-      .cursor-follower {
-        position: fixed;
-        width: 36px;
-        height: 36px;
-        border: 1px solid var(--accent);
-        border-radius: 50%;
-        pointer-events: none;
-        mix-blend-mode: difference;
-        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-        z-index: 9999;
-      }
-      .cursor-grow {
-        transform: scale(3);
-        background: var(--accent);
-      }
-      @media (max-width: 768px) {
-        .cursor,
-        .cursor-follower {
-          display: none;
-        }
-      }
+
       #mobile-menu {
         position: fixed;
         top: 0;
@@ -92,7 +60,7 @@
       }
       .mobile-nav-link {
         font-size: 2.5rem;
-        font-family: "Cormorant Garamond", serif;
+        font-family: "Hind Siliguri", serif;
         font-weight: 600;
         text-transform: uppercase;
         line-height: 1.5;
@@ -233,29 +201,29 @@
         <ul class="space-y-6">
           <li>
             <a href="home" class="mobile-nav-link hover-link magnetic-item"
-              >Home</a
+              >হোম</a
             >
           </li>
           <li>
             <a href="shop" class="mobile-nav-link hover-link magnetic-item"
-              >Shop</a
+              >কেনাকাটা</a
             >
           </li>
           <li>
             <a href="gallery" class="mobile-nav-link hover-link magnetic-item"
-              >Gallery</a
+              >গ্যালারি</a
             >
           </li>
           <li>
             <a href="contact" class="mobile-nav-link hover-link magnetic-item"
-              >Contact</a
+              >যোগাযোগ</a
             >
           </li>
           <li>
             <a
               href="our-studio"
               class="mobile-nav-link hover-link magnetic-item"
-              >Studio</a
+              >স্টুডিও</a
             >
           </li>
         </ul>
@@ -279,11 +247,11 @@
         <nav
           class="hidden md:flex items-center space-x-10 text-sm uppercase tracking-wider font-light"
         >
-          <a href="home" class="hover-link magnetic-item">Home</a>
-          <a href="shop" class="hover-link magnetic-item">Shop</a>
-          <a href="gallery" class="hover-link magnetic-item">Gallery</a>
-          <a href="contact" class="hover-link magnetic-item">Contact</a>
-          <a href="our-studio" class="hover-link magnetic-item">Studio</a>
+          <a href="home" class="hover-link magnetic-item">হোম</a>
+          <a href="shop" class="hover-link magnetic-item">কেনাকাটা</a>
+          <a href="gallery" class="hover-link magnetic-item">গ্যালারি</a>
+          <a href="contact" class="hover-link magnetic-item">যোগাযোগ</a>
+          <a href="our-studio" class="hover-link magnetic-item">স্টুডিও</a>
         </nav>
         <div class="flex items-center space-x-6">
           <a
@@ -343,14 +311,14 @@
           id="main-title"
           class="text-7xl md:text-9xl font-heading text-center uppercase leading-none overflow-hidden"
         >
-          Our Studio
+          OUR STUDIO
         </h1>
         <!-- New: Style text that fades on scroll -->
         <p
           id="hero-scroll-text"
           class="text-lg md:text-xl text-[var(--secondary-text)] font-heading italic tracking-wide text-center mt-8"
         >
-          Fashion is what you buy. Style is what you do with it.
+          ফ্যাশন হলো যা আপনি কেনেন। স্টাইল হলো যা আপনি ধারণ করেন।
         </p>
         <div class="scroll-indicator">
           <span></span>
@@ -365,7 +333,7 @@
             data-parallax-image
           >
             <img
-              src="https://images.unsplash.com/photo-1600201319331-27d31ecd7850?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              src="https://images.unsplash.com/photo-1600201319331-27d31ecd7850?q=80&w=1170&auto=format&fit=crop"
               alt="Crafted with a conscious mind"
               class="w-full h-full object-cover clip-img"
               onerror="this.onerror=null;this.src='https://placehold.co/800x600/1a1a1a/a8a8a8?text=Craft';"
@@ -376,27 +344,22 @@
               class="font-heading text-4xl md:text-5xl mb-8 font-semibold"
               data-animation-target
             >
-              Our Philosophy
+              আমাদের দর্শন
             </h2>
             <div
               class="text-[var(--secondary-text)] font-body leading-relaxed text-lg md:text-xl space-y-6"
             >
               <p class="text-reveal-split" data-animation-target>
-                At NovofitBD, we believe in creating more than just products; we
-                craft experiences. Our journey began with a simple idea: to
-                design pieces that transcend fleeting trends, focusing on
-                quality, elegance, and durability. We pour our passion for art
-                and design into every stitch and seam, ensuring that each item
-                tells a story of meticulous craftsmanship and enduring style.
+                NovofitBD-তে, আমরা বিশ্বাস করি আমরা কেবল পণ্য তৈরি করছি না, বরং
+                অভিজ্ঞতা তৈরি করছি। আমাদের যাত্রা শুরু হয়েছিল একটি সহজ ধারণা
+                দিয়ে: এমন পোশাক ডিজাইন করা যা কেবল ট্রেন্ড নয়, বরং মান,
+                আভিজাত্য এবং স্থায়িত্বকে প্রাধান্য দেয়।
               </p>
               <p class="text-reveal-split" data-animation-target>
-                We are dedicated to sustainable practices and ethical
-                production. From sourcing high-quality, responsibly-obtained
-                materials to partnering with artisans who share our values,
-                every step of our process is a conscious choice. Our commitment
-                extends beyond our products to the people and the planet,
-                building a brand that you can feel good about wearing and
-                supporting for years to come.
+                আমরা প্রতিটি সেলাই এবং ডিজাইনে আমাদের শিল্পের প্রতি আবেগ ঢেলে
+                দেই, নিশ্চিত করি যে প্রতিটি পোশাক সূক্ষ্ম কারিগরির গল্প বলে।
+                আমাদের লক্ষ্য হলো এমন পোশাক তৈরি করা যা আপনি গর্বের সাথে পরতে
+                পারেন এবং যা সময়ের সাথে সাথে আরও আপন হয়ে ওঠে।
               </p>
             </div>
           </div>
@@ -408,12 +371,12 @@
             class="font-heading text-4xl md:text-6xl italic font-light leading-snug max-w-4xl mx-auto"
             data-animation-target
           >
-            "Elegance is not about being noticed, it's about being remembered."
+            "আভিজাত্য মানে নজরে আসা নয়, মনে স্থান করে নেওয়া।"
           </p>
           <span
             class="block mt-6 text-[var(--secondary-text)] tracking-widest uppercase text-sm"
             data-animation-target
-            >- Giorgio Armani</span
+            >- জর্জিও আরমানি</span
           >
         </div>
 
@@ -423,7 +386,7 @@
             class="font-heading text-4xl md:text-5xl mb-16 font-semibold text-center"
             data-animation-target
           >
-            Our Creative Process
+            আমাদের সৃজনশীল প্রক্রিয়া
           </h2>
           <div
             class="flex flex-col md:flex-row justify-center items-stretch gap-8"
@@ -435,15 +398,15 @@
             >
               <span
                 class="font-heading text-6xl text-[var(--secondary-text)] font-semibold"
-                >01</span
+                >০১</span
               >
               <h3 class="font-heading text-xl font-semibold uppercase">
-                Ideation & Concept
+                আইডিয়া এবং ধারণা
               </h3>
               <p class="text-[var(--secondary-text)] font-body">
-                Every project begins with a spark. We immerse ourselves in
-                research, gathering inspiration from art, architecture, and
-                nature to form the initial concept.
+                প্রতিটি প্রজেক্ট একটি স্ফুলিঙ্গ দিয়ে শুরু হয়। আমরা শিল্প,
+                স্থাপত্য এবং প্রকৃতি থেকে অনুপ্রেরণা নিয়ে আমাদের প্রাথমিক ধারণা
+                তৈরি করি।
               </p>
             </div>
             <!-- Arrow or Separator -->
@@ -459,14 +422,14 @@
             >
               <span
                 class="font-heading text-6xl text-[var(--secondary-text)] font-semibold"
-                >02</span
+                >০২</span
               >
               <h3 class="font-heading text-xl font-semibold uppercase">
-                Design & Refinement
+                ডিজাইন এবং পরিমার্জন
               </h3>
               <p class="text-[var(--secondary-text)] font-body">
-                We meticulously sketch and iterate, translating our concepts
-                into tangible designs. Every detail is considered and refined.
+                আমরা যত্ন সহকারে স্কেচ করি এবং আমাদের ধারণাগুলিকে বাস্তব ডিজাইনে
+                রূপান্তর করি। প্রতিটি বিবরণ বিবেচনা করা হয় এবং নিখুঁত করা হয়।
               </p>
             </div>
             <!-- Arrow or Separator -->
@@ -482,14 +445,14 @@
             >
               <span
                 class="font-heading text-6xl text-[var(--secondary-text)] font-semibold"
-                >03</span
+                >০৩</span
               >
               <h3 class="font-heading text-xl font-semibold uppercase">
-                Craftsmanship & Production
+                কারিগরি এবং উৎপাদন
               </h3>
               <p class="text-[var(--secondary-text)] font-body">
-                Partnering with skilled artisans, we bring our designs to life.
-                Our focus is on ethical production and quality materials.
+                দক্ষ কারিগরদের সাথে কাজ করে আমরা আমাদের ডিজাইনগুলিকে প্রাণবন্ত
+                করি। আমাদের ফোকাস নৈতিক উৎপাদন এবং মানসম্পন্ন উপকরণের দিকে।
               </p>
             </div>
           </div>
@@ -501,14 +464,14 @@
             class="font-heading text-4xl md:text-5xl mb-16 font-semibold text-center"
             data-animation-target
           >
-            Our Manifesto
+            আমাদের ইশতেহার
           </h2>
           <p
             class="text-[var(--secondary-text)] font-body max-w-2xl mx-auto mb-16 text-lg md:text-xl"
             data-animation-target
           >
-            We are a collective of visionaries, artists, and craftsmen united by
-            a shared belief in the power of beautiful, honest design.
+            আমরা স্বপ্নদ্রষ্টা, শিল্পী এবং কারিগরদের একটি দল, যারা সুন্দর এবং সৎ
+            ডিজাইনের শক্তিতে বিশ্বাসী।
           </p>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Manifesto Item 1 -->
@@ -517,10 +480,10 @@
               data-animation-target
             >
               <i class="ph-fill ph-heart text-5xl mb-4 text-white"></i>
-              <h3 class="font-heading text-2xl font-semibold mb-2">Passion</h3>
+              <h3 class="font-heading text-2xl font-semibold mb-2">আবেগ</h3>
               <p class="text-[var(--secondary-text)] font-body">
-                We pour our souls into every creation, driven by an unwavering
-                love for our craft.
+                আমরা আমাদের প্রতিটি সৃষ্টিতে আমাদের আত্মা ঢেলে দেই, যা আমাদের
+                শিল্পের প্রতি অকৃত্রিম ভালোবাসা থেকে আসে।
               </p>
             </div>
             <!-- Manifesto Item 2 -->
@@ -530,11 +493,11 @@
             >
               <i class="ph-fill ph-infinity text-5xl mb-4 text-white"></i>
               <h3 class="font-heading text-2xl font-semibold mb-2">
-                Longevity
+                স্থায়িত্ব
               </h3>
               <p class="text-[var(--secondary-text)] font-body">
-                We design for the future, crafting timeless pieces that defy
-                passing trends.
+                আমরা ভবিষ্যতের জন্য ডিজাইন করি, এমন কালজয়ী পোশাক তৈরি করি যা
+                ক্ষণস্থায়ী ট্রেন্ডকে হার মানায়।
               </p>
             </div>
             <!-- Manifesto Item 3 -->
@@ -543,12 +506,10 @@
               data-animation-target
             >
               <i class="ph-fill ph-handshake text-5xl mb-4 text-white"></i>
-              <h3 class="font-heading text-2xl font-semibold mb-2">
-                Integrity
-              </h3>
+              <h3 class="font-heading text-2xl font-semibold mb-2">সততা</h3>
               <p class="text-[var(--secondary-text)] font-body">
-                Our commitment is to ethical practices and transparent,
-                responsible production.
+                আমাদের প্রতিশ্রুতি হলো নৈতিক অনুশীলন এবং স্বচ্ছ, দায়িত্বশীল
+                উৎপাদন প্রক্রিয়া।
               </p>
             </div>
           </div>
@@ -564,14 +525,14 @@
               class="font-heading text-4xl md:text-5xl font-semibold uppercase leading-tight mb-4"
               data-animation-target
             >
-              Crafted with a Conscious Mind
+              সচেতন মনের সৃষ্টি
             </h2>
             <p
               class="text-[var(--secondary-text)] font-body max-w-2xl mx-auto text-lg"
               data-animation-target
             >
-              Every piece is a promise of quality, sustainability, and
-              unparalleled design.
+              প্রতিটি পোশাকে থাকে গুণমান, স্থায়িত্ব এবং অতুলনীয় ডিজাইনের
+              প্রতিশ্রুতি।
             </p>
           </div>
         </div>
@@ -586,118 +547,74 @@
             <h3
               class="text-xl font-bold mb-4 uppercase tracking-wider font-heading"
             >
-              Connect
+              NovofitBD
             </h3>
             <p class="text-gray-400 mb-6 max-w-sm font-body">
-              Follow us on our social media channels to see our latest designs
-              and updates.
+              আমাদের নতুন ডিজাইন আর অফার সম্পর্কে জানতে সাথে থাকুন।
             </p>
             <div class="flex space-x-4 mt-8">
               <a
                 href="#"
                 class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M12 2.163c3.204 0 3.584.012 4.85.07c3.252.148 4.653 1.636 4.807 4.845.056 1.268.067 1.649.067 4.853 0 3.204-.011 3.585-.067 4.849-.155 3.208-1.556 4.646-4.808 4.811-1.267.056-1.648.066-4.85.066s-3.583-.01-4.85-.066c-3.252-.165-4.652-1.603-4.807-4.811-.056-1.267-.067-1.648-.067-4.849s.011-3.585.067-4.85c.155-3.208 1.555-4.646 4.807-4.811 1.267-.056 1.648-.066 4.85-.066zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.211-6.671 2.457-6.882 6.812-.058 1.281-.07 1.689-.07 4.946s.012 3.666.07 4.947c.211 4.357 2.455 6.671 6.811 6.882 1.28.058 1.689.07 4.946.07s3.666-.012 4.946-.07c4.356-.211 6.67-2.456 6.882-6.812.058-1.28.07-1.689.07-4.946s-.012-3.666-.07-4.947c-.212-4.357-2.456-6.671-6.812-6.882-1.28-.058-1.689-.07-4.946-.07zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.442.646-1.442 1.442s.646 1.442 1.442 1.442 1.442-.646 1.442-1.442-.646-1.442-1.442-1.442z"
-                  />
-                </svg>
+                <i class="ph ph-facebook-logo text-2xl"></i>
               </a>
 
               <a
                 href="#"
                 class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M19.615 3.184c-3.604-.246-11.455-.246-15.059 0-3.794.256-4.701 4.701-4.701 7.632 0 2.93 2.057 7.375 4.701 7.632 3.604.246 11.455.246 15.059 0 3.794-.256 4.701-4.701 4.701-7.632 0-2.93-2.057-7.375-4.701-7.632zm-10.515 10.612v-6.648l6.096 3.324-6.096 3.324z"
-                  />
-                </svg>
+                <i class="ph ph-instagram-logo text-2xl"></i>
               </a>
 
               <a
                 href="https://www.facebook.com/profile.php?id=61579875061969"
                 class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M24 12c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.753 4.022 10.573 9.385 11.666v-8.252h-3.084v-3.414h3.084v-2.617c0-3.059 1.85-4.73 4.595-4.73 1.312 0 2.433.102 2.753.148v3.189h-1.892c-1.517 0-1.815.72-1.815 1.777v2.333h3.585l-.466 3.414h-3.119v8.252c5.362-1.093 9.385-5.913 9.385-11.666z"
-                  />
-                </svg>
-              </a>
-
-              <a
-                href="https://vt.tiktok.com/ZSAXPFp5s/"
-                class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M16.5 3c0 .2 0 .4.1.7.3 1.4 1.4 2.4 2.8 2.5.2 0 .4 0 .6-.1v3.1c-1.6 0-3-.5-4.2-1.4v7.4c0 3-2.4 5.4-5.4 5.4S4.9 18.2 4.9 15.2c0-2.9 2.3-5.3 5.2-5.4.5 0 1 .1 1.5.2v3.2c-.2-.1-.5-.2-.8-.2-1.2 0-2.1 1-2.1 2.1 0 1.2 1 2.1 2.1 2.1 1.2 0 2.2-1 2.2-2.1V3h3.5z"
-                  />
-                </svg>
+                <i class="ph ph-tiktok-logo text-2xl"></i>
               </a>
             </div>
           </div>
           <div class="col-span-1 footer-col">
             <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
-              Shop
+              শপ
             </h4>
             <ul class="space-y-3 text-gray-400 font-body">
               <li>
-                <a href="shop" class="hover-link magnetic-item">Shop All</a>
+                <a href="shop" class="hover-link magnetic-item">সব পণ্য</a>
               </li>
               <li>
                 <a href="shop?category=Men" class="hover-link magnetic-item"
-                  >Men</a
+                  >ছেলেদের</a
                 >
               </li>
               <li>
                 <a href="shop?category=Women" class="hover-link magnetic-item"
-                  >Women</a
+                  >মেয়েদের</a
                 >
               </li>
               <li>
                 <a href="shop?category=Others" class="hover-link magnetic-item"
-                  >Accessories</a
+                  >অন্যান্য</a
                 >
               </li>
             </ul>
           </div>
           <div class="col-span-1 footer-col">
             <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
-              About
+              তথ্য
             </h4>
             <ul class="space-y-3 text-gray-400 font-body">
               <li>
                 <a href="our-studio" class="hover-link magnetic-item"
-                  >Our Studio</a
+                  >আমাদের সম্পর্কে</a
                 >
               </li>
               <li>
-                <a href="gallery" class="hover-link magnetic-item">Gallery</a>
+                <a href="gallery" class="hover-link magnetic-item">গ্যালারি</a>
               </li>
               <li>
-                <a href="contact" class="hover-link magnetic-item">Contact</a>
+                <a href="contact" class="hover-link magnetic-item">যোগাযোগ</a>
               </li>
               <li>
                 <a href="#" id="faq-link" class="hover-link magnetic-item"
@@ -711,8 +628,7 @@
           class="mt-16 pt-8 border-t border-[var(--border)] text-center text-gray-500 text-xs font-body"
         >
           <p>
-            &copy; 2025 NovofitBD. All Rights Reserved. A demonstration of
-            world-class web design.
+            &copy; ২০২৫ NovofitBD. সর্বস্বত্ব সংরক্ষিত।
           </p>
         </div>
       </div>
@@ -747,14 +663,14 @@
       });
       document
         .querySelectorAll(
-          ".hover-link, .magnetic-item, a, button, .manifesto-card"
+          ".hover-link, .magnetic-item, a, button, .manifesto-card",
         )
         .forEach((el) => {
           el.addEventListener("mouseenter", () =>
-            follower.classList.add("cursor-grow")
+            follower.classList.add("cursor-grow"),
           );
           el.addEventListener("mouseleave", () =>
-            follower.classList.remove("cursor-grow")
+            follower.classList.remove("cursor-grow"),
           );
         });
       document.querySelectorAll(".magnetic-item").forEach((el) => {
@@ -880,7 +796,7 @@
             duration: 1.5,
             ease: "power4.out",
             delay: 0.5,
-          }
+          },
         );
       }
 

@@ -39,39 +39,7 @@
       .font-body {
         font-family: "Poppins", sans-serif;
       }
-      .cursor {
-        position: fixed;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: var(--accent);
-        pointer-events: none;
-        mix-blend-mode: difference;
-        transition: transform 0.2s ease-out, width 0.3s ease, height 0.3s ease;
-        z-index: 9999;
-        transform-origin: center center;
-      }
-      .cursor-follower {
-        position: fixed;
-        width: 36px;
-        height: 36px;
-        border: 1px solid var(--accent);
-        border-radius: 50%;
-        pointer-events: none;
-        mix-blend-mode: difference;
-        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-        z-index: 9999;
-      }
-      .cursor-grow {
-        transform: scale(3);
-        background: var(--accent);
-      }
-      @media (max-width: 768px) {
-        .cursor,
-        .cursor-follower {
-          display: none;
-        }
-      }
+
       #mobile-menu {
         position: fixed;
         top: 0;
@@ -1048,14 +1016,14 @@
       });
       document
         .querySelectorAll(
-          ".hover-link, .magnetic-item, a, button, .gallery-item"
+          ".hover-link, .magnetic-item, a, button, .gallery-item",
         )
         .forEach((el) => {
           el.addEventListener("mouseenter", () =>
-            follower.classList.add("cursor-grow")
+            follower.classList.add("cursor-grow"),
           );
           el.addEventListener("mouseleave", () =>
-            follower.classList.remove("cursor-grow")
+            follower.classList.remove("cursor-grow"),
           );
         });
       document.querySelectorAll(".magnetic-item").forEach((el) => {
@@ -1170,7 +1138,7 @@
             duration: 1.5,
             ease: "power4.out",
             delay: 0.5,
-          }
+          },
         );
       }
 
@@ -1230,7 +1198,7 @@
               containerAnimation: horizontalTween,
               scrub: true,
             },
-          }
+          },
         );
       });
       // ---------------------------------------------------------------------------------------
@@ -1251,7 +1219,7 @@
                 start: "top 85%",
                 toggleActions: "play none none none",
               },
-            }
+            },
           );
         });
       }
@@ -1274,7 +1242,7 @@
               start: "top 85%",
               toggleActions: "play none none none",
             },
-          }
+          },
         );
       });
 
@@ -1296,7 +1264,7 @@
       // FULL-PAGE ARTICLE LOGIC
       // ---------------------------------------------------------------------------------------
       const fullPageArticleView = document.getElementById(
-        "full-page-article-view"
+        "full-page-article-view",
       );
       const articleCloseBtn = document.getElementById("article-close-btn");
       const articleHeroImage = document.getElementById("article-hero-image");
@@ -1416,7 +1384,7 @@
                 duration: 1.2,
                 ease: "power3.out",
                 delay: 0.5,
-              }
+              },
             );
 
             // Hide the main content

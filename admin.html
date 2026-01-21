@@ -553,7 +553,7 @@
         </div>
       </div>
     </div>
-
+    <script src="easy-bn-translate.js"></script>
     <!-- Firebase SDKs -->
     <script type="module">
       import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -663,7 +663,7 @@
       function getReadOrderIdsFromStorage(currentUserId) {
         if (!currentUserId) return new Set();
         const storedIds = localStorage.getItem(
-          `auroraAdminReadOrderIds_${currentUserId}`
+          `auroraAdminReadOrderIds_${currentUserId}`,
         );
         return storedIds ? new Set(JSON.parse(storedIds)) : new Set();
       }
@@ -672,7 +672,7 @@
         if (!currentUserId) return;
         localStorage.setItem(
           `auroraAdminReadOrderIds_${currentUserId}`,
-          JSON.stringify(Array.from(idsSet))
+          JSON.stringify(Array.from(idsSet)),
         );
       }
 
@@ -681,7 +681,7 @@
         try {
           if (!firebaseConfig || !firebaseConfig.projectId) {
             console.error(
-              "Firebase config is missing or invalid. Cannot initialize app."
+              "Firebase config is missing or invalid. Cannot initialize app.",
             );
             if (loginError)
               loginError.textContent = "Firebase configuration error.";
@@ -706,7 +706,7 @@
                 // User has the correct role, show the admin panel
                 userId = user.uid;
                 const userIdDisplay = document.getElementById(
-                  "user-id-display"
+                  "user-id-display",
                 );
                 if (userIdDisplay) userIdDisplay.textContent = userId;
                 showAdminPanel();
@@ -1056,7 +1056,7 @@
         }
 
         const selectAllCheckbox = document.getElementById(
-          "select-all-products"
+          "select-all-products",
         );
         const bulkActionsBtn = document.getElementById("bulk-actions-btn");
         const bulkActionsMenu = document.getElementById("bulk-actions-menu");
@@ -1277,7 +1277,7 @@
                         </button>
                         <input type="hidden" value="${img}">
                       </div>
-                    `
+                    `,
                             )
                             .join("")
                         : ""
@@ -1307,7 +1307,7 @@
                             <i class="ph ph-x-circle text-lg"></i>
                           </button>
                         </div>
-                      `
+                      `,
                             )
                             .join("")
                         : ""
@@ -1334,7 +1334,7 @@
                             <i class="ph ph-x text-xs"></i>
                           </button>
                         </div>
-                      `
+                      `,
                             )
                             .join("")
                         : ""
@@ -1435,7 +1435,7 @@
             document
               .querySelectorAll(".tab-link")
               .forEach((t) =>
-                t.classList.remove("active", "text-[var(--text)]")
+                t.classList.remove("active", "text-[var(--text)]"),
               );
             document
               .querySelectorAll(".tab-link")
@@ -1459,7 +1459,7 @@
         // Pricing Calculation Logic
         const basePriceInput = document.getElementById("base-price");
         const discountPercentageInput = document.getElementById(
-          "discount-percentage"
+          "discount-percentage",
         );
         const finalPriceInput = document.getElementById("final-price");
 
@@ -1480,7 +1480,7 @@
         if (discountPercentageInput) {
           discountPercentageInput.addEventListener(
             "input",
-            calculateFinalPrice
+            calculateFinalPrice,
           );
         }
 
@@ -1526,19 +1526,19 @@
         // Size input management
         const sizeDropdown = document.getElementById("size-dropdown");
         const addSizeDropdownBtn = document.getElementById(
-          "add-size-dropdown-btn"
+          "add-size-dropdown-btn",
         );
         const newSizeInput = document.getElementById("new-size-input");
         const addSizeBtn = document.getElementById("add-size-btn");
         const sizesPillsContainer = document.getElementById(
-          "sizes-pills-container"
+          "sizes-pills-container",
         );
 
         const addSizePill = (size) => {
           if (!size) return;
           if (
             !sizesPillsContainer?.querySelector(
-              `[data-size="${size.toUpperCase()}"]`
+              `[data-size="${size.toUpperCase()}"]`,
             )
           ) {
             const sizePillHtml = `
@@ -1582,10 +1582,10 @@
         // Image input management
         const imagesList = document.getElementById("images-list");
         const newImageUrlInputContainer = document.getElementById(
-          "add-image-input-container"
+          "add-image-input-container",
         );
         const addImagePlaceholder = document.getElementById(
-          "add-image-placeholder"
+          "add-image-placeholder",
         );
         const addImageBtn = document.getElementById("add-image-btn");
         const newImageUrlInput = document.getElementById("new-image-url");
@@ -1623,7 +1623,7 @@
             if (removeItemBtn) {
               removeItemBtn.closest(".relative")?.remove();
               const totalImages = imagesList.querySelectorAll(
-                'input[type="hidden"]'
+                'input[type="hidden"]',
               ).length;
               if (totalImages === 0) {
                 newImageUrlInputContainer.classList.add("hidden");
@@ -1665,7 +1665,7 @@
                 // Manually update global state for immediate UI response & duplicate checks
                 if (
                   !allCategories.some(
-                    (c) => c.name.toLowerCase() === savedName.toLowerCase()
+                    (c) => c.name.toLowerCase() === savedName.toLowerCase(),
                   )
                 ) {
                   allCategories.push({ id: "", name: savedName });
@@ -1723,7 +1723,7 @@
                 <div class="w-4 h-4 rounded-full border border-[var(--secondary-text)]" style="background-color: ${color};"></div>
                 <span>${color}</span>
             </div>
-        `
+        `,
           )
           .join("");
 
@@ -1756,7 +1756,7 @@
                     .map(
                       (imgUrl) => `
                     <img src="${imgUrl}" alt="${product.name}" class="w-full h-24 object-cover rounded-lg" onerror="this.onerror=null;this.src='https://placehold.co/100x100/2a2a2a/a8a8a8?text=Image+N/A';">
-                  `
+                  `,
                     )
                     .join("")}
                 </div>
@@ -1767,16 +1767,16 @@
                       discountPercentage > 0
                         ? `
                         <p class="text-3xl font-bold font-heading text-[var(--accent)]">&#2547;${finalPrice.toFixed(
-                          2
+                          2,
                         )}</p>
                         <p class="text-xl font-heading text-[var(--secondary-text)] line-through">&#2547;${basePrice.toFixed(
-                          2
+                          2,
                         )}</p>
                         <span class="bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-full">- ${discountPercentage}%</span>
                         `
                         : `
                         <p class="text-3xl font-bold font-heading text-[var(--accent)]">&#2547;${basePrice.toFixed(
-                          2
+                          2,
                         )}</p>
                         `
                     }
@@ -1909,7 +1909,7 @@
         }
 
         const filterButtons = document.querySelectorAll(
-          "#content-area .filter-btn"
+          "#content-area .filter-btn",
         );
         filterButtons.forEach((btn) => {
           btn.addEventListener("click", (e) => {
@@ -1972,7 +1972,7 @@
                     </div>
                     <div class="text-right">
                         <p class="font-semibold">&#2547;${finalPrice.toFixed(
-                          2
+                          2,
                         )}</p>
                     </div>
                 </div>
@@ -1982,21 +1982,16 @@
           '<p class="p-6 text-[var(--secondary-text)]">No items in this order.</p>';
 
         // --- UPDATED: Invoice Button Logic ---
+        // MODIFIED: Removed restriction on generating invoice. It is now always available if not yet generated.
         let invoiceButtonHtml = "";
         if (order.invoiceId) {
           invoiceButtonHtml = `<button id="view-invoice-btn" data-invoice-id="${order.invoiceId}" class="py-2 px-5 rounded-full text-sm font-semibold flex items-center gap-2 btn btn-secondary">
                 <i class="ph ph-receipt"></i> View Invoice
              </button>`;
         } else {
-          if (order.isShippingPaid) {
-            invoiceButtonHtml = `<button id="generate-invoice-btn" class="py-2 px-5 rounded-full text-sm font-semibold flex items-center gap-2 btn btn-primary">
+          invoiceButtonHtml = `<button id="generate-invoice-btn" class="py-2 px-5 rounded-full text-sm font-semibold flex items-center gap-2 btn btn-primary">
                     <i class="ph ph-plus-circle"></i> Generate Invoice
                  </button>`;
-          } else {
-            invoiceButtonHtml = `<button title="An invoice can be generated only after the shipping cost is paid." class="py-2 px-5 rounded-full text-sm font-semibold flex items-center gap-2 btn btn-secondary opacity-50 cursor-not-allowed" disabled>
-                    <i class="ph ph-plus-circle"></i> Generate Invoice
-                 </button>`;
-          }
         }
 
         contentArea.innerHTML = `
@@ -2088,31 +2083,7 @@
                     <div class="card rounded-xl p-6">
                         <h3 class="font-heading text-2xl font-semibold text-[var(--accent)] mb-4">Order Status</h3>
                         <div class="space-y-4 text-sm text-[var(--secondary-text)]">
-                            <!-- Shipping Payment Status and Action -->
-                            <div class="flex flex-col gap-4">
-                                <div class="flex justify-between items-center">
-                                    <p><strong>Shipping Payment:</strong></p>
-                                    <span class="font-semibold ${
-                                      order.isShippingPaid
-                                        ? "text-green-400"
-                                        : "text-yellow-400"
-                                    }">
-                                        ${
-                                          order.isShippingPaid
-                                            ? "Paid"
-                                            : "Pending"
-                                        }
-                                    </span>
-                                </div>
-                                ${
-                                  !order.isShippingPaid
-                                    ? `<button id="mark-shipping-paid-btn" class="w-full py-2 px-4 rounded-full text-sm font-semibold btn btn-secondary">
-                                        Mark Shipping Paid & Confirm Order
-                                    </button>`
-                                    : ""
-                                }
-                            </div>
-                            <hr class="border-[var(--border)]">
+                            <!-- MODIFIED: Removed Shipping Payment Section as 'there will not be any paid before' -->
                             <div>
                                 <label for="order-status-select" class="block text-sm font-light mb-2">Update Status (Manual)</label>
                                 <select id="order-status-select" class="form-select w-full">
@@ -2161,14 +2132,10 @@
             updateOrderStatus(order.userId, order.id, e.target.value);
           });
 
-        document
-          .getElementById("mark-shipping-paid-btn")
-          ?.addEventListener("click", () => {
-            markShippingAsPaid(order);
-          });
+        // Note: mark-shipping-paid-btn listeners removed as the button was removed
 
         const generateInvoiceBtn = document.getElementById(
-          "generate-invoice-btn"
+          "generate-invoice-btn",
         );
         if (generateInvoiceBtn) {
           generateInvoiceBtn.addEventListener("click", () => {
@@ -2187,7 +2154,7 @@
               "public",
               "data",
               "invoices",
-              invoiceId
+              invoiceId,
             );
             const invoiceSnap = await getDoc(invoiceRef);
             if (invoiceSnap.exists()) {
@@ -2265,7 +2232,7 @@
                     <td class="py-3 px-4">${product.name || "N/A"}</td>
                     <td class="py-3 px-4 text-center">${item.quantity}</td>
                     <td class="py-3 px-4 text-right">&#2547;${finalPrice.toFixed(
-                      2
+                      2,
                     )}</td>
                     <td class="py-3 px-4 text-right">&#2547;${(
                       finalPrice * item.quantity
@@ -2275,14 +2242,8 @@
           })
           .join("");
 
-        const shippingRowHtml = invoice.isShippingPaid
-          ? `
-                <tr>
-                    <td colspan="3" class="py-2 px-4 font-semibold">Shipping</td>
-                    <td class="py-2 px-4 text-right text-green-400 font-semibold">PAID</td>
-                </tr>
-            `
-          : `
+        // MODIFIED: Always show shipping cost amount, removed "PAID" logic.
+        const shippingRowHtml = `
                 <tr>
                     <td colspan="3" class="py-2 px-4 font-semibold">Shipping</td>
                     <td class="py-2 px-4 text-right">&#2547;${(
@@ -2313,7 +2274,7 @@
                           invoice.id
                         }</p>
                         <p class="text-right text-[var(--secondary-text)]">Date: ${new Date(
-                          invoice.issuedDate
+                          invoice.issuedDate,
                         ).toLocaleDateString()}</p>
                     </div>
                 </header>
@@ -2347,20 +2308,20 @@
                             <tr>
                                 <td colspan="3" class="py-2 px-4 font-semibold">Subtotal</td>
                                 <td class="py-2 px-4">&#2547;${invoice.totals.subtotal.toFixed(
-                                  2
+                                  2,
                                 )}</td>
                             </tr>
                             ${shippingRowHtml}
                             <tr>
                                 <td colspan="3" class="py-2 px-4 font-semibold">Tax</td>
                                 <td class="py-2 px-4">&#2547;${invoice.totals.tax.toFixed(
-                                  2
+                                  2,
                                 )}</td>
                             </tr>
                             <tr class="font-bold text-lg text-[var(--accent)] border-t-2 border-[var(--accent)]">
                                 <td colspan="3" class="py-3 px-4">Amount Due</td>
                                 <td class="py-3 px-4">&#2547;${invoice.totals.total.toFixed(
-                                  2
+                                  2,
                                 )}</td>
                             </tr>
                         </tfoot>
@@ -2450,7 +2411,7 @@
             const baseCost = document.getElementById("base-shipping-cost")
               .value;
             const freeThreshold = document.getElementById(
-              "free-shipping-threshold"
+              "free-shipping-threshold",
             ).value;
             saveSettings("shipping", {
               baseCost: parseFloat(baseCost),
@@ -2474,7 +2435,7 @@
       function setupGlobalListeners() {
         if (!db || !userId) {
           console.error(
-            "Firestore or User ID not initialized. Cannot set up global listeners."
+            "Firestore or User ID not initialized. Cannot set up global listeners.",
           );
           return;
         }
@@ -2498,12 +2459,12 @@
 
             currentOrders.sort(
               (a, b) =>
-                (b.timestamp?.toDate() || 0) - (a.timestamp?.toDate() || 0)
+                (b.timestamp?.toDate() || 0) - (a.timestamp?.toDate() || 0),
             );
 
             // Notification logic using persistent storage
             const unreadOrders = currentOrders.filter(
-              (order) => !readOrderIds.has(order.id)
+              (order) => !readOrderIds.has(order.id),
             );
             updateNotificationsUI(unreadOrders);
 
@@ -2520,7 +2481,7 @@
           },
           (error) => {
             console.error("Global orders listener error:", error);
-          }
+          },
         );
 
         // We also need product data for the dashboard charts
@@ -2530,7 +2491,7 @@
           "aurora-data",
           "public",
           "data",
-          "products"
+          "products",
         );
         getDocs(productsRef).then((productsSnap) => {
           allProductsForCharts = productsSnap.docs.map((doc) => ({
@@ -2584,7 +2545,7 @@
 
         const credential = EmailAuthProvider.credential(
           user.email,
-          currentPassword
+          currentPassword,
         );
 
         try {
@@ -2658,7 +2619,7 @@
 
         // ALL pending orders (not date-filtered)
         const pendingOrders = allOrdersInView.filter(
-          (order) => (order.status || "Pending") === "Pending"
+          (order) => (order.status || "Pending") === "Pending",
         );
 
         const filteredProducts = allProductsForCharts.filter((product) => {
@@ -2670,10 +2631,10 @@
         const totalRevenueEl = document.getElementById("total-revenue");
         const totalProfitEl = document.getElementById("total-profit");
         const pendingOrdersCountEl = document.getElementById(
-          "pending-orders-count"
+          "pending-orders-count",
         );
         const totalProductsCountEl = document.getElementById(
-          "total-products-count"
+          "total-products-count",
         );
 
         let totalRevenue = 0;
@@ -2683,7 +2644,7 @@
           totalRevenue += order.totals?.total || 0;
           order.cart?.forEach((item) => {
             const product = allProductsForCharts.find(
-              (p) => p.id === item.product?.id
+              (p) => p.id === item.product?.id,
             );
             if (product) {
               const cost = product.costPrice || product.basePrice || 0;
@@ -2713,7 +2674,7 @@
           let orderCost = 0;
           order.cart?.forEach((item) => {
             const product = allProductsForCharts.find(
-              (p) => p.id === item.product?.id
+              (p) => p.id === item.product?.id,
             );
             if (product) {
               orderCost +=
@@ -2726,10 +2687,10 @@
         });
 
         const sortedDates = Object.keys(dailyData).sort(
-          (a, b) => new Date(a) - new Date(b)
+          (a, b) => new Date(a) - new Date(b),
         );
         const chartLabels = sortedDates.map((date) =>
-          dayjs(date).format("MMM D")
+          dayjs(date).format("MMM D"),
         );
         const revenueData = sortedDates.map((date) => dailyData[date].revenue);
         const profitData = sortedDates.map((date) => dailyData[date].profit);
@@ -2908,13 +2869,13 @@
           "aurora-data",
           "public",
           "data",
-          "products"
+          "products",
         );
 
         if (currentProductStatusFilter !== "All") {
           productsRef = query(
             productsRef,
-            where("status", "==", currentProductStatusFilter)
+            where("status", "==", currentProductStatusFilter),
           );
         }
 
@@ -2933,7 +2894,7 @@
             if (tableBody) {
               tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-red-500">Error loading products.</td></tr>`;
             }
-          }
+          },
         );
       }
 
@@ -2950,7 +2911,7 @@
           appId,
           "public",
           "data",
-          "invoices"
+          "invoices",
         );
 
         invoicesUnsubscribe = onSnapshot(
@@ -2967,12 +2928,12 @@
           (error) => {
             console.error("Error fetching invoices:", error);
             const invoicesTableBody = document.getElementById(
-              "invoices-table-body"
+              "invoices-table-body",
             );
             if (invoicesTableBody) {
               invoicesTableBody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-red-500">Error loading invoices.</td></tr>`;
             }
-          }
+          },
         );
       }
 
@@ -2987,7 +2948,7 @@
           "aurora-data",
           "public",
           "data",
-          "productCategories"
+          "productCategories",
         );
         const categoriesQuery = query(categoriesRef, orderBy("name"));
 
@@ -3008,7 +2969,7 @@
           },
           (error) => {
             console.error("Error listening for categories:", error);
-          }
+          },
         );
       }
 
@@ -3058,7 +3019,7 @@
         // Check for duplicates (case-insensitive) again just before saving
         const normalizedName = categoryName.trim();
         const exists = allCategories.some(
-          (cat) => cat.name.toLowerCase() === normalizedName.toLowerCase()
+          (cat) => cat.name.toLowerCase() === normalizedName.toLowerCase(),
         );
         if (exists) {
           openMessageModal({
@@ -3076,7 +3037,7 @@
             "aurora-data",
             "public",
             "data",
-            "productCategories"
+            "productCategories",
           );
           await addDoc(categoriesRef, {
             name: normalizedName,
@@ -3119,7 +3080,7 @@
         const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
 
         const selectAllCheckbox = document.getElementById(
-          "select-all-products"
+          "select-all-products",
         );
         if (selectAllCheckbox) {
           selectAllCheckbox.checked =
@@ -3188,17 +3149,17 @@
                         ? `
                       <div class="flex items-center gap-2">
                           <span class="text-[var(--accent)] font-semibold">&#2547;${finalPrice.toFixed(
-                            2
+                            2,
                           )}</span>
                           <span class="text-sm text-[var(--secondary-text)] line-through">&#2547;${basePrice.toFixed(
-                            2
+                            2,
                           )}</span>
                       </div>
                       <span class="bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-full w-fit mt-1">- ${discountPercentage}%</span>
                       `
                         : `
                       <span class="text-[var(--accent)] font-semibold">&#2547;${basePrice.toFixed(
-                        2
+                        2,
                       )}</span>
                       `
                     }
@@ -3243,7 +3204,7 @@
           (newPage) => {
             productsCurrentPage = newPage;
             displayProducts(allProductsInView);
-          }
+          },
         );
 
         // Attach event listeners for new elements
@@ -3263,7 +3224,7 @@
           btn.addEventListener("click", (e) => {
             const productId = e.currentTarget.getAttribute("data-id");
             const productToView = filteredProducts.find(
-              (p) => p.id === productId
+              (p) => p.id === productId,
             );
             if (productToView) {
               renderUI("product_detail", productToView);
@@ -3275,7 +3236,7 @@
           btn.addEventListener("click", (e) => {
             const productId = e.currentTarget.getAttribute("data-id");
             const productToEdit = filteredProducts.find(
-              (p) => p.id === productId
+              (p) => p.id === productId,
             );
             if (productToEdit) {
               renderUI("edit_product", productToEdit);
@@ -3332,7 +3293,7 @@
         const endIndex = startIndex + ordersItemsPerPage;
         const paginatedOrders = searchFilteredOrders.slice(
           startIndex,
-          endIndex
+          endIndex,
         );
 
         // 4. Render the final list
@@ -3357,7 +3318,7 @@
                         <div class="flex items-center justify-between gap-2 mb-2">
                             <h3 class="font-heading text-lg font-semibold truncate">Order #${order.id.substring(
                               0,
-                              8
+                              8,
                             )}</h3>
                             <span class="order-status-pill status-${status.toLowerCase()}">${status}</span>
                         </div>
@@ -3366,7 +3327,7 @@
                               order.userId
                             }</span></p>
                             <p><strong>Total Amount:</strong> <span class="text-[var(--accent)] font-semibold">&#2547;${totalAmount.toFixed(
-                              2
+                              2,
                             )}</span></p>
                         </div>
                     </div>
@@ -3388,7 +3349,7 @@
               btn.addEventListener("click", (e) => {
                 const orderId = e.currentTarget.getAttribute("data-id");
                 const orderToView = allOrdersInView.find(
-                  (o) => o.id === orderId
+                  (o) => o.id === orderId,
                 );
                 if (orderToView) {
                   renderUI("order_detail", orderToView);
@@ -3405,13 +3366,13 @@
           (newPage) => {
             ordersCurrentPage = newPage;
             displayOrders(allOrdersInView);
-          }
+          },
         );
       }
 
       function displayInvoices(invoices) {
         const invoicesTableBody = document.getElementById(
-          "invoices-table-body"
+          "invoices-table-body",
         );
         if (!invoicesTableBody) return;
 
@@ -3449,10 +3410,10 @@
                       invoice.shippingAddress.firstName
                     } ${invoice.shippingAddress.lastName}</td>
                     <td class="py-4 px-2">${new Date(
-                      invoice.issuedDate
+                      invoice.issuedDate,
                     ).toLocaleDateString()}</td>
                     <td class="py-4 px-2 text-[var(--accent)] font-semibold">&#2547;${invoice.totals.total.toFixed(
-                      2
+                      2,
                     )}</td>
                     <td class="py-4 px-2">
                          <button data-id="${
@@ -3460,7 +3421,7 @@
                          }" class="view-invoice-details-btn text-sm text-[var(--accent)] hover:underline font-semibold">View</button>
                     </td>
                 </tr>
-            `
+            `,
             )
             .join("");
         }
@@ -3475,7 +3436,7 @@
           (newPage) => {
             invoicesCurrentPage = newPage;
             displayInvoices(allInvoicesInView);
-          }
+          },
         );
 
         document
@@ -3484,7 +3445,7 @@
             btn.addEventListener("click", (e) => {
               const invoiceId = e.currentTarget.getAttribute("data-id");
               const invoiceToView = allInvoicesInView.find(
-                (inv) => inv.id === invoiceId
+                (inv) => inv.id === invoiceId,
               );
               if (invoiceToView) {
                 renderUI("invoice_detail", invoiceToView);
@@ -3507,7 +3468,7 @@
             "public",
             "data",
             "products",
-            productId
+            productId,
           );
           await updateDoc(productDocRef, {
             status: newStatus,
@@ -3532,7 +3493,7 @@
           "users",
           orderUserId,
           "orders",
-          orderId
+          orderId,
         );
         try {
           await updateDoc(orderDocRef, { status: newStatus });
@@ -3568,7 +3529,7 @@
           "users",
           order.userId,
           "orders",
-          order.id
+          order.id,
         );
         try {
           // Set shipping as paid and automatically confirm the order
@@ -3603,20 +3564,19 @@
         if (!db) return;
 
         const invoiceId = generateReadableId("INV");
-        const isShippingPaid = order.isShippingPaid || false;
+        // MODIFIED: We force this to false or ignore it, as per "there will not be any paid before" requirement.
+        const isShippingPaid = false;
 
         // Create a deep copy of totals to avoid mutating the original order object
         const invoiceTotals = JSON.parse(JSON.stringify(order.totals));
 
-        // If shipping is paid, the amount due on the invoice should not include shipping cost
-        if (isShippingPaid) {
-          invoiceTotals.total -= invoiceTotals.shippingCost || 0;
-        }
+        // MODIFIED: Removed logic that deducted shippingCost from total.
+        // The Invoice Total will now always be the full amount (Subtotal + Shipping + Tax).
 
         const invoiceData = {
           ...order,
-          totals: invoiceTotals, // Use the adjusted totals
-          isShippingPaid: isShippingPaid, // Store the flag in the invoice
+          totals: invoiceTotals, // Use the original full totals
+          isShippingPaid: isShippingPaid,
           id: invoiceId,
           orderId: order.id,
           issuedDate: Date.now(),
@@ -3629,7 +3589,7 @@
           "public",
           "data",
           "invoices",
-          invoiceId
+          invoiceId,
         );
         const orderDocRef = doc(
           db,
@@ -3638,7 +3598,7 @@
           "users",
           order.userId,
           "orders",
-          order.id
+          order.id,
         );
 
         try {
@@ -3675,14 +3635,14 @@
         }
 
         const selectAllCheckbox = document.getElementById(
-          "select-all-products"
+          "select-all-products",
         );
         if (selectAllCheckbox) {
           const checkboxesOnPage = document.querySelectorAll(
-            ".product-checkbox"
+            ".product-checkbox",
           );
           const allOnPageSelected = Array.from(checkboxesOnPage).every((cb) =>
-            selectedProducts.has(cb.dataset.id)
+            selectedProducts.has(cb.dataset.id),
           );
           selectAllCheckbox.checked =
             allOnPageSelected && checkboxesOnPage.length > 0;
@@ -3723,7 +3683,7 @@
             "public",
             "data",
             "products",
-            productId
+            productId,
           );
           batch.delete(productDocRef);
         });
@@ -3734,7 +3694,7 @@
           selectedProducts.clear();
           // After deletion, you might want to force a re-render
           displayProducts(
-            allProductsInView.filter((p) => !selectedProducts.has(p.id))
+            allProductsInView.filter((p) => !selectedProducts.has(p.id)),
           );
         } catch (error) {
           console.error("Error during bulk deletion:", error);
@@ -3751,17 +3711,17 @@
         const productId = document.getElementById("product-id")?.value;
 
         const colors = Array.from(
-          document.querySelectorAll("#colors-list input[type='text']") || []
+          document.querySelectorAll("#colors-list input[type='text']") || [],
         )
           .map((input) => input.value.trim())
           .filter(Boolean);
 
         const sizes = Array.from(
-          document.querySelectorAll("#sizes-pills-container .size-pill") || []
+          document.querySelectorAll("#sizes-pills-container .size-pill") || [],
         ).map((pill) => pill.getAttribute("data-size"));
 
         const images = Array.from(
-          document.querySelectorAll('#images-list input[type="hidden"]') || []
+          document.querySelectorAll('#images-list input[type="hidden"]') || [],
         )
           .map((input) => input.value.trim())
           .filter(Boolean);
@@ -3828,7 +3788,7 @@
               "public",
               "data",
               "products",
-              productId
+              productId,
             );
             await setDoc(productDocRef, productData, { merge: true });
             console.log("Product updated successfully:", productId);
@@ -3841,12 +3801,12 @@
               "public",
               "data",
               "products",
-              newProductId
+              newProductId,
             );
             await setDoc(productDocRef, productData);
             console.log(
               "New product added successfully with ID:",
-              newProductId
+              newProductId,
             );
           }
           renderUI("products");
@@ -3874,7 +3834,7 @@
             "public",
             "data",
             "products",
-            productId
+            productId,
           );
           await deleteDoc(productDocRef);
           console.log("Product deleted:", productId);
@@ -3908,7 +3868,7 @@
           "public",
           "data",
           "settings",
-          type
+          type,
         );
         try {
           await setDoc(settingsRef, data, { merge: true });
@@ -3938,7 +3898,7 @@
             "public",
             "data",
             "settings",
-            "shipping"
+            "shipping",
           );
           const taxRef = doc(
             db,
@@ -3947,7 +3907,7 @@
             "public",
             "data",
             "settings",
-            "tax"
+            "tax",
           );
 
           const shippingSnap = await getDoc(shippingRef);
@@ -3975,7 +3935,7 @@
         currentPage,
         totalItems,
         itemsPerPage,
-        onPageChange
+        onPageChange,
       ) {
         const container = document.getElementById(containerId);
         if (!container) return;
@@ -4049,7 +4009,7 @@
                           <p class="text-xs text-[var(--secondary-text)]">
                               Order <span class="font-mono text-[var(--accent)]">#${order.id.substring(
                                 0,
-                                8
+                                8,
                               )}</span> from ${customerName} for <span class="font-semibold text-white">&#2547;${total}</span>.
                           </p>
                           <p class="text-xs text-[var(--secondary-text)] mt-1">${timeAgo}</p>
@@ -4078,7 +4038,7 @@
 
               // Find the order and render the detail view
               const orderToView = allOrdersInView.find(
-                (o) => o.id === orderId && o.userId === userIdFromNotification
+                (o) => o.id === orderId && o.userId === userIdFromNotification,
               );
               if (orderToView) {
                 renderUI("order_detail", orderToView);
@@ -4094,7 +4054,7 @@
 
               // Update the badge count
               const notificationBadge = document.getElementById(
-                "notification-badge"
+                "notification-badge",
               );
               const currentBadgeCount =
                 parseInt(notificationBadge.textContent) || 0;
@@ -4213,7 +4173,7 @@
 
         const notificationBell = document.getElementById("notification-bell");
         const notificationDropdown = document.getElementById(
-          "notification-dropdown"
+          "notification-dropdown",
         );
         const notificationBadge = document.getElementById("notification-badge");
 

@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>NovofitBD - Cart</title>
+    <title>NovofitBD - কার্ট</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Added Hind Siliguri for Bangla -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Poppins:wght@300;400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <link rel="shortcut icon" href="logo.png" type="image/x-icon" />
@@ -24,7 +25,7 @@
         --secondary-text: #a8a8a8;
       }
       body {
-        font-family: "Poppins", sans-serif;
+        font-family: "Hind Siliguri", sans-serif; /* Changed to Bangla font */
         background-color: var(--background);
         color: var(--text);
         overflow-x: hidden;
@@ -34,38 +35,12 @@
         overflow: hidden;
       }
       .font-heading {
-        font-family: "Cormorant Garamond", serif;
+        font-family: "Hind Siliguri", sans-serif;
       }
       .font-body {
-        font-family: "Poppins", sans-serif;
+        font-family: "Hind Siliguri", sans-serif;
       }
-      .cursor {
-        position: fixed;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background: var(--accent);
-        pointer-events: none;
-        mix-blend-mode: difference;
-        transition: transform 0.2s ease-out, width 0.3s ease, height 0.3s ease;
-        z-index: 9999;
-        transform-origin: center center;
-      }
-      .cursor-follower {
-        position: fixed;
-        width: 40px;
-        height: 40px;
-        border: 1px solid var(--accent);
-        border-radius: 50%;
-        pointer-events: none;
-        mix-blend-mode: difference;
-        transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-        z-index: 9999;
-      }
-      .cursor-grow {
-        transform: scale(3);
-        background: var(--accent);
-      }
+
       /* --- MOBILE MENU FIX --- */
       #mobile-menu {
         position: fixed;
@@ -74,7 +49,7 @@
         width: 100%;
         height: 100vh;
         background-color: var(--background);
-        z-index: 5000; /* Increased z-index to ensure it's on top */
+        z-index: 5000;
         transform: translateX(100%);
         transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
         display: flex;
@@ -90,23 +65,21 @@
 
       .mobile-nav-link {
         font-size: 2.5rem;
-        font-family: "Cormorant Garamond", serif;
+        font-family: "Hind Siliguri", serif;
         font-weight: 600;
         text-transform: uppercase;
         line-height: 1.5;
-        color: var(--text); /* Explicitly set text color */
-        opacity: 0; /* Initial state for animation */
-        transform: translateY(20px); /* Initial state for animation */
-        transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Add transition for animation */
+        color: var(--text);
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease-out, transform 0.5s ease-out;
       }
 
-      /* Animation for the links when the menu is open */
       #mobile-menu.open .mobile-nav-link {
         opacity: 1;
         transform: translateY(0);
       }
 
-      /* Stagger the animation for each link */
       #mobile-menu.open .mobile-nav-link:nth-child(1) {
         transition-delay: 0.1s;
       }
@@ -125,7 +98,7 @@
         top: 2rem;
         right: 2rem;
         cursor: pointer;
-        z-index: 5001; /* Must be higher than the menu itself */
+        z-index: 5001;
       }
       .hamburger-btn {
         cursor: pointer;
@@ -172,18 +145,10 @@
         background-color: var(--accent);
         color: var(--background);
       }
-      .discount-input {
-        background-color: transparent;
-        border-bottom: 1px solid var(--border);
-        color: var(--text);
-      }
-      .discount-input:focus {
-        outline: none;
-        border-color: var(--accent);
-      }
       @media (max-width: 768px) {
-        #discount-code {
-          width: 100%;
+        .cursor,
+        .cursor-follower {
+          display: none;
         }
       }
     </style>
@@ -204,34 +169,36 @@
         <ul class="space-y-6">
           <li>
             <a href="home" class="mobile-nav-link hover-link magnetic-item"
-              >Home</a
+              >হোম</a
             >
           </li>
           <li>
             <a href="shop" class="mobile-nav-link hover-link magnetic-item"
-              >Shop</a
+              >কেনাকাটা</a
             >
           </li>
           <li>
             <a href="gallery" class="mobile-nav-link hover-link magnetic-item"
-              >Gallery</a
+              >গ্যালারি</a
             >
           </li>
           <li>
             <a href="contact" class="mobile-nav-link hover-link magnetic-item"
-              >Contact</a
+              >যোগাযোগ</a
             >
           </li>
           <li>
             <a
               href="our-studio"
               class="mobile-nav-link hover-link magnetic-item"
-              >Studio</a
+              >স্টুডিও</a
             >
           </li>
         </ul>
       </nav>
     </div>
+
+    <!-- Header -->
     <header
       class="fixed top-0 left-0 w-full z-40 p-6 md:p-8 transition-all duration-500 bg-[var(--background)]/70 backdrop-blur-lg"
     >
@@ -246,11 +213,11 @@
         <nav
           class="hidden md:flex items-center space-x-10 text-sm uppercase tracking-wider font-light"
         >
-          <a href="home" class="hover-link magnetic-item">Home</a>
-          <a href="shop" class="hover-link magnetic-item">Shop</a>
-          <a href="gallery" class="hover-link magnetic-item">Gallery</a>
-          <a href="contact" class="hover-link magnetic-item">Contact</a>
-          <a href="our-studio" class="hover-link magnetic-item">Studio</a>
+          <a href="home" class="hover-link magnetic-item">হোম</a>
+          <a href="shop" class="hover-link magnetic-item">কেনাকাটা</a>
+          <a href="gallery" class="hover-link magnetic-item">গ্যালারি</a>
+          <a href="contact" class="hover-link magnetic-item">যোগাযোগ</a>
+          <a href="our-studio" class="hover-link magnetic-item">স্টুডিও</a>
         </nav>
         <div class="flex items-center space-x-6">
           <a
@@ -305,7 +272,7 @@
         <h1
           class="text-5xl md:text-7xl font-heading text-center mb-16 uppercase"
         >
-          Your Cart
+          আপনার কার্ট
         </h1>
 
         <div
@@ -323,118 +290,72 @@
             <h3
               class="text-xl font-bold mb-4 uppercase tracking-wider font-heading"
             >
-              Connect
+              NovofitBD
             </h3>
             <p class="text-gray-400 mb-6 max-w-sm font-body">
-              Follow us on our social media channels to see our latest designs
-              and updates.
+              আমাদের নতুন ডিজাইন আর অফার সম্পর্কে জানতে সাথে থাকুন।
             </p>
             <div class="flex space-x-4 mt-8">
               <a
                 href="#"
                 class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M12 2.163c3.204 0 3.584.012 4.85.07c3.252.148 4.653 1.636 4.807 4.845.056 1.268.067 1.649.067 4.853 0 3.204-.011 3.585-.067 4.849-.155 3.208-1.556 4.646-4.808 4.811-1.267.056-1.648.066-4.85.066s-3.583-.01-4.85-.066c-3.252-.165-4.652-1.603-4.807-4.811-.056-1.267-.067-1.648-.067-4.849s.011-3.585.067-4.85c.155-3.208 1.555-4.646 4.807-4.811 1.267-.056 1.648-.066 4.85-.066zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.211-6.671 2.457-6.882 6.812-.058 1.281-.07 1.689-.07 4.946s.012 3.666.07 4.947c.211 4.357 2.455 6.671 6.811 6.882 1.28.058 1.689.07 4.946.07s3.666-.012 4.946-.07c4.356-.211 6.67-2.456 6.882-6.812.058-1.28.07-1.689.07-4.946s-.012-3.666-.07-4.947c-.212-4.357-2.456-6.671-6.812-6.882-1.28-.058-1.689-.07-4.946-.07zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.162 6.162 6.162 6.162-2.759 6.162-6.162c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4zm6.406-11.845c-.796 0-1.442.646-1.442 1.442s.646 1.442 1.442 1.442 1.442-.646 1.442-1.442-.646-1.442-1.442-1.442z"
-                  />
-                </svg>
+                <i class="ph ph-facebook-logo text-2xl"></i>
               </a>
-
               <a
                 href="#"
                 class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M19.615 3.184c-3.604-.246-11.455-.246-15.059 0-3.794.256-4.701 4.701-4.701 7.632 0 2.93 2.057 7.375 4.701 7.632 3.604.246 11.455.246 15.059 0 3.794-.256 4.701-4.701 4.701-7.632 0-2.93-2.057-7.375-4.701-7.632zm-10.515 10.612v-6.648l6.096 3.324-6.096 3.324z"
-                  />
-                </svg>
+                <i class="ph ph-instagram-logo text-2xl"></i>
               </a>
-
               <a
                 href="https://www.facebook.com/profile.php?id=61579875061969"
                 class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M24 12c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.753 4.022 10.573 9.385 11.666v-8.252h-3.084v-3.414h3.084v-2.617c0-3.059 1.85-4.73 4.595-4.73 1.312 0 2.433.102 2.753.148v3.189h-1.892c-1.517 0-1.815.72-1.815 1.777v2.333h3.585l-.466 3.414h-3.119v8.252c5.362-1.093 9.385-5.913 9.385-11.666z"
-                  />
-                </svg>
-              </a>
-
-              <a
-                href="https://vt.tiktok.com/ZSAXPFp5s/"
-                class="hover-link magnetic-item text-gray-400 hover:text-white transition-colors duration-300"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M16.5 3c0 .2 0 .4.1.7.3 1.4 1.4 2.4 2.8 2.5.2 0 .4 0 .6-.1v3.1c-1.6 0-3-.5-4.2-1.4v7.4c0 3-2.4 5.4-5.4 5.4S4.9 18.2 4.9 15.2c0-2.9 2.3-5.3 5.2-5.4.5 0 1 .1 1.5.2v3.2c-.2-.1-.5-.2-.8-.2-1.2 0-2.1 1-2.1 2.1 0 1.2 1 2.1 2.1 2.1 1.2 0 2.2-1 2.2-2.1V3h3.5z"
-                  />
-                </svg>
+                <i class="ph ph-tiktok-logo text-2xl"></i>
               </a>
             </div>
           </div>
           <div class="col-span-1 footer-col">
             <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
-              Shop
+              শপ
             </h4>
             <ul class="space-y-3 text-gray-400 font-body">
               <li>
-                <a href="shop" class="hover-link magnetic-item">Shop All</a>
+                <a href="shop" class="hover-link magnetic-item">সব পণ্য</a>
               </li>
               <li>
                 <a href="shop?category=Men" class="hover-link magnetic-item"
-                  >Men</a
+                  >ছেলেদের</a
                 >
               </li>
               <li>
                 <a href="shop?category=Women" class="hover-link magnetic-item"
-                  >Women</a
+                  >মেয়েদের</a
                 >
               </li>
               <li>
                 <a href="shop?category=Others" class="hover-link magnetic-item"
-                  >Accessories</a
+                  >অন্যান্য</a
                 >
               </li>
             </ul>
           </div>
           <div class="col-span-1 footer-col">
             <h4 class="font-bold mb-4 uppercase tracking-wider font-heading">
-              About
+              তথ্য
             </h4>
             <ul class="space-y-3 text-gray-400 font-body">
               <li>
                 <a href="our-studio" class="hover-link magnetic-item"
-                  >Our Studio</a
+                  >আমাদের সম্পর্কে</a
                 >
               </li>
               <li>
-                <a href="gallery" class="hover-link magnetic-item">Gallery</a>
+                <a href="gallery" class="hover-link magnetic-item">গ্যালারি</a>
               </li>
               <li>
-                <a href="contact" class="hover-link magnetic-item">Contact</a>
+                <a href="contact" class="hover-link magnetic-item">যোগাযোগ</a>
               </li>
               <li>
                 <a href="#" id="faq-link" class="hover-link magnetic-item"
@@ -448,8 +369,7 @@
           class="mt-16 pt-8 border-t border-[var(--border)] text-center text-gray-500 text-xs font-body"
         >
           <p>
-            &copy; 2025 NovofitBD. All Rights Reserved. A demonstration of
-            world-class web design.
+            &copy; ২০২৫ NovofitBD. সর্বস্বত্ব সংরক্ষিত।
           </p>
         </div>
       </div>
@@ -477,9 +397,8 @@
       const appId =
         typeof __app_id !== "undefined" ? __app_id : "default-app-id";
 
-      // Default settings in case Firestore is not available or data is missing
-      let shippingSettings = { baseCost: 10, freeThreshold: 100 }; // Default: $10 shipping, free over $100
-      let taxSettings = { rate: 8 }; // Default: 8% tax rate
+      let shippingSettings = { baseCost: 10, freeThreshold: 100 };
+      let taxSettings = { rate: 8 };
 
       async function initFirebase() {
         try {
@@ -504,17 +423,13 @@
           } else {
             await signInAnonymously(auth);
           }
-          console.log("Firebase initialized and user signed in.");
         } catch (error) {
           console.error("Firebase initialization failed:", error);
         }
       }
 
       async function loadCartSettings() {
-        if (!db) {
-          console.log("Firestore is not initialized. Using default settings.");
-          return;
-        }
+        if (!db) return;
         try {
           const shippingRef = doc(
             db,
@@ -523,7 +438,7 @@
             "public",
             "data",
             "settings",
-            "shipping"
+            "shipping",
           );
           const taxRef = doc(
             db,
@@ -532,7 +447,7 @@
             "public",
             "data",
             "settings",
-            "tax"
+            "tax",
           );
 
           const shippingSnap = await getDoc(shippingRef);
@@ -540,32 +455,23 @@
             const data = shippingSnap.data();
             shippingSettings.baseCost = data.baseCost || 0;
             shippingSettings.freeThreshold = data.freeThreshold || 0;
-            console.log("Loaded shipping settings:", shippingSettings);
-          } else {
-            console.log(
-              "No shipping settings found in Firestore. Using defaults."
-            );
           }
 
           const taxSnap = await getDoc(taxRef);
           if (taxSnap.exists()) {
             const data = taxSnap.data();
             taxSettings.rate = data.rate || 0;
-            console.log("Loaded tax settings:", taxSettings);
-          } else {
-            console.log("No tax settings found in Firestore. Using defaults.");
           }
         } catch (error) {
-          console.error("Error loading settings from Firestore:", error);
+          console.error("Error loading settings:", error);
         }
       }
 
       document.addEventListener("DOMContentLoaded", async () => {
-        // --- Initialize Firebase and load settings first ---
         await initFirebase();
         await loadCartSettings();
 
-        // --- Core UI and Animations ---
+        // --- Core UI ---
         gsap.registerPlugin();
         const lenis = new Lenis();
         function raf(time) {
@@ -591,10 +497,10 @@
           .querySelectorAll(".hover-link, .checkout-btn")
           .forEach((el) => {
             el.addEventListener("mouseenter", () =>
-              follower.classList.add("cursor-grow")
+              follower.classList.add("cursor-grow"),
             );
             el.addEventListener("mouseleave", () =>
-              follower.classList.remove("cursor-grow")
+              follower.classList.remove("cursor-grow"),
             );
           });
         document.querySelectorAll(".magnetic-item").forEach((el) => {
@@ -619,7 +525,7 @@
           });
         });
 
-        // --- Mobile Menu Logic ---
+        // --- Mobile Menu ---
         const hamburgerBtn = document.getElementById("hamburger-btn");
         const closeMenuBtn = document.getElementById("close-menu");
         const mobileMenu = document.getElementById("mobile-menu");
@@ -683,7 +589,7 @@
               item &&
               item.product &&
               item.product.name &&
-              item.product.basePrice
+              item.product.basePrice,
           );
 
           if (validCart.length === 0) {
@@ -703,41 +609,41 @@
               id="cart-summary"
             >
               <h2 class="font-heading text-3xl font-semibold mb-6">
-                Order Summary
+                অর্ডার সারাংশ
               </h2>
               <div class="space-y-4 text-lg">
                 <div class="flex justify-between items-center">
                   <span class="text-[var(--secondary-text)] font-body"
-                    >Subtotal</span
+                    >সাবটোটাল</span
                   >
                   <span id="subtotal-amount" class="font-body font-medium"
-                    >$0.00</span
+                    >৳0.00</span
                   >
                 </div>
                 <div class="flex justify-between items-center">
                   <span class="text-[var(--secondary-text)] font-body"
-                    >Shipping</span
+                    >শিপিং</span
                   >
                   <span id="shipping-amount" class="font-body font-medium"
                     >...</span
                   >
                 </div>
                 <div class="flex justify-between items-center">
-                  <span class="text-[var(--secondary-text)] font-body">Tax</span>
-                  <span id="tax-amount" class="font-body font-medium">$0.00</span>
+                  <span class="text-[var(--secondary-text)] font-body">ভ্যাট</span>
+                  <span id="tax-amount" class="font-body font-medium">৳0.00</span>
                 </div>
               </div>
               <div
                 class="border-t border-[var(--border)] my-6 pt-6 flex justify-between items-center font-heading text-2xl font-bold"
               >
-                <span>Total</span>
-                <span style="font-family: 'Poppins';" id="total-amount">$0.00</span>
+                <span>সর্বমোট</span>
+                <span id="total-amount">৳0.00</span>
               </div>
               <a href="checkout">
                   <button
                     class="checkout-btn w-full bg-white text-black py-4 rounded-full text-lg font-semibold uppercase tracking-wider magnetic-item"
                   >
-                    Proceed to Checkout
+                    অর্ডার সম্পন্ন করুন
                   </button>
               </a>
             </div>
@@ -751,7 +657,7 @@
                 ? item.product.images[0]
                 : `https://placehold.co/96x128/0d0d0d/e8e8e8?text=${item.product.name.replace(
                     /\s/g,
-                    "+"
+                    "+",
                   )}`;
             const finalPrice = getFinalPrice(item.product);
             const isDiscounted = item.product.discountPercentage > 0;
@@ -772,7 +678,7 @@
                 class="w-full h-full object-cover"
                 onerror="this.onerror=null;this.src='https://placehold.co/96x128/0d0d0d/e8e8e8?text=${item.product.name.replace(
                   /\s/g,
-                  "+"
+                  "+",
                 )}';">
             </div>
             <div class="flex-grow">
@@ -783,15 +689,16 @@
                   </h3>
                   <div class="flex items-center gap-2">
                     <p class="text-[var(--secondary-text)] text-sm font-body">
-                      ${item.size} / ${item.color}
+                      ${item.size || ""} ${item.color ? `/ ${item.color}` : ""}
                     </p>
-                    <div
-                      class="w-4 h-4 rounded-full border border-[var(--secondary-text)]"
-                      style="background-color: ${item.color};"
-                    ></div>
+                    ${
+                      item.color
+                        ? `<div class="w-4 h-4 rounded-full border border-[var(--secondary-text)]" style="background-color: ${item.color};"></div>`
+                        : ""
+                    }
                   </div>
                 </div>
-                <span class="font-heading text-lg font-bold flex flex-col items-end" style="font-family: 'Poppins', sans-serif;">
+                <span class="font-heading text-lg font-bold flex flex-col items-end" style="font-family: 'Hind Siliguri', sans-serif;">
                     ${
                       isDiscounted
                         ? `<span class="text-xs line-through text-[var(--secondary-text)] font-normal">&#2547;${(
@@ -837,11 +744,11 @@
             id="empty-cart-message"
             class="text-center py-16 text-[var(--secondary-text)] w-full"
           >
-            <p class="font-heading text-2xl mb-4">Your cart is empty.</p>
+            <p class="font-heading text-2xl mb-4">আপনার কার্ট খালি।</p>
             <a
               href="shop"
               class="hover-link text-white underline text-sm magnetic-item"
-              >Continue Shopping</a
+              >কেনাকাটা চালিয়ে যান</a
             >
           </div>
         `;
@@ -904,7 +811,7 @@
         function updateCartSummary() {
           const cart = getCart();
           const validCart = cart.filter(
-            (item) => item && item.product && item.product.basePrice
+            (item) => item && item.product && item.product.basePrice,
           );
 
           let subtotal = 0;
@@ -913,7 +820,6 @@
             subtotal += finalPrice * item.quantity;
           });
 
-          // Calculate shipping based on Firestore settings
           let currentShippingCost = shippingSettings.baseCost;
           if (
             shippingSettings.freeThreshold > 0 &&
@@ -922,31 +828,27 @@
             currentShippingCost = 0;
           }
 
-          // Calculate tax based on Firestore settings
           const tax = subtotal * (taxSettings.rate / 100);
           const total = subtotal + currentShippingCost + tax;
 
           document.getElementById(
-            "subtotal-amount"
+            "subtotal-amount",
           ).textContent = `৳${subtotal.toFixed(2)}`;
-
           document.getElementById("shipping-amount").textContent =
             currentShippingCost === 0
-              ? "Free"
+              ? "ফ্রি"
               : `৳${currentShippingCost.toFixed(2)}`;
-
           document.getElementById("tax-amount").textContent = `৳${tax.toFixed(
-            2
+            2,
           )}`;
-
           document.getElementById(
-            "total-amount"
+            "total-amount",
           ).textContent = `৳${total.toFixed(2)}`;
         }
 
-        // Initially render the cart when the page loads
         renderCart();
-        // Header Animation on Scroll
+
+        // Header Scroll
         const header = document.querySelector("header");
         let lastScroll = 0;
         window.addEventListener("scroll", () => {
@@ -965,6 +867,5 @@
         });
       });
     </script>
-    <script src="footer.js"></script>
   </body>
 </html>
